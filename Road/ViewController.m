@@ -29,7 +29,7 @@
 
 //RunTime
 @property (nonatomic, assign) CFTimeInterval startTime;
-@property (nonatomic, assign) int timeIndex;
+@property (nonatomic, assign) int wordIndex;
 
 //Speed
 @property (nonatomic, assign) float acceleration;
@@ -218,15 +218,15 @@
         self.acceleration += 0.005;
     }
     
-    self.timeIndex = ((self.displaylink.timestamp - self.startTime)/(self.baseSpeed + self.acceleration));
-    self.focusText.text = [self.wordsArray objectAtIndex:self.timeIndex];
-    if (self.timeIndex == self.wordsArray.count) {
+    self.wordIndex = ((self.displaylink.timestamp - self.startTime)/(self.baseSpeed + self.acceleration));
+    self.focusText.text = [self.wordsArray objectAtIndex:self.wordIndex];
+    if (self.wordIndex == self.wordsArray.count) {
         self.displaylink.paused = YES;
     }
     
     self.currentSpeed = self.baseSpeed + self.acceleration;
     
-    NSLog(@"%d, %0.2f, %0.3f", self.timeIndex, self.acceleration, self.currentSpeed);
+    NSLog(@"%d, %0.2f, %0.3f", self.wordIndex, self.acceleration, self.currentSpeed);
 }
 
 - (void)gas {

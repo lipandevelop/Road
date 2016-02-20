@@ -17,7 +17,6 @@
 		0AF7418E1C778205000C3CC2 /* RoadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7418D1C778205000C3CC2 /* RoadTests.m */; };
 		0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */ = {isa = PBXBuildFile; fileRef = 0AF7419E1C77964D000C3CC2 /* thePrince.epub */; };
 		0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */ = {isa = PBXBuildFile; fileRef = 0AF741A01C7796F1000C3CC2 /* tolstoy-war-and-peace.epub */; };
-		0AF741A31C779716000C3CC2 /* Winnie-the-Pooh.epub in Resources */ = {isa = PBXBuildFile; fileRef = 0AF741A21C779716000C3CC2 /* Winnie-the-Pooh.epub */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 		0AF7418F1C778205000C3CC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AF7419E1C77964D000C3CC2 /* thePrince.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = thePrince.epub; path = Books/thePrince.epub; sourceTree = "<group>"; };
 		0AF741A01C7796F1000C3CC2 /* tolstoy-war-and-peace.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = "tolstoy-war-and-peace.epub"; path = "Books/tolstoy-war-and-peace.epub"; sourceTree = "<group>"; };
-		0AF741A21C779716000C3CC2 /* Winnie-the-Pooh.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Winnie-the-Pooh.epub"; path = "Books/Winnie-the-Pooh.epub"; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -133,7 +131,6 @@
 			children = (
 				0AF7419E1C77964D000C3CC2 /* thePrince.epub */,
 				0AF741A01C7796F1000C3CC2 /* tolstoy-war-and-peace.epub */,
-				0AF741A21C779716000C3CC2 /* Winnie-the-Pooh.epub */,
 			);
 			name = Books;
 			sourceTree = "<group>";
@@ -243,7 +240,6 @@
 				0AF741831C778205000C3CC2 /* LaunchScreen.storyboard in Resources */,
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,
 				0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */,
-				0AF741A31C779716000C3CC2 /* Winnie-the-Pooh.epub in Resources */,
 				0AF7417E1C778205000C3CC2 /* Main.storyboard in Resources */,
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
 				0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */,
