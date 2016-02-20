@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AF741751C778205000C3CC2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF741741C778205000C3CC2 /* main.m */; };
 		0AF741781C778205000C3CC2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF741771C778205000C3CC2 /* AppDelegate.m */; };
 		0AF7417B1C778205000C3CC2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7417A1C778205000C3CC2 /* ViewController.m */; };
@@ -31,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AF741701C778205000C3CC2 /* Road.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Road.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF741741C778205000C3CC2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0AF741761C778205000C3CC2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 		0AF741671C778205000C3CC2 = {
 			isa = PBXGroup;
 			children = (
+				0AEF497C1C78010F009309F1 /* ivoryPaper.png */,
 				0AF741981C77894D000C3CC2 /* Books */,
 				0AF741721C778205000C3CC2 /* Road */,
 				0AF7418C1C778205000C3CC2 /* RoadTests */,
@@ -243,6 +246,7 @@
 				0AF741A31C779716000C3CC2 /* Winnie-the-Pooh.epub in Resources */,
 				0AF7417E1C778205000C3CC2 /* Main.storyboard in Resources */,
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
+				0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
