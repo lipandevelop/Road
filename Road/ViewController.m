@@ -10,6 +10,21 @@
 #import "KFEpubController.h"
 #import "KFEpubContentModel.h"
 
+typedef NS_ENUM(NSInteger, SpeedAdjustmentSegmentSelected) {
+    NormalSpeed,
+    MaximumSpeed,
+    MinimumSpeed,
+    AccelerationSpeed,
+    DecelerationSpeed,
+};
+
+typedef NS_ENUM(NSInteger, ColorAdjustmentSegmentSelected) {
+    Red,
+    Green,
+    Blue,
+    Alpha,
+};
+
 @interface ViewController () <KFEpubControllerDelegate, UIGestureRecognizerDelegate, UIWebViewDelegate>
 @property (nonatomic, strong) KFEpubController *epubController;
 @property (nonatomic, strong) KFEpubContentModel *contentModel;
@@ -67,6 +82,7 @@
 @property (nonatomic, strong) UISlider *constColorAdjusterSlider;
 @property (nonatomic, strong) UISlider *vowelColorAdjusterSlider;
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;
+@property (nonatomic, strong) UISegmentedControl *colorPropertySelector;
 
 
 @property (nonatomic, assign) float colorAdjusterValue;
@@ -75,6 +91,11 @@
 @property (nonatomic, strong) UIColor *highlightVowelColor;
 @property (nonatomic, strong) UIColor *highlightConsonantColor;
 @property (nonatomic, strong) UIColor *highlightUserSelectedTextColor;
+@property (nonatomic, strong) UIColor *highlightColorThree;
+@property (nonatomic, strong) UIColor *highlightColorFour;
+@property (nonatomic, strong) UIColor *highlightColorFive;
+
+
 @property (nonatomic, strong) UIColor *defaultButtonColor;
 
 //Frames
@@ -84,12 +105,27 @@
 @property (nonatomic, strong) NSString *userInputForHighlightedTextString;
 @property (nonatomic, strong) NSString *selectedSpeedToAdjustIndicator;
 
+//Arrays
+@property (nonatomic, strong) NSArray *rgbArray;
+@property (nonatomic, strong) NSArray *speedArray;
+
+
 @end
 
 @implementation ViewController
 
 static const float kUpdateSpeed = 0.1f;
-static const float kMoney = 1000000000;
+//static const CGSize kShadowSize = CGSizeMake(-1.0, 6.0);
+static const float kShadowOpacity = 0.35f;
+static const float kBoarderWidth = 1.5f;
+static const float kMoney = 1000000000.00f;
+static const float kGoldenRatio = 1.61803398875;
+static const float kGoldenRatioMinusOne = 0.68903398875f;
+static const float kOneMinusGoldenRatioMinusOne = 0.38196601125;
+static const float kSmallFontSize = 10.0f;
+static const float kHiddenControlRevealedAlhpa = 0.7f;
+static const float kZero = 0.0f;
+static const float kUINormaAlpha = 0.45f;
 
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -132,10 +168,18 @@ static const float kMoney = 1000000000;
     self.highlightConsonantsActivated = NO;
     self.hideControlsActivated = YES;
     self.colorAdjusterValue = 254.0;
-    self.highlightConsonantColor = [UIColor colorWithRed:136.0f/255.0f green:14.0f/255.0f blue:79.0f/255.0f alpha:1.0f];
-    self.highlightVowelColor = [UIColor colorWithRed:self.colorAdjusterValue/255.0f green:82.0f/255.0f blue:15.0f/255.0f alpha:1.0f];
-    self.defaultButtonColor = [UIColor colorWithRed:65.0f/255.0f green:65.0f/255.0f blue:65.0f/255.0f alpha:1.0f];
     
+    self.highlightConsonantColor = [UIColor colorWithRed:136.0f/255.0f green:14.0f/255.0f blue:79.0f/255.0f alpha:1.0f];
+    self.highlightVowelColor = [UIColor colorWithRed:254.0f/255.0f green:82.0f/255.0f blue:15.0f/255.0f alpha:1.0f];
+    self.highlightUserSelectedTextColor = [UIColor colorWithRed:253.0f/255.0f green:196.0f/255.0f blue:2.0f/255.0f alpha:1.0f];
+    self.defaultButtonColor = [UIColor colorWithRed:98.0f/255.0f green:91.0f/255.0f blue:77.0f/255.0f alpha:1.0f];
+    self.highlightColorThree = [UIColor colorWithRed:11.0f/255.0f green:73.0f/255.0f blue:119.0f/255.0f alpha:1.0f];
+    self.highlightColorFour = [UIColor colorWithRed:243.0f/255.0f green:131.0f/255.0f blue:121.0f/255.0f alpha:1.0f];
+    self.highlightColorFive = [UIColor colorWithRed:71.0f/255.0f green:215.0f/255.0f blue:193.0f/255.0f alpha:1.0f];
+    
+    self.rgbArray = [NSArray arrayWithObjects:@"red", @"green", @"blue", @"alpha", nil];
+    self.speedArray = [NSArray arrayWithObjects: @"norm speed", @"max speed", @"min speed", @"accel", @"decel", nil];
+
 }
 
 - (void)loadUIContents {
@@ -145,92 +189,95 @@ static const float kMoney = 1000000000;
     UIImage *vowelImage = [UIImage imageNamed:@"Vowel.png"];
     self.view.layer.contents = (__bridge id)paper.CGImage;
     
-    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*0.68903398875f, CGRectGetMaxY(self.view.frame)*(1-0.57603398875f), 4.5f, 4.5f)];
-    self.dot.layer.cornerRadius = 3.0f;
-    self.dot.layer.borderWidth = 1.5f;
+    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*(1-0.57603398875f), 8.0f, 8.0f)];
+    self.dot.layer.cornerRadius = 4.0f;
+    self.dot.layer.borderWidth = kBoarderWidth;
     self.dot.clipsToBounds = YES;
-    self.dot.layer.borderColor = [UIColor colorWithRed:195.0f/255.0f green:25.0f/255.0f blue:25.0f/255.0f alpha:0.6f].CGColor;
-    [self.view addSubview:self.dot];
+    self.dot.layer.borderColor = [UIColor colorWithRed:195.0f/255.0f green:25.0f/255.0f blue:25.0f/255.0f alpha:0.8f].CGColor;
     
-    self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*0.67803398875, CGRectGetMaxY(self.view.frame)/1.15203398875, 15.0f, 15.0f)];
-    self.hideControlButton.layer.borderWidth = 2.0f;
+    self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/1.15203398875, 15.0f, 15.0f)];
+    self.hideControlButton.layer.borderWidth = kBoarderWidth;
     self.hideControlButton.layer.borderColor = [UIColor blackColor].CGColor;
-    self.hideControlButton.titleLabel.text = @"H";
-    self.hideControlButton.titleLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:10];
+    self.hideControlButton.titleLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.hideControlButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.hideControlButton.alpha = 0.45;
-    self.hideControlButton.layer.cornerRadius = 7.5f;
-    [self.hideControlButton addTarget:self action:@selector(hideControls) forControlEvents:UIControlEventTouchDown];
-    [self.view addSubview:self.hideControlButton];
-    
+    self.hideControlButton.alpha = kUINormaAlpha;
+    self.hideControlButton.layer.cornerRadius = self.hideControlButton.frame.size.width/2;
+    [self.hideControlButton addTarget:self action:@selector(hideControls) forControlEvents:UIControlEventTouchUpInside];
     
     self.breakPedalGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(breaking)];
-    self.breakPedalFrame = CGRectMake(CGRectGetWidth(self.view.frame)*0.38196601125, CGRectGetMaxY(self.view.frame)/1.61803398875, 220.0f, 220.0f);
+    self.breakPedalFrame = CGRectMake(CGRectGetWidth(self.view.frame)*0.38196601125, CGRectGetMaxY(self.view.frame)/kGoldenRatio, 220.0f, 220.0f);
     CGAffineTransform pedalPosition = CGAffineTransformIdentity;
     pedalPosition = CGAffineTransformScale(pedalPosition, 0.50f, 0.50f);
     pedalPosition = CGAffineTransformRotate(pedalPosition, M_PI/180.0 * -37);
-    pedalPosition = CGAffineTransformTranslate(pedalPosition, 50.0f, 0.0f);
+    pedalPosition = CGAffineTransformTranslate(pedalPosition, 50.0f, kZero);
     self.breakPedal = [[UIView alloc]initWithFrame:self.breakPedalFrame];
     self.breakPedal.layer.contents = (__bridge id)breakPedal.CGImage;
     self.breakPedal.layer.opacity = 0.2f;
     self.breakPedal.layer.affineTransform = pedalPosition;
     self.breakPedal.layer.shadowColor = [UIColor blackColor].CGColor;
     [self.breakPedal addGestureRecognizer:self.breakPedalGesture];
-    [self.view addSubview:self.breakPedal];
     
     self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.view.frame) - 95, 25, 25);
-    
     self.toggleVowels = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
     [self.toggleVowels addTarget:self action:@selector(toggleVowelsSelected) forControlEvents:UIControlEventTouchUpInside];
     [self modifyToggleButtonWithButton:self.toggleVowels buttonLayer:self.toggleVowels.layer color: self.defaultButtonColor image:vowelImage];
     self.toggleVowels.layer.affineTransform = CGAffineTransformMakeTranslation(-45, -40);
+    UILongPressGestureRecognizer *toggleVowelOptionsGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(openVowelOptions)];
+    toggleVowelOptionsGesture.minimumPressDuration = 0.5;
+    [self.toggleVowels addGestureRecognizer:toggleVowelOptionsGesture];
     
     self.toggleConsonates = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
     [self.toggleConsonates addTarget:self action:@selector(toggleConsonantsSelected) forControlEvents:UIControlEventTouchUpInside];
     [self modifyToggleButtonWithButton:self.toggleConsonates buttonLayer:self.toggleConsonates.layer color:self.defaultButtonColor image:consonantImage];
-    
+    UILongPressGestureRecognizer *toggleConsonantOptionsGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(openConsonantOptions)];
+    toggleConsonantOptionsGesture.minimumPressDuration = 0.5;
+    [self.toggleConsonates addGestureRecognizer:toggleConsonantOptionsGesture];
     
     self.constColorAdjusterSlider = [[UISlider alloc]init];
     self.vowelColorAdjusterSlider = [[UISlider alloc]init];
     
     self.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(160, 360, 120, 30)];
     [self.speedAdjusterSlider addTarget:self action:@selector(adjustSpeedUsingSlider:) forControlEvents:UIControlEventValueChanged];
+
     self.speedAdjusterSlider.layer.affineTransform = CGAffineTransformRotate(self.speedAdjusterSlider.layer.affineTransform, M_PI/180.0 * -40);
     self.speedAdjusterSlider.tintColor = self.defaultButtonColor;
-    self.speedAdjusterSlider.alpha = 0.00f;
+    self.speedAdjusterSlider.alpha = kZero;
     self.speedAdjusterSlider.value = 1/self.normalSpeed;
-    [self.view addSubview:self.speedAdjusterSlider];
     
     self.speedLabel = [[UILabel alloc]initWithFrame:CGRectMake(164, 320, 220, 60)];
-    self.speedLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:10];
-    self.speedLabel.numberOfLines = 0;
-    self.speedLabel.alpha = 0.45f;
-    [self.view setNeedsDisplay];
+    self.speedLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
+    self.speedLabel.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
+    self.speedLabel.layer.shadowOpacity = kShadowOpacity;
+    self.speedLabel.numberOfLines = kZero;
+    self.speedLabel.alpha = kZero;
     
-    NSArray *speedsArray = [NSArray arrayWithObjects: @"norm speed", @"max speed", @"min speed", @"accel", @"decel", nil];
-    
-    self.speedPropertySelector = [[UISegmentedControl alloc]initWithItems:speedsArray];
-                                  
-    self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
-    self.speedPropertySelector.selectedSegmentIndex = 0;
-    self.speedPropertySelector.layer.borderWidth = 2.0f;
+    self.speedPropertySelector = [[UISegmentedControl alloc]initWithItems:self.speedArray];
+    self.speedPropertySelector.frame = CGRectMake(kZero, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
+    self.speedPropertySelector.selectedSegmentIndex = kZero;
+    self.speedPropertySelector.layer.borderWidth = kBoarderWidth;
     self.speedPropertySelector.layer.borderColor = [UIColor blackColor].CGColor;
     self.speedPropertySelector.tintColor = [UIColor blackColor];
-    self.speedPropertySelector.alpha = 0.45f;
-    UIFont *segmentControlfont = [UIFont fontWithName:(@"AmericanTypewriter") size:10];
-    NSDictionary *attributes = [NSDictionary dictionaryWithObject:segmentControlfont forKey:NSFontAttributeName];
-    [self.speedPropertySelector setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    self.speedPropertySelector.alpha = kUINormaAlpha;
+    [self.speedPropertySelector addTarget:self action:@selector(speedPropertySelectorSwitch:) forControlEvents:UIControlEventValueChanged];
+    UIFont *speedControlfont = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
+    NSDictionary *speedAttributes = [NSDictionary dictionaryWithObject:speedControlfont forKey:NSFontAttributeName];
+    [self.speedPropertySelector setTitleTextAttributes:speedAttributes forState:UIControlStateNormal];
     
+    [self.view addSubview:self.dot];
+    [self.view addSubview:self.speedAdjusterSlider];
+    [self.view addSubview:self.breakPedal];
+    [self.view addSubview:self.hideControlButton];
+
 }
 
 #pragma mark Modify Toggle Buttons
 
 - (void)modifyToggleButtonWithButton: (UIButton *)button buttonLayer:(CALayer *)layer color: (UIColor*)color image: (UIImage *)image {
-    layer.cornerRadius = 12.5f;
+    layer.cornerRadius = button.frame.size.width/2;
     layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    layer.shadowOpacity = 0.30f;
+    layer.shadowOpacity = kShadowOpacity;
     layer.contents = (__bridge id)image.CGImage;
-    button.alpha = 0.00;
+    button.alpha = kZero;
     button.backgroundColor = color;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:button];
@@ -243,7 +290,7 @@ static const float kMoney = 1000000000;
     self.epubController = [[KFEpubController alloc] initWithEpubURL:epubURL andDestinationFolder:documentsURL];
     self.epubController.delegate = self;
     [self.epubController openAsynchronous:YES];
-    self.bookContentView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 50, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame)/4)];
+    self.bookContentView = [[UIWebView alloc]initWithFrame:CGRectMake(kZero, 50, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame)/4)];
     self.bookContentView.delegate = self;
     //    [self.view addSubview:self.bookContentView];
     
@@ -329,13 +376,13 @@ static const float kMoney = 1000000000;
     self.startTime = CACurrentMediaTime();
     
     //Label
-    self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*0.38196601125, CGRectGetMaxY(self.view.frame)*(1-0.61803398875f), 200, 30.0f)];
-    self.focusText.numberOfLines = 0;
+    self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
+    self.focusText.numberOfLines = kZero;
     self.focusText.text = self.bookTextString;
     self.focusText.font = [UIFont fontWithName:(@"AmericanTypewriter") size:16];
     self.focusText.textColor = [UIColor colorWithRed:110.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0f];
     self.focusText.textColor = [UIColor blackColor];
-    self.focusText.alpha = 0.61803398875;
+    self.focusText.alpha = kGoldenRatioMinusOne;
     self.focusText.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.focusText];
     
@@ -374,8 +421,8 @@ static const float kMoney = 1000000000;
     //    NSLog(@"%d, %lu, %0.2f", self.wordIndex, (unsigned long)self.wordsArray.count, self.timeIntervalBetweenIndex);
     
     self.dot.alpha = 0.8;
-    [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:0.0 options:UIViewKeyframeAnimationOptionRepeat animations:^{
-        self.dot.alpha = 0.0;
+    [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+        self.dot.alpha = kZero;
     } completion:nil];
 }
 
@@ -405,9 +452,9 @@ static const float kMoney = 1000000000;
         self.breakPedal.alpha = MAX(self.breakPedal.alpha, 0.2);
         self.breakPedal.alpha -= 0.01f;
         self.breakPedal.layer.shadowOpacity -= 0.1f;
-        self.breakPedal.layer.shadowOpacity = MIN(self.breakPedal.layer.shadowOpacity, 0.0);
+        self.breakPedal.layer.shadowOpacity = MIN(self.breakPedal.layer.shadowOpacity, kZero);
         self.breakPedal.layer.shadowRadius -= 0.5f;
-        self.breakPedal.layer.shadowRadius = MIN(self.breakPedal.layer.shadowRadius, 0.0);
+        self.breakPedal.layer.shadowRadius = MIN(self.breakPedal.layer.shadowRadius, kZero);
     }
 }
 
@@ -424,11 +471,12 @@ static const float kMoney = 1000000000;
 
 - (void)startBreaking {
     [self modifyTimeInterval:+0.020];
-    NSLog(@"%f", self.timeIntervalBetweenIndex);
+    //    NSLog(@"%f", self.timeIntervalBetweenIndex);
     
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self.nextResponder touchesBegan:touches withEvent:event];
     self.accelerationBegan = YES;
     self.accelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
     NSLog(@"Began %d", self.accelerationBegan);
@@ -443,9 +491,17 @@ static const float kMoney = 1000000000;
     
     [self.constColorAdjusterSlider removeFromSuperview];
     [self.vowelColorAdjusterSlider removeFromSuperview];
+    
+    [UIView animateWithDuration:1.5 animations:^{
+        self.speedAdjusterSlider.alpha = kZero;
+        self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
+        self.speedLabel.alpha = kZero;
+        self.colorPropertySelector.frame = CGRectMake(-90, CGRectGetHeight(self.view.frame) * 0.85f, 90, 30.0f);
+    }];
+    
     [self.speedPropertySelector removeFromSuperview];
     [self.speedLabel removeFromSuperview];
-
+    
     
 }
 
@@ -487,12 +543,12 @@ static const float kMoney = 1000000000;
 }
 
 - (void)configureColorSliderWithSlider: (UISlider *)slider {
-    slider.layer.anchorPoint = CGPointMake(0, 0);
-    slider.maximumValue = 255.0;
-    slider.minimumValue = 0.0;
+    slider.layer.anchorPoint = CGPointMake(kZero, kZero);
+    slider.maximumValue = 255.0f;
+    slider.minimumValue = kZero;
     self.colorAdjusterValue = slider.value;
     [self.view addSubview:slider];
-    slider.layer.affineTransform = CGAffineTransformRotate(slider.layer.affineTransform, M_PI/180.0 * -55);
+    slider.layer.affineTransform = CGAffineTransformRotate(slider.layer.affineTransform, M_PI/180.0 * -37);
     
 }
 
@@ -500,8 +556,8 @@ static const float kMoney = 1000000000;
     self.highlightVowelsActivated = !self.highlightVowelsActivated;
     if (self.highlightVowelsActivated) {
         [UIView animateWithDuration:0.5 animations:^{
-            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 130, 25, 25);
-            self.toggleVowels.layer.shadowOpacity = 0.45f;
+            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 140, 25, 25);
+            self.toggleVowels.layer.shadowOpacity = 0.55f;
             self.toggleVowels.layer.shadowOffset = CGSizeMake(-1.5, 7.0);
             self.toggleVowels.backgroundColor = self.highlightVowelColor;
             self.toggleVowels.alpha = 0.75f;
@@ -510,11 +566,11 @@ static const float kMoney = 1000000000;
     }
     if (!self.highlightVowelsActivated) {
         [UIView animateWithDuration:0.5 animations:^{
-            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 128, 25, 25);
+            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 138, 25, 25);
             self.toggleVowels.layer.shadowOpacity = 0.30f;
             self.toggleVowels.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
             self.toggleVowels.backgroundColor = self.defaultButtonColor;
-            self.toggleVowels.alpha = 0.50f;
+            self.toggleVowels.alpha = kHiddenControlRevealedAlhpa;
         }];
     }
     
@@ -527,10 +583,9 @@ static const float kMoney = 1000000000;
 - (void)toggleConsonantsSelected {
     self.highlightConsonantsActivated = !self.highlightConsonantsActivated;
     if (self.highlightConsonantsActivated) {
-        //        self.constColorAdjusterSlider.frame = CGRectMake(-27, CGRectGetHeight(self.view.frame) - 79, 120, 30);
         [UIView animateWithDuration:0.5f animations:^{
             self.toggleConsonates.frame = CGRectMake(100, CGRectGetHeight(self.view.frame) - 95, 25, 25);
-            self.toggleConsonates.layer.shadowOpacity = 0.45f;
+            self.toggleConsonates.layer.shadowOpacity = kUINormaAlpha;
             self.toggleConsonates.layer.shadowOffset = CGSizeMake(-1.5, 7.0);
             self.toggleConsonates.backgroundColor = self.highlightConsonantColor;
             self.toggleConsonates.alpha = 0.75;
@@ -542,76 +597,102 @@ static const float kMoney = 1000000000;
             self.toggleConsonates.layer.shadowOpacity = 0.30f;
             self.toggleConsonates.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
             self.toggleConsonates.backgroundColor = self.defaultButtonColor;
-            self.toggleConsonates.alpha = 0.50f;
+            self.toggleConsonates.alpha = kUINormaAlpha;
         }];
     }
+}
+
+- (void)openVowelOptions {
+    
+    [self.view addSubview:self.colorPropertySelector];
+    self.speedShown = self.vowelColorAdjusterSlider.value;
+    [UIView animateWithDuration:1.0 animations:^{
+        self.colorPropertySelector.frame = CGRectMake(kZero, CGRectGetHeight(self.view.frame) * 0.85f, 90.0f, 30.0f);
+    }];
+
 }
 
 - (void)highlightConsonants {
     [self modifyTextWithString:@"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ" color:self.highlightConsonantColor];
 }
 
+- (void)openConsonantOptions {
+
+}
+
 - (void)highlightUserSelectedLetters {
-    [self modifyTextWithString:self.userInputForHighlightedTextString color:[UIColor yellowColor]];
+    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.highlightColorThree];
+}
+
+- (void)colorPropertySelectorSwitch: (UISegmentedControl *)segmentController {
+//    [self refresh];
 }
 
 - (void)speedPropertySelectorSwitch: (UISegmentedControl *)segmentController {
-    switch (self.speedPropertySelector.selectedSegmentIndex) {
-        case 0:
+    [self refreshSpeedValues];
+}
+
+- (void)adjustSpeedUsingSlider: (UISlider *)slider {
+    [self refreshSpeedValues];
+}
+
+- (void)refreshSpeedValues {
+    SpeedAdjustmentSegmentSelected segmentSelected = self.speedPropertySelector.selectedSegmentIndex;
+    
+    switch (segmentSelected) {
+        case NormalSpeed:
             self.speedShown = self.normalSpeed;
             self.speedAdjusterSlider.maximumValue = self.minSpeed;
             self.speedAdjusterSlider.minimumValue = self.maxSpeed;
             self.speedAdjusterSlider.maximumTrackTintColor = self.highlightVowelColor;
             self.selectedSpeedToAdjustIndicator = @"normal speed";
             break;
-        case 1:
+        case MaximumSpeed:
             self.speedShown = self.maxSpeed;
             self.speedAdjusterSlider.maximumValue = 0.75f;
             self.speedAdjusterSlider.minimumValue = 0.01f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightVowelColor;
+            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightUserSelectedTextColor;
             self.selectedSpeedToAdjustIndicator = @"max speed";
             break;
-        case 2:
+        case MinimumSpeed:
             self.speedShown = self.minSpeed;
             self.speedShown = self.maxSpeed;
             self.speedAdjusterSlider.maximumValue = 1.0f;
             self.speedAdjusterSlider.minimumValue = 0.01f;
             self.speedAdjusterSlider.maximumTrackTintColor = self.highlightConsonantColor;
-            self.selectedSpeedToAdjustIndicator = @"max speed";
+            self.selectedSpeedToAdjustIndicator = @"min speed";
             break;
-        case 3:
+        case AccelerationSpeed:
             self.speedShown = self.acceleration;
             self.speedAdjusterSlider.maximumValue = 0.1f;
             self.speedAdjusterSlider.minimumValue = 0.001f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightVowelColor;
-            self.selectedSpeedToAdjustIndicator = @"max speed";
+            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorThree;
+            self.selectedSpeedToAdjustIndicator = @"acceleration";
             break;
-        case 4:
+        case DecelerationSpeed:
             self.speedShown = self.deceleration;
             self.speedAdjusterSlider.maximumValue = 0.1f;
             self.speedAdjusterSlider.minimumValue = 0.0001f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightVowelColor;
-            self.selectedSpeedToAdjustIndicator = @"max speed";
+            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorFour;
+            self.selectedSpeedToAdjustIndicator = @"deceleration";
             break;
         default:
             self.speedShown = self.maxSpeed;
             self.speedAdjusterSlider.maximumValue = 0.75f;
             self.speedAdjusterSlider.minimumValue = 0.01f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightVowelColor;
-            self.selectedSpeedToAdjustIndicator = @"max speed";
+            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorFive;
+            self.selectedSpeedToAdjustIndicator = @"normal speed";
             break;
     }
-}
-
-- (void)adjustSpeedUsingSlider: (UISlider *)slider {
     [self.view addSubview:self.speedLabel];
     [self.view addSubview:self.speedPropertySelector];
-    self.speedShown = slider.value;
+    self.speedShown = self.speedAdjusterSlider.value;
     float wordsPerMinute = 1/self.speedShown * 60;
     self.speedLabel.text = [NSString stringWithFormat:@"%@\n%0.1f\nwords/min",self.selectedSpeedToAdjustIndicator, wordsPerMinute];
     [UIView animateWithDuration:1.0 animations:^{
+        self.speedLabel.alpha = kUINormaAlpha;
         self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 30, CGRectGetWidth(self.view.frame), 30);
-
+        
     }];
 }
 
@@ -621,18 +702,18 @@ static const float kMoney = 1000000000;
         [UIView animateWithDuration:1.0 animations:^{
             self.hideControlButton.backgroundColor = [UIColor blackColor];
             self.hideControlButton.alpha = 0.25f;
-            self.toggleVowels.alpha = 0.6f;
-            self.toggleConsonates.alpha = 0.6f;
-            self.speedAdjusterSlider.alpha = 0.7f;
+            self.toggleVowels.alpha = kHiddenControlRevealedAlhpa;
+            self.toggleConsonates.alpha = kHiddenControlRevealedAlhpa;
+            self.speedAdjusterSlider.alpha = kHiddenControlRevealedAlhpa;
         }];
     }
     if (self.hideControlsActivated) {
         [UIView animateWithDuration:1.0 animations:^{
-            self.hideControlButton.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.0];
-            self.hideControlButton.alpha = 0.45;
-            self.toggleVowels.alpha = 0.0f;
-            self.toggleConsonates.alpha = 0.0f;
-            self.speedAdjusterSlider.alpha = 0.0f;
+            self.hideControlButton.backgroundColor = [UIColor colorWithWhite:1.0f alpha:kZero];
+            self.hideControlButton.alpha = kUINormaAlpha;
+            self.toggleVowels.alpha = kZero;
+            self.toggleConsonates.alpha = kZero;
+            self.speedAdjusterSlider.alpha = kZero;
         }];
     }
 }
