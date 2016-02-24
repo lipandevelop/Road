@@ -30,7 +30,6 @@ typedef NS_ENUM(NSInteger, ColorAdjustmentSegmentSelected) {
 @property (nonatomic, strong) KFEpubContentModel *contentModel;
 @property (nonatomic, strong) UIWebView *bookContentView;
 @property (nonatomic, assign) NSUInteger spineIndex;
-
 @property (nonatomic, strong) CADisplayLink *displaylink;
 
 //Data
@@ -56,6 +55,8 @@ typedef NS_ENUM(NSInteger, ColorAdjustmentSegmentSelected) {
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSTimer *accelerationtimer;
 @property (nonatomic, strong) NSTimer *deccelerationtimer;
+@property (nonatomic, strong) NSTimer *breaktimer;
+
 
 //Speeds
 @property (nonatomic, assign) float normalSpeed;
@@ -173,8 +174,8 @@ static const float kColorPaletteHeight = 15.0f;
     self.normalSpeed = 0.45;
     self.minSpeed = 1.0;
     self.maxSpeed = 0.15;
-    self.acceleration = 0.004;
-    self.deceleration = 0.0005;
+    self.acceleration = 0.002;
+    self.deceleration = 0.0007;
     self.timeIntervalBetweenIndex = self.normalSpeed;
     self.accelerationBegan = NO;
     self.highlightVowelsActivated = NO;
@@ -219,20 +220,20 @@ static const float kColorPaletteHeight = 15.0f;
     self.pinView.layer.shadowOpacity = kShadowOpacity;
     
     self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-27, 149.0f, 60, 15)];
-//    self.speedometerReadLabel.layer.borderWidth = 0.75;
+    //    self.speedometerReadLabel.layer.borderWidth = 0.75;
     self.speedometerReadLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.speedometerReadLabel.alpha = kUINormaAlpha;
     self.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
     
     
     
-    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*(1-0.57603398875f), 8.0f, 8.0f)];
+    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*(0.43), 8.0f, 8.0f)];
     self.dot.layer.cornerRadius = 4.0f;
     self.dot.layer.borderWidth = kBoarderWidth;
     self.dot.clipsToBounds = YES;
     self.dot.layer.borderColor = [UIColor colorWithRed:195.0f/255.0f green:25.0f/255.0f blue:25.0f/255.0f alpha:0.8f].CGColor;
     
-    self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/1.15203398875, 15.0f, 15.0f)];
+    self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/1.15203398875, 35.0f, 35.0f)];
     self.hideControlButton.layer.borderWidth = kBoarderWidth;
     self.hideControlButton.layer.borderColor = [UIColor blackColor].CGColor;
     self.hideControlButton.titleLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
@@ -242,6 +243,7 @@ static const float kColorPaletteHeight = 15.0f;
     [self.hideControlButton addTarget:self action:@selector(hideControls) forControlEvents:UIControlEventTouchUpInside];
     
     self.breakPedalGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(breaking)];
+    self.breakPedalGesture.minimumPressDuration = 0.01;
     self.breakPedalFrame = CGRectMake(CGRectGetWidth(self.view.frame)*0.38196601125, CGRectGetMaxY(self.view.frame)/kGoldenRatio, 220.0f, 220.0f);
     CGAffineTransform pedalPosition = CGAffineTransformIdentity;
     pedalPosition = CGAffineTransformScale(pedalPosition, 0.50f, 0.50f);
@@ -307,7 +309,7 @@ static const float kColorPaletteHeight = 15.0f;
     self.color1.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color1.layer.shadowOpacity = kShadowOpacity;
     self.color1.backgroundColor = self.highlightColorFive;
-
+    
     self.color2 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight)];
     self.color2.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color2.layer.shadowOpacity = kShadowOpacity;
@@ -446,7 +448,7 @@ static const float kColorPaletteHeight = 15.0f;
     self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
     self.focusText.numberOfLines = kZero;
     self.focusText.text = self.bookTextString;
-    self.focusText.font = [UIFont fontWithName:(@"AmericanTypewriter") size:16];
+    self.focusText.font = [UIFont fontWithName:(@"AmericanTypewriter") size:24];
     self.focusText.textColor = [UIColor colorWithRed:110.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0f];
     self.focusText.textColor = [UIColor blackColor];
     self.focusText.alpha = kGoldenRatioMinusOne;
@@ -466,9 +468,16 @@ static const float kColorPaletteHeight = 15.0f;
 }
 
 - (void)update {
-    float angle = -(self.timeIntervalBetweenIndex *7)+8.2f;
+    float angle = -(self.timeIntervalBetweenIndex *4.5)+8.5f;
+    angle = MAX(angle, 4.75);
+    angle = MIN(angle, 8.0);
+    NSLog(@"%f", angle);
     self.speedometerReadLabel.text = [NSString stringWithFormat:@"%0.1fwpm",1/self.timeIntervalBetweenIndex*60];
     self.pinView.layer.affineTransform = CGAffineTransformMakeRotation(angle);
+    if (self.timeIntervalBetweenIndex == self.normalSpeed) {
+        [self.deccelerationtimer invalidate];
+        self.deccelerationtimer = nil;
+    }
     if (self.timeIntervalBetweenIndex < self.minSpeed) {
         self.wordIndex ++;
     } else if (self.timeIntervalBetweenIndex >= self.minSpeed) {
@@ -488,7 +497,7 @@ static const float kColorPaletteHeight = 15.0f;
         self.displaylink.paused = YES;
     }
     self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeIntervalBetweenIndex target:self selector:@selector(update) userInfo:nil repeats:NO];
-        NSLog(@"%d, %lu, %0.2f", self.wordIndex, (unsigned long)self.wordsArray.count, self.timeIntervalBetweenIndex);
+    //        NSLog(@"%d, %lu, %0.2f", self.wordIndex, (unsigned long)self.wordsArray.count, self.timeIntervalBetweenIndex);
     
     self.dot.alpha = 0.8;
     [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
@@ -506,7 +515,7 @@ static const float kColorPaletteHeight = 15.0f;
         self.timeIntervalBetweenIndex = MAX(self.timeIntervalBetweenIndex, self.maxSpeed);
         self.timeIntervalBetweenIndex = MIN(self.timeIntervalBetweenIndex, self.minSpeed + 0.10f);
     }
-    //    NSLog(@"%f %d", self.timeIntervalBetweenIndex, self.wordIndex);
+//        NSLog(@"%f %d", self.timeIntervalBetweenIndex, self.wordIndex);
 }
 
 - (void)updateFrame {
@@ -533,20 +542,22 @@ static const float kColorPaletteHeight = 15.0f;
 
 - (void)modifySpeed {
     if (self.accelerationBegan) {
+//        NSLog(@"Accelerating!...");
         [self modifyTimeInterval:-self.acceleration];
     } else if (!self.accelerationBegan) {
+//        NSLog(@"Decelerating!... %f",self.timeIntervalBetweenIndex);
         [self modifyTimeInterval:+self.deceleration];
+        
     }
-}
-
-- (void)startBreaking {
-    [self modifyTimeInterval:+0.020];
-    //    NSLog(@"%f", self.timeIntervalBetweenIndex);
-    
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self.nextResponder touchesBegan:touches withEvent:event];
+    if (self.timeIntervalBetweenIndex < 6.575) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.pinView.layer.affineTransform = CGAffineTransformMakeRotation(self.timeIntervalBetweenIndex);
+        }];
+    }
     self.accelerationBegan = YES;
     self.accelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
     NSLog(@"Began %d", self.accelerationBegan);
@@ -560,7 +571,6 @@ static const float kColorPaletteHeight = 15.0f;
     NSLog(@"Ended %d", self.accelerationBegan);
     
     [UIView animateWithDuration:1.5 animations:^{
-        self.speedAdjusterSlider.alpha = kZero;
         self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
         self.speedLabel.alpha = kZero;
         
@@ -569,7 +579,7 @@ static const float kColorPaletteHeight = 15.0f;
         self.color2.frame = CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight);
         self.color3.frame = CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight);
         self.color4.frame = CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight);
-        self.color5.frame = CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth*2, kColorPaletteHeight);
+        self.color5.frame = CGRectMake(kColorPaletteXOrigin*2, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth*2, kColorPaletteHeight);
     }];
     
     [self.speedPropertySelector removeFromSuperview];
@@ -578,20 +588,32 @@ static const float kColorPaletteHeight = 15.0f;
     
 }
 
+- (void)startBreaking {
+    [self modifyTimeInterval:+0.020];
+        NSLog(@"Breaking!...%f", self.timeIntervalBetweenIndex);
+    
+}
+
 - (void)breaking {
     if (self.breakPedalGesture.state == UIControlEventTouchDown) {
+        self.breakingBegan = YES;
         NSLog(@"break");
         self.accelerationBegan = NO;
         [self.accelerationtimer invalidate];
         self.accelerationtimer = nil;
-        self.breakingBegan = YES;
-        self.deccelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(startBreaking) userInfo:nil repeats:YES];
+        [self.deccelerationtimer invalidate];
+        self.deccelerationtimer = nil;
+        self.breaktimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(startBreaking) userInfo:nil repeats:YES];
         NSLog(@"%f", self.timeIntervalBetweenIndex);
         
     } if (self.breakPedalGesture.state == UIGestureRecognizerStateEnded) {
-        NSLog(@"break ended");
+        [UIView animateWithDuration:0.5 animations:^{
+            self.pinView.layer.affineTransform = CGAffineTransformMakeRotation(self.timeIntervalBetweenIndex);
+        }];
         self.breakingBegan = NO;
-        self.deccelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
+        NSLog(@"break ended");
+        [self.breaktimer invalidate];
+        self.breaktimer = nil;
     }
     [self.speedLabel removeFromSuperview];
     
@@ -690,7 +712,7 @@ static const float kColorPaletteHeight = 15.0f;
         self.color3.frame = CGRectMake(kZero + (kColorPaletteWidth *2), CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight);
         self.color4.frame = CGRectMake(kZero + (kColorPaletteWidth *3), CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight);
         self.color5.frame = CGRectMake(kZero + (kColorPaletteWidth *3), CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth*2, kColorPaletteHeight);
-
+        
     }];
     
 }
@@ -732,7 +754,7 @@ static const float kColorPaletteHeight = 15.0f;
             break;
         case MaximumSpeed:
             self.speedShown = self.maxSpeed;
-            self.speedAdjusterSlider.maximumValue = 0.75f;
+            self.speedAdjusterSlider.maximumValue = 0.30f;
             self.speedAdjusterSlider.minimumValue = 0.01f;
             self.speedAdjusterSlider.maximumTrackTintColor = self.highlightUserSelectedTextColor;
             self.selectedSpeedToAdjustIndicator = @"max speed";
@@ -747,14 +769,14 @@ static const float kColorPaletteHeight = 15.0f;
             break;
         case AccelerationSpeed:
             self.speedShown = self.acceleration;
-            self.speedAdjusterSlider.maximumValue = 0.1f;
+            self.speedAdjusterSlider.maximumValue = 0.01f;
             self.speedAdjusterSlider.minimumValue = 0.001f;
             self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorThree;
             self.selectedSpeedToAdjustIndicator = @"acceleration";
             break;
         case DecelerationSpeed:
             self.speedShown = self.deceleration;
-            self.speedAdjusterSlider.maximumValue = 0.1f;
+            self.speedAdjusterSlider.maximumValue = 0.01f;
             self.speedAdjusterSlider.minimumValue = 0.0001f;
             self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorFour;
             self.selectedSpeedToAdjustIndicator = @"deceleration";
