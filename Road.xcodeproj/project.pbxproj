@@ -10,11 +10,11 @@
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497E1C7B9D9F009309F1 /* finger_noise.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
-		0AEF49861C7C314C009309F1 /* User.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49841C7C314C009309F1 /* User.png */; };
 		0AEF49871C7C314C009309F1 /* Vowel.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49851C7C314C009309F1 /* Vowel.png */; };
 		0AEF49941C7D0368009309F1 /* Consonant.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49931C7D0368009309F1 /* Consonant.png */; };
 		0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49991C7D3236009309F1 /* Speedometer.png */; };
 		0AEF499C1C7D3508009309F1 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF499B1C7D3508009309F1 /* Pin.png */; };
+		0AEFA66C1C7E1BBD00E696BE /* User.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEFA66A1C7E1B3500E696BE /* User.png */; };
 		0AF741751C778205000C3CC2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF741741C778205000C3CC2 /* main.m */; };
 		0AF741781C778205000C3CC2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF741771C778205000C3CC2 /* AppDelegate.m */; };
 		0AF7417B1C778205000C3CC2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7417A1C778205000C3CC2 /* ViewController.m */; };
@@ -41,11 +41,11 @@
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF497E1C7B9D9F009309F1 /* finger_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_noise.png; path = Images/finger_noise.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
-		0AEF49841C7C314C009309F1 /* User.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = User.png; path = Images/User.png; sourceTree = "<group>"; };
 		0AEF49851C7C314C009309F1 /* Vowel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Vowel.png; path = Images/Vowel.png; sourceTree = "<group>"; };
 		0AEF49931C7D0368009309F1 /* Consonant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Consonant.png; path = Images/Consonant.png; sourceTree = "<group>"; };
 		0AEF49991C7D3236009309F1 /* Speedometer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Speedometer.png; path = Images/Speedometer.png; sourceTree = "<group>"; };
 		0AEF499B1C7D3508009309F1 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Pin.png; path = Images/Pin.png; sourceTree = "<group>"; };
+		0AEFA66A1C7E1B3500E696BE /* User.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = User.png; path = Images/User.png; sourceTree = "<group>"; };
 		0AF741701C778205000C3CC2 /* Road.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Road.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF741741C778205000C3CC2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0AF741761C778205000C3CC2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -90,11 +90,11 @@
 			children = (
 				0AEF49931C7D0368009309F1 /* Consonant.png */,
 				0AEF497C1C78010F009309F1 /* ivoryPaper.png */,
+				0AEFA66A1C7E1B3500E696BE /* User.png */,
 				0AEF49991C7D3236009309F1 /* Speedometer.png */,
 				0AEF499B1C7D3508009309F1 /* Pin.png */,
 				0AEF49801C7C2FBC009309F1 /* finger_clean.png */,
 				0AEF497E1C7B9D9F009309F1 /* finger_noise.png */,
-				0AEF49841C7C314C009309F1 /* User.png */,
 				0AEF49851C7C314C009309F1 /* Vowel.png */,
 			);
 			name = Images;
@@ -268,10 +268,10 @@
 			files = (
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
 				0AF741831C778205000C3CC2 /* LaunchScreen.storyboard in Resources */,
-				0AEF49861C7C314C009309F1 /* User.png in Resources */,
 				0AEF49871C7C314C009309F1 /* Vowel.png in Resources */,
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,
 				0AEF499C1C7D3508009309F1 /* Pin.png in Resources */,
+				0AEFA66C1C7E1BBD00E696BE /* User.png in Resources */,
 				0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */,
 				0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */,
 				0AEF49941C7D0368009309F1 /* Consonant.png in Resources */,
