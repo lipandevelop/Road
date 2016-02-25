@@ -40,6 +40,10 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) NSString *bookTextString;
 @property (nonatomic, strong) NSMutableArray *wordsArray;
 
+@property (nonatomic, strong) NSMutableDictionary *assistantTextRangeDictionary;
+@property (nonatomic, strong) NSScanner *assistantTextRangeScanner;
+
+
 #pragma mark UI Properties
 
 @property (nonatomic, strong) UILabel *focusText;
@@ -520,9 +524,39 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 #pragma mark Converting To String
 
 - (void)convertBookToString {
+//    NSUInteger rangeIndex;
+//    NSUInteger rangeLength;
     
     self.bookTextRawString = [self.bookContentView stringByEvaluatingJavaScriptFromString:@"document.body.textContent"];
    self.bookTextString = [[self.bookTextRawString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+    
+//    self.assistantTextRangeDictionary = [[NSMutableDictionary alloc]init];
+//    self.assistantTextRangeScanner = [[NSScanner alloc]initWithString:self.bookTextRawString];
+//    self.assistantTextRangeScanner.scanLocation = kZero;
+//    self.assistantTextRangeScanner.caseSensitive = YES;
+////    self.assistantTextRangeScanner.charactersToBeSkipped = [NSCharacterSet punctuationCharacterSet];
+//    
+//    NSString *textString = [[NSString alloc]init];
+//    
+//    [self.assistantTextRangeScanner scanUpToString:@" " intoString:nil];
+//    while (![self.assistantTextRangeScanner isAtEnd]) {
+//        for (rangeIndex = 0; rangeIndex < self.bookTextString.length; rangeIndex++) {
+//            //
+//        }
+//    }
+    
+    
+    
+//    for (self.wordIndex = 0; self.wordIndex < self.wordsArray.count; self.wordIndex++) {
+//        rangeIndex = textString.
+//        rangeLength = textString.length;
+//        
+//    }
+    
+//    [self.assistantTextRangeScanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet] intoString:&textString];
+//    
+//    NSLog(@"%@", textString);
+    
     
 //    self.bookTextString = newString;
     //    NSLog(@"%@", self.bookTextString);
