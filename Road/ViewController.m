@@ -50,7 +50,9 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) UILabel *nextWord2;
 @property (nonatomic, strong) UILabel *nextWord3;
 @property (nonatomic, strong) UILabel *nextWord4;
-@property (nonatomic, strong) UILabel *assistantTextView;
+@property (nonatomic, strong) UILabel *assistantTextLabel;
+
+@property (nonatomic, strong) UIScrollView *assistantTextView;
 @property (nonatomic, strong) CATextLayer *focusTextLayer;
 
 @property (nonatomic, strong) UILabel *speedLabel;
@@ -75,6 +77,7 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, assign) BOOL highlightUserSelectionActivated;
 @property (nonatomic, assign) BOOL highlightColorSelected;
 @property (nonatomic, assign) BOOL hideControlsActivated;
+@property (nonatomic, assign) BOOL textFieldRevealed;
 
 #pragma mark Speed Properties
 
@@ -97,8 +100,10 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) UIButton *toggleUserSelections;
 @property (nonatomic, strong) UIButton *restoreDefaultButton;
 @property (nonatomic, strong) UIButton *accessTextViewButton;
+@property (nonatomic, strong) UIButton *expandTextViewButton;
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
+@property (nonatomic, strong) UIView *speedometerView;
 @property (nonatomic, strong) UIView *pinView;
 
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;
@@ -243,20 +248,15 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     UIImage *speedometerImage = [UIImage imageNamed:@"Speedometer.png"];
     UIImage *pinImage= [UIImage imageNamed:@"Pin.png"];
     
-    UIImage *consonantImage = [UIImage imageNamed:@"Consonant.png"];
-    UIImage *vowelImage = [UIImage imageNamed:@"Vowel.png"];
-    UIImage *userSelectImage = [UIImage imageNamed:@"User.png"];
-    
     self.view.layer.contents = (__bridge id)paper.CGImage;
     
-    UIView *speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-170, 35, 140, 140)];
-    speedometerView.layer.contents = (__bridge id)speedometerImage.CGImage;
-    speedometerView.layer.contentsGravity = kCAGravityResizeAspect;
-    speedometerView.alpha = 0.15f;
+    self.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-170, 35, 140, 140)];
+    self.speedometerView.layer.contents = (__bridge id)speedometerImage.CGImage;
+    self.speedometerView.layer.contentsGravity = kCAGravityResizeAspect;
+    self.speedometerView.alpha = 0.15f;
     
     UIImageView *pinImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 400, 400)];
     pinImageView.image = [UIImage imageNamed:@"Pin.png"];
-    
     
     self.pinView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-105.1f, 65.0f, 15.0f, 70.0f)];
     self.pinView.layer.contents = (__bridge id)pinImage.CGImage;
@@ -279,11 +279,12 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/1.15203398875, 35.0f, 35.0f)];
     self.hideControlButton.layer.borderWidth = kBoarderWidth;
     self.hideControlButton.layer.borderColor = [UIColor blackColor].CGColor;
+    [self.hideControlButton setTitle:@"hide Options" forState:UIControlStateNormal];
     self.hideControlButton.titleLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.hideControlButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.hideControlButton.alpha = kUINormaAlpha;
     self.hideControlButton.layer.cornerRadius = self.hideControlButton.frame.size.width/2;
-    [self.hideControlButton addTarget:self action:@selector(hideControls) forControlEvents:UIControlEventTouchUpInside];
+    [self.hideControlButton addTarget:self action:@selector(toggleHideControls:) forControlEvents:UIControlEventTouchUpInside];
     
     self.breakPedalGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(breaking)];
     self.breakPedalGesture.minimumPressDuration = 0.01;
@@ -305,16 +306,16 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.view.frame) - 95, 25, 25);
     self.toggleVowels = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
     [self.toggleVowels addTarget:self action:@selector(toggleVowelsSelected) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.toggleVowels buttonLayer:self.toggleVowels.layer color: self.defaultButtonColor image:vowelImage];
+    [self modifyToggleButtonWithButton:self.toggleVowels buttonLayer:self.toggleVowels.layer color: self.defaultButtonColor string:@"æ"];
     self.toggleVowels.layer.affineTransform = CGAffineTransformMakeTranslation(-45, -40);
     
     self.toggleConsonates = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
     [self.toggleConsonates addTarget:self action:@selector(toggleConsonantsSelected) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.toggleConsonates buttonLayer:self.toggleConsonates.layer color:self.defaultButtonColor image:consonantImage];
+    [self modifyToggleButtonWithButton:self.toggleConsonates buttonLayer:self.toggleConsonates.layer color:self.defaultButtonColor string:@"ɳ"];
     
     self.toggleUserSelections = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
     [self.toggleUserSelections addTarget:self action:@selector(toggleUserSelected) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.toggleUserSelections buttonLayer:self.toggleUserSelections.layer color:self.defaultButtonColor image:userSelectImage];
+    [self modifyToggleButtonWithButton:self.toggleUserSelections buttonLayer:self.toggleUserSelections.layer color:self.defaultButtonColor string:@"u"];
     self.toggleUserSelections.layer.affineTransform = CGAffineTransformMakeTranslation(-65, -100);
     
     self.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(160, 360, 120, 30)];
@@ -343,12 +344,17 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     NSDictionary *speedAttributes = [NSDictionary dictionaryWithObject:speedControlfont forKey:NSFontAttributeName];
     [self.speedPropertySelector setTitleTextAttributes:speedAttributes forState:UIControlStateNormal];
     
-    self.userSelectedTextTextField = [[UITextField alloc]initWithFrame:CGRectMake(-145.0f, self.toggleUserSelections.frame.origin.y-30.0f, 145.0f, kColorPaletteHeight)];
+    self.userSelectedTextTextField = [[UITextField alloc]initWithFrame:CGRectMake(-145.0f, self.toggleUserSelections.frame.origin.y-45.0f, 145.0f, 30.0f)];
     self.userSelectedTextTextField.layer.borderWidth = 0.75;
     self.userSelectedTextTextField.layer.borderColor = [UIColor colorWithWhite:0.0 alpha:kUINormaAlpha].CGColor;
     self.userSelectedTextTextField.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.userSelectedTextTextField.layer.shadowOpacity = kShadowOpacity;
     self.userSelectedTextTextField.placeholder = @"Customize";
+    self.userSelectedTextTextField.textAlignment = NSTextAlignmentCenter;
+    self.userSelectedTextTextField.autocorrectionType = NO;
+    self.userSelectedTextTextField.autocapitalizationType = NO;
+    self.userSelectedTextTextField.keyboardType = UIKeyboardTypeAlphabet;
+    self.userSelectedTextTextField.keyboardAppearance = UIKeyboardAppearanceDark;
     self.userSelectedTextTextField.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     
     self.accessTextViewButton = [[UIButton alloc]initWithFrame:CGRectMake(-20, CGRectGetMidY(self.view.frame), 40, 20)];
@@ -358,8 +364,24 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.accessTextViewButton.backgroundColor = self.colorThree;
     [self.accessTextViewButton addTarget:self action:@selector(revealAssistantText:) forControlEvents:UIControlEventTouchDown];
     
-    self.assistantTextView = [[UILabel alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-60, 120.0f, 120.0f)];
+    self.expandTextViewButton = [[UIButton alloc]init];
+    self.expandTextViewButton.alpha = 0.1;
+    self.expandTextViewButton.layer.borderWidth = kBoarderWidth;
+    self.expandTextViewButton.layer.borderColor = self.defaultButtonColor.CGColor;
+    self.expandTextViewButton.layer.cornerRadius = 10.0f;
+    [self.expandTextViewButton addTarget:self action:@selector(expandAssistantText:) forControlEvents:UIControlEventTouchDown];
     
+    self.assistantTextView = [[UIScrollView alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f)];
+    self.assistantTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f)];
+    //    self.assistantTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(4, 4, CGRectGetWidth(self.assistantTextView.bounds), 500)];
+    //    self.assistantTextLabel.layer.borderWidth = 2.0f;
+    //    self.assistantTextLabel.layer.borderColor = self.colorThree.CGColor;
+    self.assistantTextLabel.layer.zPosition = 0.9;
+    self.assistantTextLabel.numberOfLines = kZero;
+    self.assistantTextLabel.text = self.bookTextString;
+    self.assistantTextLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
+    self.assistantTextLabel.textColor = [UIColor blackColor];
+    self.assistantTextLabel.alpha = 0.50;
     
     self.color1 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight)];
     self.userSelectedTextTextField.delegate = self;
@@ -394,19 +416,20 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.pinView];
     [self.view addSubview:self.speedometerReadLabel];
     [self.view addSubview:self.accessTextViewButton];
-    [self.view addSubview:speedometerView];
+    [self.view addSubview:self.speedometerView];
     
     [self.view setNeedsDisplay];
 }
 
 #pragma mark Modify Toggle Buttons
 
-- (void)modifyToggleButtonWithButton: (UIButton *)button buttonLayer:(CALayer *)layer color: (UIColor*)color image: (UIImage *)image {
+- (void)modifyToggleButtonWithButton: (UIButton *)button buttonLayer:(CALayer *)layer color: (UIColor*)color string: (NSString *)string {
     layer.cornerRadius = button.frame.size.width/2;
     layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     layer.shadowOpacity = kShadowOpacity;
     layer.zPosition = 1.0f;
-    layer.contents = (__bridge id)image.CGImage;
+    [button setTitle:string forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:12];
     button.alpha = kZero;
     button.backgroundColor = color;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -611,7 +634,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     } else if (self.timeIntervalBetweenIndex >= self.minSpeed) {
         self.wordIndex --;
     }
-    if (self.wordIndex > 4) {
+    if (self.wordIndex > 4 && self.wordsArray.count >4) {
         self.previousWord3.text = [self.wordsArray objectAtIndex:self.wordIndex +3];
         self.previousWord2.text = [self.wordsArray objectAtIndex:self.wordIndex +2];
     }
@@ -716,6 +739,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     [self retractColorPalette];
     [self retractAssistantText];
+    [self retractUserInputTextField];
     [UIView animateWithDuration:1.5 animations:^{
         self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
         self.speedLabel.alpha = kZero;
@@ -1072,8 +1096,12 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 #pragma mark Modify UITransition Methods
 
-- (void)hideControls {
+- (void)toggleHideControls: (UIButton *)sender {
     self.hideControlsActivated = !self.hideControlsActivated;
+    [self hideControls];
+}
+
+- (void)hideControls {
     if (!self.hideControlsActivated) {
         [UIView animateWithDuration:1.0 animations:^{
             self.hideControlButton.backgroundColor = [UIColor blackColor];
@@ -1094,6 +1122,23 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             self.speedAdjusterSlider.alpha = kZero;
         }];
     }
+}
+- (void)revealSpeedometer {
+    [UIView animateWithDuration:1.50f animations:^{
+        self.pinView.alpha = 1.0f;
+        self.speedometerView.alpha = 0.15;
+        self.speedometerReadLabel.alpha = kUINormaAlpha;
+    }];
+    
+}
+
+- (void)hideSpeedometer {
+    [UIView animateWithDuration:0.50f animations:^{
+        self.pinView.alpha = kZero;
+        self.speedometerView.alpha = kZero;
+        self.speedometerReadLabel.alpha = kZero;
+    }];
+    
 }
 
 - (void)updatePaletteOrigin {
@@ -1168,44 +1213,55 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 - (void)openUserInputTextField {
     [self.view addSubview:self.userSelectedTextTextField];
     [UIView animateWithDuration:1.20f animations:^{
-        self.userSelectedTextTextField.frame = CGRectMake(kZero-1.0f, self.toggleUserSelections.frame.origin.y-30.0f, 90.0f, kColorPaletteHeight);
+        self.userSelectedTextTextField.frame = CGRectMake(kZero-1.0f, self.toggleUserSelections.frame.origin.y-45.0f, 90.0f, 30.0f);
     }];
 }
 
 - (void)retractUserInputTextField {
     [UIView animateWithDuration:1.0 animations:^{
-        self.userSelectedTextTextField.frame = CGRectMake(-145.0f, self.toggleUserSelections.frame.origin.y-30.0f, 145.0f, kColorPaletteHeight);
+        self.userSelectedTextTextField.frame = CGRectMake(-145.0f, self.toggleUserSelections.frame.origin.y-45.0f, 145.0f, 30.0f);
     }];
     
 }
 
 - (void)revealAssistantText: (UIButton *)sender {
-    [self.view addSubview:self.assistantTextView];
-    self.assistantTextView.layer.borderWidth = 2.0f;
-    self.assistantTextView.layer.borderColor = self.colorThree.CGColor;
-    self.assistantTextView.layer.zPosition = 0.9;
-    self.assistantTextView.numberOfLines = kZero;
-    self.assistantTextView.text = self.bookTextString;
-    self.assistantTextView.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
-    self.assistantTextView.textColor = [UIColor blackColor];
-    self.assistantTextView.text = self.bookTextString;
-    self.assistantTextView.alpha = 0.75;
-
+    //    [self.view addSubview:self.assistantTextLabel];
+    //    [self.assistantTextView addSubview:self.assistantTextLabel];
+    [self.view addSubview:self.assistantTextLabel];
+    [self.view addSubview:self.expandTextViewButton];
+    self.assistantTextLabel.text = self.bookTextString;
+    self.accessTextViewButton.backgroundColor = self.defaultButtonColor;
+    self.expandTextViewButton.frame = CGRectMake(CGRectGetWidth(self.assistantTextLabel.bounds)/2, self.assistantTextLabel.frame.origin.y-15, 20, 20);
     [UIView animateWithDuration:1.0f animations:^{
-        self.assistantTextView.frame = CGRectMake(0, CGRectGetMidY(self.view.frame)-60, 160.0f, 120.0f);
-        self.accessTextViewButton.frame = CGRectMake(140, CGRectGetMidY(self.view.frame), 40, 20);
+        self.assistantTextLabel.frame = CGRectMake(kZero, CGRectGetMidY(self.view.frame)-40.0f, 160.0f, 120.0f);
+        self.accessTextViewButton.frame = CGRectMake(140, CGRectGetMidY(self.view.frame), 40.0f, 20.0f);
+        self.expandTextViewButton.alpha = 1.0f;
+        self.expandTextViewButton.frame = CGRectMake(CGRectGetWidth(self.assistantTextLabel.bounds)/2, self.assistantTextLabel.frame.origin.y-15, 20, 20);
     }];
 }
 
 - (void)retractAssistantText {
     [UIView animateWithDuration:1.0f animations:^{
-        self.assistantTextView.frame = CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-60, 120.0f, 120.0f);
-        self.accessTextViewButton.frame = CGRectMake(-20, CGRectGetMidY(self.view.frame), 40, 20);
+        self.assistantTextLabel.frame = CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f);
+        self.accessTextViewButton.alpha = kZero;
+        self.expandTextViewButton.alpha = kZero;
     } completion:^(BOOL finished) {
-        [self.assistantTextView removeFromSuperview];
+        [self.assistantTextLabel removeFromSuperview];
+        [self.expandTextViewButton removeFromSuperview];
     }];
 }
 
+- (void)expandAssistantText: (UIButton *)sender {
+    self.hideControlsActivated = YES;
+    [self hideControlButton];
+    [self hideSpeedometer];
+    [UIView animateWithDuration:1.0f animations:^{
+        self.expandTextViewButton.alpha = kZero;
+        self.assistantTextLabel.frame = CGRectMake(kZero, CGRectGetMinY(self.view.frame)+20.0f, CGRectGetMidX(self.view.frame)-4.0f, CGRectGetHeight(self.view.frame)-20.0f);
+        self.accessTextViewButton.frame = CGRectMake(140, CGRectGetMidY(self.view.frame)+90.0f, 40.0f, 20.0f);
+        self.accessTextViewButton.backgroundColor = self.colorThree;
+    }];
+}
 
 #pragma TextField Delegate Methods
 
