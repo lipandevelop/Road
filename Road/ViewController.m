@@ -182,25 +182,26 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self loadBook];
-    [self loadValues];
-    [self loadUIContents];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateFrame)];
-    [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-    
+    [self loadBook];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateFrame)];
+        [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    });
     [self.timer invalidate];
     self.timer = nil;
-    
     self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeIntervalBetweenIndex target:self selector:@selector(update) userInfo:nil repeats:NO];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self loadValues];
+    [self loadUIContents];
 
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -222,6 +223,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.highlightConsonantsActivated = NO;
     self.hideControlsActivated = YES;
     self.colorAdjusterValue = 254.0;
+    self.wordIndex = MAX(self.wordIndex, self.wordsArray.count);
     
     self.mainFontSize = 24.0f;
     
@@ -1286,7 +1288,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
         self.accessTextViewButton.frame = CGRectMake(140, CGRectGetMidY(self.view.frame)+90.0f, 40.0f, 20.0f);
         self.accessTextViewButton.backgroundColor = self.colorThree;
         self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.view.frame), kZero, 1.0f, CGRectGetHeight(self.view.frame));
-
+        
     }];
 }
 
