@@ -10,12 +10,14 @@
 #import "KFEpubController.h"
 #import "KFEpubContentModel.h"
 
+#pragma mark ENUMs
+
 typedef NS_ENUM(NSInteger, SpeedAdjustmentSegmentSelected) {
     NormalSpeed,
     MaximumSpeed,
     MinimumSpeed,
     AccelerationSpeed,
-    DecelerationSpeed,
+    Default,
 };
 
 typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
@@ -24,7 +26,7 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
     UserSelection,
 };
 
-
+#pragma mark Properties
 
 @interface ViewController () <KFEpubControllerDelegate, UIGestureRecognizerDelegate, UIWebViewDelegate, UITextFieldDelegate>
 @property (nonatomic, strong) KFEpubController *epubController;
@@ -33,22 +35,38 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, assign) NSUInteger spineIndex;
 @property (nonatomic, strong) CADisplayLink *displaylink;
 
-//Data
+#pragma mark Data Properties
 
 @property (nonatomic, strong) NSString *bookTextString;
 @property (nonatomic, strong) NSMutableArray *wordsArray;
 
-//UI
+#pragma mark UI Properties
+
 @property (nonatomic, strong) UILabel *focusText;
+@property (nonatomic, strong) UILabel *previousWord3;
+@property (nonatomic, strong) UILabel *previousWord2;
 @property (nonatomic, strong) UILabel *previousWord;
 @property (nonatomic, strong) UILabel *nextWord;
-@property (nonatomic, strong) UILabel *assistantText;
+@property (nonatomic, strong) UILabel *nextWord2;
+@property (nonatomic, strong) UILabel *nextWord3;
+@property (nonatomic, strong) UILabel *nextWord4;
+@property (nonatomic, strong) UILabel *assistantTextView;
 @property (nonatomic, strong) CATextLayer *focusTextLayer;
 
-//RunTime
+@property (nonatomic, strong) UILabel *speedLabel;
+@property (nonatomic, strong) UILabel *speedometerReadLabel;
+
+#pragma mark Runtime Properties
+
 @property (nonatomic, assign) CFTimeInterval startTime;
 @property (nonatomic, assign) NSTimeInterval timeIntervalBetweenIndex;
 @property (nonatomic, assign) int wordIndex;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSTimer *accelerationtimer;
+@property (nonatomic, strong) NSTimer *deccelerationtimer;
+@property (nonatomic, strong) NSTimer *breaktimer;
+
+#pragma mark BOOL Properties
 
 @property (nonatomic, assign) BOOL accelerationBegan;
 @property (nonatomic, assign) BOOL breakingBegan;
@@ -56,16 +74,10 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, assign) BOOL highlightConsonantsActivated;
 @property (nonatomic, assign) BOOL highlightUserSelectionActivated;
 @property (nonatomic, assign) BOOL highlightColorSelected;
-
 @property (nonatomic, assign) BOOL hideControlsActivated;
 
-@property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) NSTimer *accelerationtimer;
-@property (nonatomic, strong) NSTimer *deccelerationtimer;
-@property (nonatomic, strong) NSTimer *breaktimer;
+#pragma mark Speed Properties
 
-
-//Speeds
 @property (nonatomic, assign) float normalSpeed;
 @property (nonatomic, assign) float maxSpeed;
 @property (nonatomic, assign) float minSpeed;
@@ -73,12 +85,8 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, assign) float deceleration;
 @property (nonatomic, assign) float speedShown;
 
-//SpeedLabels
-@property (nonatomic, strong) UILabel *speedLabel;
-@property (nonatomic, strong) UILabel *speedometerReadLabel;
+#pragma mark Interaction Properties
 
-
-//Interaction
 @property (nonatomic, strong) UIView *breakPedal;
 @property (nonatomic, strong) UILabel *dot;
 @property (nonatomic, strong) UILongPressGestureRecognizer *breakPedalGesture;
@@ -87,24 +95,27 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) UIButton *toggleConsonates;
 @property (nonatomic, strong) UIButton *toggleVowels;
 @property (nonatomic, strong) UIButton *toggleUserSelections;
+@property (nonatomic, strong) UIButton *restoreDefaultButton;
+@property (nonatomic, strong) UIButton *accessTextViewButton;
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
-
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
 @property (nonatomic, strong) UIView *pinView;
 
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;
 @property (nonatomic, strong) UITextField *userSelectedTextTextField;
 
-
+#pragma mark Color Properties
 @property (nonatomic, assign) float colorAdjusterValue;
 
-//Colors
+@property (nonatomic, strong) UIColor *dotColor;
 @property (nonatomic, strong) UIColor *highlightVowelColor;
 @property (nonatomic, strong) UIColor *highlightConsonantColor;
 @property (nonatomic, strong) UIColor *highlightUserSelectedTextColor;
-@property (nonatomic, strong) UIColor *highlightColorThree;
-@property (nonatomic, strong) UIColor *highlightColorFour;
-@property (nonatomic, strong) UIColor *highlightColorFive;
+@property (nonatomic, strong) UIColor *colorOne;
+@property (nonatomic, strong) UIColor *colorTwo;
+@property (nonatomic, strong) UIColor *colorThree;
+@property (nonatomic, strong) UIColor *colorFour;
+@property (nonatomic, strong) UIColor *colorFive;
 
 
 @property (nonatomic, strong) UIColor *defaultButtonColor;
@@ -119,7 +130,8 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 //Arrays
 @property (nonatomic, strong) NSArray *speedArray;
 
-//Palette
+#pragma Mark Palette Properties
+
 @property (nonatomic, strong) UIButton *color1;
 @property (nonatomic, strong) UIButton *color2;
 @property (nonatomic, strong) UIButton *color3;
@@ -131,8 +143,9 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 
 @property (nonatomic, assign) ModifyColorForTextActivated textColorBeingModified;
 
+//Sizes
 
-
+@property (nonatomic, assign) float mainFontSize;
 
 
 @end
@@ -203,15 +216,24 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.hideControlsActivated = YES;
     self.colorAdjusterValue = 254.0;
     
-    self.highlightConsonantColor = [UIColor colorWithRed:136.0f/255.0f green:14.0f/255.0f blue:79.0f/255.0f alpha:1.0f];
-    self.highlightVowelColor = [UIColor colorWithRed:254.0f/255.0f green:82.0f/255.0f blue:15.0f/255.0f alpha:1.0f];
-    self.highlightUserSelectedTextColor = [UIColor colorWithRed:253.0f/255.0f green:196.0f/255.0f blue:2.0f/255.0f alpha:1.0f];
-    self.defaultButtonColor = [UIColor colorWithRed:98.0f/255.0f green:91.0f/255.0f blue:77.0f/255.0f alpha:1.0f];
-    self.highlightColorThree = [UIColor colorWithRed:11.0f/255.0f green:73.0f/255.0f blue:119.0f/255.0f alpha:1.0f];
-    self.highlightColorFour = [UIColor colorWithRed:243.0f/255.0f green:131.0f/255.0f blue:121.0f/255.0f alpha:1.0f];
-    self.highlightColorFive = [UIColor colorWithRed:71.0f/255.0f green:215.0f/255.0f blue:193.0f/255.0f alpha:1.0f];
+    self.mainFontSize = 24.0f;
     
-    self.speedArray = [NSArray arrayWithObjects: @"norm speed", @"max speed", @"min speed", @"accel", @"decel", nil];
+    self.dotColor = [UIColor colorWithRed:195.0f/255.0f green:25.0f/255.0f blue:25.0f/255.0f alpha:0.8f];
+    
+    self.colorOne = [UIColor colorWithRed:254.0f/255.0f green:82.0f/255.0f blue:15.0f/255.0f alpha:1.0f];
+    self.colorTwo = [UIColor colorWithRed:136.0f/255.0f green:14.0f/255.0f blue:79.0f/255.0f alpha:1.0f];
+    self.colorThree = [UIColor colorWithRed:11.0f/255.0f green:73.0f/255.0f blue:119.0f/255.0f alpha:1.0f];
+    self.colorFour = [UIColor colorWithRed:71.0f/255.0f green:215.0f/255.0f blue:193.0f/255.0f alpha:1.0f];
+    self.colorFive = [UIColor colorWithRed:253.0f/255.0f green:196.0f/255.0f blue:2.0f/255.0f alpha:1.0f];
+    
+    self.defaultButtonColor = [UIColor colorWithRed:98.0f/255.0f green:91.0f/255.0f blue:77.0f/255.0f alpha:1.0f];
+    self.highlightVowelColor = self.colorOne;
+    self.highlightConsonantColor = self.colorTwo;
+    self.highlightUserSelectedTextColor = self.colorThree;
+    
+    
+    
+    self.speedArray = [NSArray arrayWithObjects: @"norm speed", @"max speed", @"min speed", @"accel", @"default", nil];
     
 }
 
@@ -227,7 +249,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.view.layer.contents = (__bridge id)paper.CGImage;
     
-    UIView *speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-70, 65, 140, 140)];
+    UIView *speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-170, 35, 140, 140)];
     speedometerView.layer.contents = (__bridge id)speedometerImage.CGImage;
     speedometerView.layer.contentsGravity = kCAGravityResizeAspect;
     speedometerView.alpha = 0.15f;
@@ -236,25 +258,23 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     pinImageView.image = [UIImage imageNamed:@"Pin.png"];
     
     
-    self.pinView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-5.1f, 100.0f, 15.0f, 70.0f)];
+    self.pinView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-105.1f, 65.0f, 15.0f, 70.0f)];
     self.pinView.layer.contents = (__bridge id)pinImage.CGImage;
     self.pinView.layer.contentsGravity = kCAGravityResizeAspect;
     self.pinView.layer.shadowOffset = CGSizeMake(-1.0, 4.0);
     self.pinView.layer.shadowOpacity = kShadowOpacity;
     
-    self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-27, 149.0f, 60, 15)];
+    self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-127, 114.0f, 60, 15)];
     //    self.speedometerReadLabel.layer.borderWidth = 0.75;
     self.speedometerReadLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.speedometerReadLabel.alpha = kUINormaAlpha;
     self.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
     
-    
-    
     self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*(0.43), 8.0f, 8.0f)];
     self.dot.layer.cornerRadius = 4.0f;
     self.dot.layer.borderWidth = kBoarderWidth;
     self.dot.clipsToBounds = YES;
-    self.dot.layer.borderColor = [UIColor colorWithRed:195.0f/255.0f green:25.0f/255.0f blue:25.0f/255.0f alpha:0.8f].CGColor;
+    self.dot.layer.borderColor = self.dotColor.CGColor;
     
     self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/1.15203398875, 35.0f, 35.0f)];
     self.hideControlButton.layer.borderWidth = kBoarderWidth;
@@ -280,7 +300,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.breakPedal addGestureRecognizer:self.breakPedalGesture];
     
     self.openColorOptionsGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(openColorPalette:)];
-    self.openColorOptionsGesture.minimumPressDuration = 0.50f;
+    self.openColorOptionsGesture.minimumPressDuration = 0.30f;
     
     self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.view.frame) - 95, 25, 25);
     self.toggleVowels = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
@@ -328,33 +348,43 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.userSelectedTextTextField.layer.borderColor = [UIColor colorWithWhite:0.0 alpha:kUINormaAlpha].CGColor;
     self.userSelectedTextTextField.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.userSelectedTextTextField.layer.shadowOpacity = kShadowOpacity;
-//    self.userSelectedTextTextField.alpha = kUINormaAlpha;
     self.userSelectedTextTextField.placeholder = @"Customize";
     self.userSelectedTextTextField.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
+    
+    self.accessTextViewButton = [[UIButton alloc]initWithFrame:CGRectMake(-20, CGRectGetMidY(self.view.frame), 40, 20)];
+    self.accessTextViewButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.accessTextViewButton.layer.shadowOpacity = kShadowOpacity;
+    self.accessTextViewButton.layer.cornerRadius = 30.0f;
+    self.accessTextViewButton.backgroundColor = self.colorThree;
+    [self.accessTextViewButton addTarget:self action:@selector(revealAssistantText:) forControlEvents:UIControlEventTouchDown];
+    
+    self.assistantTextView = [[UILabel alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-60, 120.0f, 120.0f)];
+    
+    
     self.color1 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight)];
     self.userSelectedTextTextField.delegate = self;
     self.color1.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color1.layer.shadowOpacity = kShadowOpacity;
-    self.color1.backgroundColor = self.highlightColorFive;
+    self.color1.backgroundColor = self.colorOne;
     
     self.color2 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, self.colorPaletteYOrigin, kColorPaletteWidth, kColorPaletteHeight)];
     self.color2.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color2.layer.shadowOpacity = kShadowOpacity;
-    self.color2.backgroundColor = self.highlightColorThree;
+    self.color2.backgroundColor = self.colorTwo;
     
     self.color3 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, self.colorPaletteYOrigin, kColorPaletteWidth, kColorPaletteHeight)];
     self.color3.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color3.layer.shadowOpacity = kShadowOpacity;
-    self.color3.backgroundColor = self.highlightConsonantColor;
+    self.color3.backgroundColor = self.colorThree;
     
     self.color4 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, self.colorPaletteYOrigin, kColorPaletteWidth, kColorPaletteHeight)];
     self.color4.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
-    self.color4.backgroundColor = self.highlightVowelColor;
+    self.color4.backgroundColor = self.colorFour;
     
     self.color5 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, self.colorPaletteYOrigin, kColorPaletteWidth*2, kColorPaletteHeight)];
     self.color5.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color5.layer.shadowOpacity = kShadowOpacity;
-    self.color5.backgroundColor = self.highlightUserSelectedTextColor;
+    self.color5.backgroundColor = self.colorFive;
     self.color5.layer.cornerRadius = 4.0;
     
     [self.view addSubview:self.dot];
@@ -363,6 +393,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.hideControlButton];
     [self.view addSubview:self.pinView];
     [self.view addSubview:self.speedometerReadLabel];
+    [self.view addSubview:self.accessTextViewButton];
     [self.view addSubview:speedometerView];
     
     [self.view setNeedsDisplay];
@@ -473,13 +504,11 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 - (void)loadText {
     self.startTime = CACurrentMediaTime();
-    
     //Label
     self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
     self.focusText.numberOfLines = kZero;
     self.focusText.text = self.bookTextString;
-    self.focusText.font = [UIFont fontWithName:(@"AmericanTypewriter") size:24];
-    self.focusText.textColor = [UIColor colorWithRed:110.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0f];
+    self.focusText.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize];
     self.focusText.textColor = [UIColor blackColor];
     self.focusText.alpha = kGoldenRatioMinusOne;
     self.focusText.textAlignment = NSTextAlignmentCenter;
@@ -495,16 +524,75 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.wordsArray addObjectsFromArray:words];
     //    NSLog(@"%@", self.wordsArray);
     
-//    self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(45, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
-//    self.previousWord.numberOfLines = kZero;
-//    self.previousWord.text = self.bookTextString;
-//    self.previousWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:24];
-//    self.previousWord.textColor = [UIColor colorWithRed:110.0f/255.0f green:20.0f/255.0f blue:20.0f/255.0f alpha:1.0f];
-//    self.previousWord.textColor = [UIColor blackColor];
-//    self.previousWord.alpha = kGoldenRatioMinusOne;
-//    self.previousWord.textAlignment = NSTextAlignmentCenter;
-//    [self.view addSubview:self.previousWord];
-//    
+    self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 46.0f, 200.0f, 30.0f)];
+    self.previousWord3.numberOfLines = kZero;
+    self.previousWord3.text = self.bookTextString;
+    self.previousWord3.textColor = self.dotColor;
+    self.previousWord3.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
+    //    self.previousWord3.textColor = [UIColor blackColor];
+    //        self.previousWord2.backgroundColor = [UIColor redColor];
+    self.previousWord3.alpha = kHiddenControlRevealedAlhpa;
+    self.previousWord3.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.previousWord3];
+    
+    self.previousWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 33.0f, 200.0f, 30.0f)];
+    self.previousWord2.numberOfLines = kZero;
+    self.previousWord2.text = self.bookTextString;
+    self.previousWord2.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
+    self.previousWord2.textColor = [UIColor blackColor];
+    //        self.previousWord2.backgroundColor = [UIColor redColor];
+    self.previousWord2.alpha = kUINormaAlpha - 0.1;
+    self.previousWord2.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.previousWord2];
+    
+    self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 20.0f, 200.0f, 30.0f)];
+    self.previousWord.numberOfLines = kZero;
+    self.previousWord.text = self.bookTextString;
+    self.previousWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-10];
+    self.previousWord.textColor = [UIColor blackColor];
+    //        self.previousWord.backgroundColor = [UIColor redColor];
+    self.previousWord.alpha = kUINormaAlpha;
+    self.previousWord.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.previousWord];
+    
+    self.nextWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 30.0f, 200.0f, 30.0f)];
+    self.nextWord.numberOfLines = kZero;
+    self.nextWord.text = self.bookTextString;
+    self.nextWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-10];
+    self.nextWord.textColor = [UIColor blackColor];
+    //    self.nextWord.backgroundColor = [UIColor redColor];
+    self.nextWord.alpha = kUINormaAlpha;
+    self.nextWord.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.nextWord];
+    
+    self.nextWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 43.0f, 200.0f, 30.0f)];
+    self.nextWord2.numberOfLines = kZero;
+    self.nextWord2.text = self.bookTextString;
+    self.nextWord2.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
+    self.nextWord2.textColor = [UIColor blackColor];
+    //    self.nextWord.backgroundColor = [UIColor redColor];
+    self.nextWord2.alpha = kUINormaAlpha-0.1f;
+    self.nextWord2.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.nextWord2];
+    
+    self.nextWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 56.0f, 200.0f, 30.0f)];self.nextWord3.numberOfLines = kZero;
+    self.nextWord3.text = self.bookTextString;
+    self.nextWord3.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-12];
+    self.nextWord3.textColor = [UIColor blackColor];
+    //    self.nextWord.backgroundColor = [UIColor redColor];
+    self.nextWord3.alpha = kUINormaAlpha-0.15f;
+    self.nextWord3.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.nextWord3];
+    
+    self.nextWord4 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 69.0f, 200.0f, 30.0f)];self.nextWord4.numberOfLines = kZero;
+    self.nextWord4.text = self.bookTextString;
+    self.nextWord4.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-13];
+    self.nextWord4.textColor = [UIColor blackColor];
+    //    self.nextWord.backgroundColor = [UIColor redColor];
+    self.nextWord4.alpha = kUINormaAlpha-0.175;
+    self.nextWord4.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.nextWord4];
+    
 }
 
 - (void)update {
@@ -523,7 +611,17 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     } else if (self.timeIntervalBetweenIndex >= self.minSpeed) {
         self.wordIndex --;
     }
+    if (self.wordIndex > 4) {
+        self.previousWord3.text = [self.wordsArray objectAtIndex:self.wordIndex +3];
+        self.previousWord2.text = [self.wordsArray objectAtIndex:self.wordIndex +2];
+    }
+    self.previousWord.text = [self.wordsArray objectAtIndex:self.wordIndex +1];
     self.focusText.text = [self.wordsArray objectAtIndex:self.wordIndex];
+    self.nextWord.text = [self.wordsArray objectAtIndex:self.wordIndex -1];
+    self.nextWord2.text = [self.wordsArray objectAtIndex:self.wordIndex -2];
+    self.nextWord3.text = [self.wordsArray objectAtIndex:self.wordIndex -3];
+    self.nextWord4.text = [self.wordsArray objectAtIndex:self.wordIndex -4];
+    
     
     if (self.highlightVowelsActivated) {
         [self highlightVowels];
@@ -547,7 +645,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
         self.dot.alpha = kZero;
     } completion:nil];
-    //insert if statement
 }
 
 - (void)modifyTimeInterval: (float)time {
@@ -564,7 +661,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)updateFrame {
-    NSLog(@"%@,%@", self.userSelectedTextTextField.text, self.userInputForHighlightedTextString);
+    //    NSLog(@"%@,%@", self.userSelectedTextTextField.text, self.userInputForHighlightedTextString);
     if (self.breakPedalGesture.state == UIControlEventTouchDown) {
         [UIView animateWithDuration:4.0f animations:^{
             self.breakPedal.alpha = 0.50f;
@@ -618,8 +715,8 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     NSLog(@"Ended %d", self.accelerationBegan);
     
     [self retractColorPalette];
+    [self retractAssistantText];
     [UIView animateWithDuration:1.5 animations:^{
-        self.userSelectedTextTextField.frame = CGRectMake(-145.0f, self.toggleUserSelections.frame.origin.y-30.0f, 145.0f, kColorPaletteHeight);
         self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
         self.speedLabel.alpha = kZero;
     }];
@@ -627,7 +724,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)startBreaking {
-    [self modifyTimeInterval:+0.020];
+    [self modifyTimeInterval:+0.03f];
     NSLog(@"Breaking!...%f", self.timeIntervalBetweenIndex);
     
 }
@@ -657,6 +754,8 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
 }
 
+#pragma mark Modify Text Methods
+
 - (void)modifyTextWithString: (NSString *)characterSetString color: (UIColor *)color {
     NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:characterSetString];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString: self.focusText.attributedText];
@@ -665,15 +764,13 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
         BOOL isCharacterSet = [characterSet characterIsMember:currentCharacter];
         if (isCharacterSet) {
             [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(charIdx, 1)];
+            //            NSLog(@"%C is a %@", currentCharacter, isCharacterSet ? @"vowel" : @"consonant");
+            [self.focusText setAttributedText: attributedString];
         }
-        //            [UIView animateWithDuration:0.3 animations:^{
-        //            [constText addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(charIdx, 1)];
-        //            }];
-        //        }
-        //        NSLog(@"%C is a %@", currentCharacter, isVowel ? @"vowel" : @"consonant");
     }
-    [self.focusText setAttributedText: attributedString];
 }
+
+#pragma mark Vowels
 
 - (void)toggleVowelsSelected {
     self.highlightVowelsActivated = !self.highlightVowelsActivated;
@@ -685,9 +782,8 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 140, 25, 25);
             self.toggleVowels.layer.shadowOpacity = 0.55f;
             self.toggleVowels.layer.shadowOffset = CGSizeMake(-1.5, 7.0);
-            self.toggleVowels.backgroundColor = self.highlightVowelColor;
+            self.toggleVowels.backgroundColor = self.colorOne;
             self.toggleVowels.alpha = 1.0f;
-            
         }];
     }
     if (!self.highlightVowelsActivated) {
@@ -707,6 +803,8 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 - (void)highlightVowels {
     [self modifyTextWithString:kVowels color:self.highlightVowelColor];
 }
+
+#pragma mark Consonants
 
 - (void)toggleConsonantsSelected {
     self.highlightConsonantsActivated = !self.highlightConsonantsActivated;
@@ -739,6 +837,8 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self modifyTextWithString:kConsonants color:self.highlightConsonantColor];
 }
 
+#pragma mark UserSelected
+
 - (void)toggleUserSelected {
     self.highlightUserSelectionActivated = !self.highlightUserSelectionActivated;
     self.textColorBeingModified = UserSelection;
@@ -758,6 +858,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     if (!self.highlightUserSelectionActivated) {
         [self.toggleUserSelections removeGestureRecognizer:self.openColorOptionsGesture];
         [self retractColorPalette];
+        [self retractUserInputTextField];
         [UIView animateWithDuration:0.5f animations:^{
             self.toggleUserSelections.frame = CGRectMake(35, CGRectGetHeight(self.view.frame) - 193, 25, 25);
             self.toggleUserSelections.layer.shadowOpacity = 0.30f;
@@ -769,128 +870,114 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)highlightUserSelected {
-//    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.highlightUserSelectedTextColor];
-    [self modifyTextWithString:self.userSelectedTextTextField.text color:[UIColor redColor]];
-
+    [self modifyTextWithString:self.userSelectedTextTextField.text color:self.highlightUserSelectedTextColor];
+    
 }
+
+#pragma mark Modify Colors
 
 - (void)changeSelectedTextColor: (UIButton *)button {
     NSLog(@"buttonPressed %ld", (long)button.tag);
     
-//    if (self.textColorBeingModified == Vowels) {
-//        button.tag = 3;
-//        button.alpha = 1.0f;
-//        button.layer.affineTransform = CGAffineTransformScale(button.layer.affineTransform, 1.05f, 1.20f);
-//        button.layer.shadowOpacity = 0.65f;
-//        button.layer.zPosition = 1.0f;
-//    }
-    
-    self.highlightColorSelected = !self.highlightColorSelected;
-    if (self.highlightColorSelected) {
-//        [UIView animateWithDuration:0.50f animations:^{
-            button.alpha = 1.0f;
-            button.layer.affineTransform = CGAffineTransformScale(button.layer.affineTransform, 1.05f, 1.20f);
-            button.layer.shadowOpacity = 0.65f;
-            button.layer.zPosition = 1.0f;
-//        }];
-    }
-    
-    if (!self.highlightColorSelected) {
-//        [UIView animateWithDuration:0.10f animations:^{
-            button.alpha = 1.0f;
-            button.layer.affineTransform = CGAffineTransformScale(button.layer.affineTransform, 1/1.05f, 1/1.20f);
-            button.layer.shadowOpacity = kShadowOpacity;
-            button.layer.zPosition = 0.0f;
-//        }];
-    }
-    ModifyColorForTextActivated modifyColorActivated;
+    UIButton *selectedButton = [self.view viewWithTag:button.tag];
+    [UIView animateWithDuration:0.50f animations:^{
+        selectedButton.alpha = 1.0f;
+        selectedButton.layer.affineTransform = CGAffineTransformScale(button.layer.affineTransform, 1.05f, 1.20f);
+        selectedButton.layer.shadowOpacity = 0.65f;
+        selectedButton.layer.zPosition = 1.0f;
+    } completion:^(BOOL finished) {
+        selectedButton.tag = -1;
+    }];
+    //    button.alpha = 1.0f;
+    //    button.layer.affineTransform = CGAffineTransformScale(button.layer.affineTransform, 1/1.05f, 1/1.20f);
+    //    button.layer.shadowOpacity = kShadowOpacity;
+    //    button.layer.zPosition = 0.0f;
     switch (button.tag) {
         case 1:
-            switch (modifyColorActivated) {
+            switch (self.textColorBeingModified) {
                 case Consonants:
-                    self.toggleConsonates.backgroundColor = self.highlightColorFive;
-                    [self modifyTextWithString:kConsonants color:self.highlightColorFive];
+                    self.highlightConsonantColor = self.colorOne;
+                    self.toggleConsonates.backgroundColor = self.colorOne;
                     break;
                 case Vowels:
-                    self.toggleVowels.backgroundColor = self.highlightColorFive;
-                    [self modifyTextWithString:kVowels color:self.highlightColorFive];
+                    self.highlightVowelColor = self.colorOne;
+                    self.toggleVowels.backgroundColor = self.colorOne;
                     break;
                 case UserSelection:
-                    self.toggleConsonates.backgroundColor = self.highlightColorFive;
-                    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.highlightColorFive];
+                    self.highlightUserSelectedTextColor = self.colorOne;
+                    self.toggleUserSelections.backgroundColor = self.colorOne;
                     break;
                 default:
                     break;
             }
             break;
         case 2:
-            switch (modifyColorActivated) {
+            switch (self.textColorBeingModified) {
                 case Consonants:
-                    self.toggleConsonates.backgroundColor = self.self.highlightColorThree;
-                    [self modifyTextWithString:kConsonants color:self.self.highlightColorThree];
+                    self.highlightConsonantColor = self.colorTwo;
+                    self.toggleConsonates.backgroundColor = self.colorTwo;
                     break;
                 case Vowels:
-                    self.toggleVowels.backgroundColor = self.self.highlightColorThree;
-                    [self modifyTextWithString:kVowels color:self.self.highlightColorThree];
+                    self.highlightVowelColor = self.colorTwo;
+                    self.toggleVowels.backgroundColor = self.colorTwo;
                     break;
                 case UserSelection:
-                    self.toggleConsonates.backgroundColor = self.self.highlightColorThree;
-                    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.self.highlightColorThree];
+                    self.highlightUserSelectedTextColor = self.colorTwo;
+                    self.toggleUserSelections.backgroundColor = self.colorTwo;
                     break;
                 default:
                     break;
             }
-            
             break;
         case 3:
-            switch (modifyColorActivated) {
+            switch (self.textColorBeingModified) {
                 case Consonants:
-                    self.toggleConsonates.backgroundColor = self.self.highlightConsonantColor;
-                    [self modifyTextWithString:kConsonants color:self.self.highlightConsonantColor];
+                    self.highlightConsonantColor = self.colorThree;
+                    self.toggleConsonates.backgroundColor = self.colorThree;
                     break;
                 case Vowels:
-                    self.toggleVowels.backgroundColor = self.self.highlightConsonantColor;
-                    [self modifyTextWithString:kVowels color:self.self.highlightConsonantColor];
+                    self.highlightVowelColor = self.colorThree;
+                    self.toggleVowels.backgroundColor = self.colorThree;
                     break;
                 case UserSelection:
-                    self.toggleUserSelections.backgroundColor = self.self.highlightConsonantColor;
-                    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.self.highlightConsonantColor];
+                    self.highlightUserSelectedTextColor = self.colorThree;
+                    self.toggleUserSelections.backgroundColor = self.colorThree;
                     break;
                 default:
                     break;
             }
             break;
         case 4:
-            switch (modifyColorActivated) {
+            switch (self.textColorBeingModified) {
                 case Consonants:
-                    self.toggleConsonates.backgroundColor = self.self.highlightVowelColor;
-                    [self modifyTextWithString:kConsonants color:self.self.highlightVowelColor];
+                    self.highlightConsonantColor = self.colorFour;
+                    self.toggleConsonates.backgroundColor = self.colorFour;
                     break;
                 case Vowels:
-                    self.toggleVowels.backgroundColor = self.self.highlightVowelColor;
-                    [self modifyTextWithString:kVowels color:self.self.highlightVowelColor];
+                    self.highlightVowelColor = self.colorFour;
+                    self.toggleVowels.backgroundColor = self.colorFour;
                     break;
                 case UserSelection:
-                    self.toggleUserSelections.backgroundColor = self.self.highlightVowelColor;
-                    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.self.highlightVowelColor];
+                    self.highlightUserSelectedTextColor = self.colorFour;
+                    self.toggleUserSelections.backgroundColor = self.colorFour;
                     break;
                 default:
                     break;
             }
             break;
         case 5:
-            switch (modifyColorActivated) {
+            switch (self.textColorBeingModified) {
                 case Consonants:
-                    self.toggleConsonates.backgroundColor = self.self.highlightUserSelectedTextColor;
-                    [self modifyTextWithString:kConsonants color:self.self.highlightUserSelectedTextColor];
+                    self.highlightConsonantColor = self.colorFive;
+                    self.toggleConsonates.backgroundColor = self.colorFive;
                     break;
                 case Vowels:
-                    self.toggleVowels.backgroundColor = self.self.highlightUserSelectedTextColor;
-                    [self modifyTextWithString:kVowels color:self.self.highlightUserSelectedTextColor];
+                    self.highlightVowelColor = self.colorFive;
+                    self.toggleVowels.backgroundColor = self.colorFive;
                     break;
                 case UserSelection:
-                    self.toggleUserSelections.backgroundColor = self.self.highlightUserSelectedTextColor;
-                    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.self.highlightUserSelectedTextColor];
+                    self.highlightUserSelectedTextColor = self.colorFive;
+                    self.toggleUserSelections.backgroundColor = self.colorFive;
                     break;
                 default:
                     break;
@@ -902,19 +989,14 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     }
 }
 
-- (void)highlightUserSelectedLetters {
-    [self modifyTextWithString:self.userInputForHighlightedTextString color:self.highlightColorThree];
-}
-
-- (void)colorPropertySelectorSwitch: (UISegmentedControl *)segmentController {
-    //    [self refresh];
-}
+#pragma Modify Speed Methods
 
 - (void)speedPropertySelectorSwitch: (UISegmentedControl *)segmentController {
     [self refreshSpeedValues];
 }
 
 - (void)adjustSpeedUsingSlider: (UISlider *)slider {
+    self.speedAdjusterSlider.alpha = kHiddenControlRevealedAlhpa;
     [self refreshSpeedValues];
 }
 
@@ -927,7 +1009,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             self.normalSpeed = self.speedAdjusterSlider.value;
             self.speedAdjusterSlider.maximumValue = self.minSpeed;
             self.speedAdjusterSlider.minimumValue = self.maxSpeed;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightVowelColor;
+            self.speedAdjusterSlider.maximumTrackTintColor = self.colorOne;
             self.selectedSpeedToAdjustIndicator = @"normal speed";
             break;
         case MaximumSpeed:
@@ -943,7 +1025,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             self.minSpeed = self.speedAdjusterSlider.value;
             self.speedAdjusterSlider.maximumValue = 1.0f;
             self.speedAdjusterSlider.minimumValue = 0.01f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightConsonantColor;
+            self.speedAdjusterSlider.maximumTrackTintColor = self.colorTwo;
             self.selectedSpeedToAdjustIndicator = @"min speed";
             break;
         case AccelerationSpeed:
@@ -951,23 +1033,24 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             self.acceleration = self.speedAdjusterSlider.value;
             self.speedAdjusterSlider.maximumValue = 0.1f;
             self.speedAdjusterSlider.minimumValue = 0.001f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorThree;
+            self.speedAdjusterSlider.maximumTrackTintColor = self.colorThree;
             self.selectedSpeedToAdjustIndicator = @"acceleration";
             break;
-        case DecelerationSpeed:
-            self.speedShown = self.deceleration;
-            self.deceleration = self.speedAdjusterSlider.value;
-            self.speedAdjusterSlider.maximumValue = 0.1f;
-            self.speedAdjusterSlider.minimumValue = 0.0001f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorFour;
-            self.selectedSpeedToAdjustIndicator = @"deceleration";
+        case Default:
+            self.normalSpeed = 0.45;
+            self.minSpeed = 1.0;
+            self.maxSpeed = 0.15;
+            self.acceleration = 0.002;
+            self.deceleration = 0.0007;
+            self.speedLabel.text = @"Default\nrestored";
+            
             break;
         default:
             self.speedShown = self.maxSpeed;
             self.maxSpeed = self.speedAdjusterSlider.value;
             self.speedAdjusterSlider.maximumValue = 0.75f;
             self.speedAdjusterSlider.minimumValue = 0.01f;
-            self.speedAdjusterSlider.maximumTrackTintColor = self.highlightColorFive;
+            self.speedAdjusterSlider.maximumTrackTintColor = self.colorFive;
             self.selectedSpeedToAdjustIndicator = @"normal speed";
             break;
     }
@@ -975,13 +1058,19 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.speedPropertySelector];
     self.speedShown = self.speedAdjusterSlider.value;
     float wordsPerMinute = 1/self.speedShown * 60;
-    self.speedLabel.text = [NSString stringWithFormat:@"%@\n%0.1f\nwords/min",self.selectedSpeedToAdjustIndicator, wordsPerMinute];
-    [UIView animateWithDuration:1.0 animations:^{
-        self.speedLabel.alpha = kUINormaAlpha;
-        self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 30, CGRectGetWidth(self.view.frame), 30);
-        
-    }];
+    if (segmentSelected == Default) {
+        self.speedLabel.text = @"Default\nrestored";
+    } else {
+        self.speedLabel.text = [NSString stringWithFormat:@"%@\n%0.1f\nwords/min",self.selectedSpeedToAdjustIndicator, wordsPerMinute];
+        [UIView animateWithDuration:1.0 animations:^{
+            self.speedLabel.alpha = kUINormaAlpha;
+            self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 30, CGRectGetWidth(self.view.frame), 30);
+            
+        }];
+    }
 }
+
+#pragma mark Modify UITransition Methods
 
 - (void)hideControls {
     self.hideControlsActivated = !self.hideControlsActivated;
@@ -992,7 +1081,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             self.toggleVowels.alpha = kHiddenControlRevealedAlhpa + 0.1;
             self.toggleConsonates.alpha = kHiddenControlRevealedAlhpa;
             self.toggleUserSelections.alpha = kHiddenControlRevealedAlhpa + 0.2;
-            self.speedAdjusterSlider.alpha = kHiddenControlRevealedAlhpa;
+            self.speedAdjusterSlider.alpha = kUINormaAlpha;
         }];
     }
     if (self.hideControlsActivated) {
@@ -1032,8 +1121,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     if (longPress.state !=UIGestureRecognizerStateBegan) {
         return;
     }
-    
-    NSLog(@"PaletteOpening!...");
     [self.view addSubview:self.color5];
     [self.view addSubview:self.color4];
     [self.view addSubview:self.color3];
@@ -1080,19 +1167,53 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 - (void)openUserInputTextField {
     [self.view addSubview:self.userSelectedTextTextField];
-//    self.userSelectedTextTextField.text = self.userInputForHighlightedTextString;
-//    self.userSelectedTextTextField.frame = CGRectMake(0, 0, 300, 300);
-////    self.userSelectedTextTextField.backgroundColor = [UIColor redColor];
-
     [UIView animateWithDuration:1.20f animations:^{
         self.userSelectedTextTextField.frame = CGRectMake(kZero-1.0f, self.toggleUserSelections.frame.origin.y-30.0f, 90.0f, kColorPaletteHeight);
     }];
 }
+
+- (void)retractUserInputTextField {
+    [UIView animateWithDuration:1.0 animations:^{
+        self.userSelectedTextTextField.frame = CGRectMake(-145.0f, self.toggleUserSelections.frame.origin.y-30.0f, 145.0f, kColorPaletteHeight);
+    }];
+    
+}
+
+- (void)revealAssistantText: (UIButton *)sender {
+    [self.view addSubview:self.assistantTextView];
+    self.assistantTextView.layer.borderWidth = 2.0f;
+    self.assistantTextView.layer.borderColor = self.colorThree.CGColor;
+    self.assistantTextView.layer.zPosition = 0.9;
+    self.assistantTextView.numberOfLines = kZero;
+    self.assistantTextView.text = self.bookTextString;
+    self.assistantTextView.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
+    self.assistantTextView.textColor = [UIColor blackColor];
+    self.assistantTextView.text = self.bookTextString;
+    self.assistantTextView.alpha = 0.75;
+
+    [UIView animateWithDuration:1.0f animations:^{
+        self.assistantTextView.frame = CGRectMake(0, CGRectGetMidY(self.view.frame)-60, 160.0f, 120.0f);
+        self.accessTextViewButton.frame = CGRectMake(140, CGRectGetMidY(self.view.frame), 40, 20);
+    }];
+}
+
+- (void)retractAssistantText {
+    [UIView animateWithDuration:1.0f animations:^{
+        self.assistantTextView.frame = CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-60, 120.0f, 120.0f);
+        self.accessTextViewButton.frame = CGRectMake(-20, CGRectGetMidY(self.view.frame), 40, 20);
+    } completion:^(BOOL finished) {
+        [self.assistantTextView removeFromSuperview];
+    }];
+}
+
+
+#pragma TextField Delegate Methods
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     self.userInputForHighlightedTextString = self.userSelectedTextTextField.text;
     [self.userSelectedTextTextField resignFirstResponder];
     return YES;
 }
+
 
 @end
