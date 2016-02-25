@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) CADisplayLink *displaylink;
 
 #pragma mark Data Properties
-
+@property (nonatomic, strong) NSString *bookTextRawString;
 @property (nonatomic, strong) NSString *bookTextString;
 @property (nonatomic, strong) NSMutableArray *wordsArray;
 
@@ -50,10 +50,9 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) UILabel *nextWord2;
 @property (nonatomic, strong) UILabel *nextWord3;
 @property (nonatomic, strong) UILabel *nextWord4;
-@property (nonatomic, strong) UILabel *assistantTextLabel;
+@property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UILabel *dividerLabel;
 
-@property (nonatomic, strong) UIScrollView *assistantTextView;
 @property (nonatomic, strong) CATextLayer *focusTextLayer;
 
 @property (nonatomic, strong) UILabel *speedLabel;
@@ -223,7 +222,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.highlightConsonantsActivated = NO;
     self.hideControlsActivated = YES;
     self.colorAdjusterValue = 254.0;
-    self.wordIndex = MAX(self.wordIndex, self.wordsArray.count);
     
     self.mainFontSize = 24.0f;
     
@@ -240,10 +238,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.highlightConsonantColor = self.colorTwo;
     self.highlightUserSelectedTextColor = self.colorThree;
     
-    
-    
     self.speedArray = [NSArray arrayWithObjects: @"norm speed", @"max speed", @"min speed", @"accel", @"default", nil];
-    
 }
 
 - (void)loadUIContents {
@@ -378,17 +373,14 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.expandTextViewButton.layer.cornerRadius = 10.0f;
     [self.expandTextViewButton addTarget:self action:@selector(expandAssistantText:) forControlEvents:UIControlEventTouchDown];
     
-    self.assistantTextView = [[UIScrollView alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f)];
-    self.assistantTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f)];
-    //    self.assistantTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(4, 4, CGRectGetWidth(self.assistantTextView.bounds), 500)];
-    //    self.assistantTextLabel.layer.borderWidth = 2.0f;
-    //    self.assistantTextLabel.layer.borderColor = self.colorThree.CGColor;
-    self.assistantTextLabel.layer.zPosition = 0.9;
-    self.assistantTextLabel.numberOfLines = kZero;
-    self.assistantTextLabel.text = self.bookTextString;
-    self.assistantTextLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
-    self.assistantTextLabel.textColor = [UIColor blackColor];
-    self.assistantTextLabel.alpha = 0.50;
+    self.assistantTextView = [[UITextView alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f)];
+    self.assistantTextView.layer.zPosition = 0.9;
+    self.assistantTextView.text = self.bookTextRawString;
+    self.assistantTextView.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
+    self.assistantTextView.textColor = [UIColor blackColor];
+    self.assistantTextView.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.0];
+    self.assistantTextView.alpha = 0.50;
+    self.assistantTextView.editable = NO;
     
     self.dividerLabel = [[UILabel alloc]init];
     self.dividerLabel.backgroundColor = self.defaultButtonColor;
@@ -528,20 +520,22 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 #pragma mark Converting To String
 
 - (void)convertBookToString {
-    NSString *txt = [self.bookContentView stringByEvaluatingJavaScriptFromString:@"document.body.textContent"];
-    NSString *newString = [[txt componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
     
-    self.bookTextString = newString;
+    self.bookTextRawString = [self.bookContentView stringByEvaluatingJavaScriptFromString:@"document.body.textContent"];
+   self.bookTextString = [[self.bookTextRawString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+    
+//    self.bookTextString = newString;
     //    NSLog(@"%@", self.bookTextString);
     
 }
 
 - (void)loadText {
+    self.wordIndex = MAX(self.wordIndex, self.wordsArray.count);
+    self.wordIndex = MIN(self.wordIndex, self.wordsArray.count);
     self.startTime = CACurrentMediaTime();
     //Label
     self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
     self.focusText.numberOfLines = kZero;
-    self.focusText.text = self.bookTextString;
     self.focusText.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize];
     self.focusText.textColor = [UIColor blackColor];
     self.focusText.alpha = kGoldenRatioMinusOne;
@@ -549,9 +543,9 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.focusText];
     
     //Label Layer
-    self.focusTextLayer.contents = self.bookTextString;
-    self.focusTextLayer.zPosition = 1.0f;
-    [self.focusText.layer addSublayer:self.focusTextLayer];
+//    self.focusTextLayer.contents = self.bookTextString;
+//    self.focusTextLayer.zPosition = 1.0f;
+//    [self.focusText.layer addSublayer:self.focusTextLayer];
     
     NSArray *words = [self.bookTextString componentsSeparatedByString: @" "];
     self.wordsArray = [NSMutableArray arrayWithCapacity:[words count]];
@@ -560,7 +554,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 46.0f, 200.0f, 30.0f)];
     self.previousWord3.numberOfLines = kZero;
-    self.previousWord3.text = self.bookTextString;
     self.previousWord3.textColor = self.dotColor;
     self.previousWord3.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
     //    self.previousWord3.textColor = [UIColor blackColor];
@@ -571,7 +564,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.previousWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 33.0f, 200.0f, 30.0f)];
     self.previousWord2.numberOfLines = kZero;
-    self.previousWord2.text = self.bookTextString;
     self.previousWord2.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
     self.previousWord2.textColor = [UIColor blackColor];
     //        self.previousWord2.backgroundColor = [UIColor redColor];
@@ -581,7 +573,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 20.0f, 200.0f, 30.0f)];
     self.previousWord.numberOfLines = kZero;
-    self.previousWord.text = self.bookTextString;
     self.previousWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-10];
     self.previousWord.textColor = [UIColor blackColor];
     //        self.previousWord.backgroundColor = [UIColor redColor];
@@ -591,7 +582,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.nextWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 30.0f, 200.0f, 30.0f)];
     self.nextWord.numberOfLines = kZero;
-    self.nextWord.text = self.bookTextString;
     self.nextWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-10];
     self.nextWord.textColor = [UIColor blackColor];
     //    self.nextWord.backgroundColor = [UIColor redColor];
@@ -601,7 +591,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.nextWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 43.0f, 200.0f, 30.0f)];
     self.nextWord2.numberOfLines = kZero;
-    self.nextWord2.text = self.bookTextString;
     self.nextWord2.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
     self.nextWord2.textColor = [UIColor blackColor];
     //    self.nextWord.backgroundColor = [UIColor redColor];
@@ -610,7 +599,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.nextWord2];
     
     self.nextWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 56.0f, 200.0f, 30.0f)];self.nextWord3.numberOfLines = kZero;
-    self.nextWord3.text = self.bookTextString;
     self.nextWord3.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-12];
     self.nextWord3.textColor = [UIColor blackColor];
     //    self.nextWord.backgroundColor = [UIColor redColor];
@@ -619,7 +607,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.nextWord3];
     
     self.nextWord4 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 69.0f, 200.0f, 30.0f)];self.nextWord4.numberOfLines = kZero;
-    self.nextWord4.text = self.bookTextString;
     self.nextWord4.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-13];
     self.nextWord4.textColor = [UIColor blackColor];
     //    self.nextWord.backgroundColor = [UIColor redColor];
@@ -645,16 +632,19 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     } else if (self.timeIntervalBetweenIndex >= self.minSpeed) {
         self.wordIndex --;
     }
-    if (self.wordIndex > 4 && self.wordsArray.count >4) {
-        self.previousWord3.text = [self.wordsArray objectAtIndex:self.wordIndex +3];
-        self.previousWord2.text = [self.wordsArray objectAtIndex:self.wordIndex +2];
-    }
-    self.previousWord.text = [self.wordsArray objectAtIndex:self.wordIndex +1];
-    self.focusText.text = [self.wordsArray objectAtIndex:self.wordIndex];
-    self.nextWord.text = [self.wordsArray objectAtIndex:self.wordIndex -1];
-    self.nextWord2.text = [self.wordsArray objectAtIndex:self.wordIndex -2];
-    self.nextWord3.text = [self.wordsArray objectAtIndex:self.wordIndex -3];
-    self.nextWord4.text = [self.wordsArray objectAtIndex:self.wordIndex -4];
+//    if (self.wordIndex > 4 && self.wordsArray.count >4) {
+//    }
+
+    self.previousWord3.text = [self.wordsArray objectAtIndex:self.wordIndex];
+    self.previousWord2.text = [self.wordsArray objectAtIndex:self.wordIndex+1];
+    self.previousWord.text = [self.wordsArray objectAtIndex:self.wordIndex+2];
+    
+    self.focusText.text = [self.wordsArray objectAtIndex:self.wordIndex+3];
+    self.nextWord.text = [self.wordsArray objectAtIndex:self.wordIndex+4];
+    
+    self.nextWord2.text = [self.wordsArray objectAtIndex:self.wordIndex+5];
+    self.nextWord3.text = [self.wordsArray objectAtIndex:self.wordIndex+6];
+    self.nextWord4.text = [self.wordsArray objectAtIndex:self.wordIndex+7];
     
     
     if (self.highlightVowelsActivated) {
@@ -1222,11 +1212,11 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 - (void)retractColorPalette {
     [UIView animateWithDuration:1.0 animations:^{
-        self.color1.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color2.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color3.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color4.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color5.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color1.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color2.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color3.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color4.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color5.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
     }];
 }
 
@@ -1246,26 +1236,28 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 - (void)revealAssistantText: (UIButton *)sender {
     self.textFieldRevealed = YES;
-    //    [self.view addSubview:self.assistantTextLabel];
-    //    [self.assistantTextView addSubview:self.assistantTextLabel];
-    [self.view addSubview:self.assistantTextLabel];
+    [self.view addSubview:self.assistantTextView];
     [self.view addSubview:self.expandTextViewButton];
-    self.assistantTextLabel.text = self.bookTextString;
+    self.assistantTextView.text = self.bookTextRawString;
     self.accessTextViewButton.backgroundColor = self.defaultButtonColor;
-    self.expandTextViewButton.frame = CGRectMake(70.0f, self.assistantTextLabel.frame.origin.y-15, 20, 20);
+    self.expandTextViewButton.frame = CGRectMake(70.0f, self.assistantTextView.frame.origin.y-15, 20, 20);
     [UIView animateWithDuration:1.0f animations:^{
-        self.assistantTextLabel.frame = CGRectMake(kZero, CGRectGetMidY(self.view.frame)-40.0f, 160.0f, 120.0f);
+        self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
+        self.assistantTextView.frame = CGRectMake(kZero, CGRectGetMidY(self.view.frame)-40.0f, 160.0f, 120.0f);
         self.accessTextViewButton.frame = CGRectMake(140.0f, CGRectGetMidY(self.view.frame), 40.0f, 20.0f);
         self.expandTextViewButton.alpha = 1.0f;
-        self.expandTextViewButton.frame = CGRectMake(70.0f, self.assistantTextLabel.frame.origin.y-15, 20, 20);
+        self.expandTextViewButton.frame = CGRectMake(70.0f, self.assistantTextView.frame.origin.y-15, 20, 20);
     }];
 }
 
 - (void)retractAssistantText {
     self.textFieldRevealed = NO;
+    [self.accessTextViewButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:kZero] forState:UIControlStateNormal];
     [UIView animateWithDuration:1.0f animations:^{
-        self.assistantTextLabel.frame = CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f);
+        self.accessTextViewButton.frame = CGRectMake(-20, CGRectGetMidY(self.view.frame), 40, 20);
+        self.assistantTextView.frame = CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f);
         self.expandTextViewButton.alpha = kZero;
+        self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
     } completion:^(BOOL finished) {
         [self.expandTextViewButton removeFromSuperview];
         [self.dividerLabel removeFromSuperview];
@@ -1284,10 +1276,11 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.view.frame), CGRectGetMidY(self.view.frame)+90.0f, 1.0f, 1.0f);
     [UIView animateWithDuration:1.0f animations:^{
         self.expandTextViewButton.alpha = kZero;
-        self.assistantTextLabel.frame = CGRectMake(kZero, CGRectGetMinY(self.view.frame)+30.0f, CGRectGetMidX(self.view.frame)-4.0f, CGRectGetHeight(self.view.frame)-70.0f);
+        self.assistantTextView.frame = CGRectMake(kZero, CGRectGetMinY(self.view.frame)+30.0f, CGRectGetMidX(self.view.frame)-4.0f, CGRectGetHeight(self.view.frame)-70.0f);
         self.accessTextViewButton.frame = CGRectMake(140, CGRectGetMidY(self.view.frame)+90.0f, 40.0f, 20.0f);
         self.accessTextViewButton.backgroundColor = self.colorThree;
         self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.view.frame), kZero, 1.0f, CGRectGetHeight(self.view.frame));
+        self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
         
     }];
 }
