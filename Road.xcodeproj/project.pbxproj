@@ -12,6 +12,7 @@
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
 		0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49991C7D3236009309F1 /* Speedometer.png */; };
 		0AEF499C1C7D3508009309F1 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF499B1C7D3508009309F1 /* Pin.png */; };
+		0AEFA66F1C7F963000E696BE /* TextProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEFA66E1C7F963000E696BE /* TextProperties.m */; };
 		0AF741751C778205000C3CC2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF741741C778205000C3CC2 /* main.m */; };
 		0AF741781C778205000C3CC2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF741771C778205000C3CC2 /* AppDelegate.m */; };
 		0AF7417B1C778205000C3CC2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7417A1C778205000C3CC2 /* ViewController.m */; };
@@ -40,6 +41,8 @@
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
 		0AEF49991C7D3236009309F1 /* Speedometer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Speedometer.png; path = Images/Speedometer.png; sourceTree = "<group>"; };
 		0AEF499B1C7D3508009309F1 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Pin.png; path = Images/Pin.png; sourceTree = "<group>"; };
+		0AEFA66D1C7F963000E696BE /* TextProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextProperties.h; sourceTree = "<group>"; };
+		0AEFA66E1C7F963000E696BE /* TextProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextProperties.m; sourceTree = "<group>"; };
 		0AF741701C778205000C3CC2 /* Road.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Road.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AF741741C778205000C3CC2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0AF741761C778205000C3CC2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 				0AF741771C778205000C3CC2 /* AppDelegate.m */,
 				0AF741791C778205000C3CC2 /* ViewController.h */,
 				0AF7417A1C778205000C3CC2 /* ViewController.m */,
+				0AEFA66D1C7F963000E696BE /* TextProperties.h */,
+				0AEFA66E1C7F963000E696BE /* TextProperties.m */,
 				0AF7417C1C778205000C3CC2 /* Main.storyboard */,
 				0AF7417F1C778205000C3CC2 /* Assets.xcassets */,
 				0AF741811C778205000C3CC2 /* LaunchScreen.storyboard */,
@@ -334,6 +339,7 @@
 			files = (
 				0AF7417B1C778205000C3CC2 /* ViewController.m in Sources */,
 				0AF741781C778205000C3CC2 /* AppDelegate.m in Sources */,
+				0AEFA66F1C7F963000E696BE /* TextProperties.m in Sources */,
 				0AF741751C778205000C3CC2 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

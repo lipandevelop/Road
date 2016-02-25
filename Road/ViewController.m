@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "KFEpubController.h"
 #import "KFEpubContentModel.h"
+#import "TextProperties.h"
+
 
 #pragma mark ENUMs
 
@@ -38,11 +40,16 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 #pragma mark Data Properties
 @property (nonatomic, strong) NSString *bookTextRawString;
 @property (nonatomic, strong) NSString *bookTextString;
+@property (nonatomic, strong) NSMutableArray *chaptersArray;
 @property (nonatomic, strong) NSMutableArray *wordsArray;
 
 @property (nonatomic, strong) NSMutableDictionary *assistantTextRangeDictionary;
-@property (nonatomic, strong) NSScanner *assistantTextRangeScanner;
+@property (nonatomic, strong) NSMutableArray *assistantTextRangeIndexArray;
+@property (nonatomic, strong) NSMutableArray *assistantTextRangeLenghtArray;
 
+
+@property (nonatomic, strong) NSScanner *assistantTextRangeScanner;
+@property (nonatomic, strong) NSString *currentChapter;
 
 #pragma mark UI Properties
 
@@ -56,8 +63,6 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, strong) UILabel *nextWord4;
 @property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UILabel *dividerLabel;
-
-@property (nonatomic, strong) CATextLayer *focusTextLayer;
 
 @property (nonatomic, strong) UILabel *speedLabel;
 @property (nonatomic, strong) UILabel *speedometerReadLabel;
@@ -82,6 +87,7 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 @property (nonatomic, assign) BOOL highlightColorSelected;
 @property (nonatomic, assign) BOOL hideControlsActivated;
 @property (nonatomic, assign) BOOL textFieldRevealed;
+@property (nonatomic, assign) BOOL highlightAssistantTextActivated;
 
 #pragma mark Speed Properties
 
@@ -182,6 +188,8 @@ static const float kColorPaletteHeight = 15.0f;
 
 NSString *const kVowels = @"aeiouAEIOU";
 NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -189,7 +197,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 - (void)viewDidAppear:(BOOL)animated {
     [self loadBook];
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         self.displaylink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateFrame)];
         [self.displaylink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
@@ -203,7 +211,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [super viewDidLoad];
     [self loadValues];
     [self loadUIContents];
-
+    
     
 }
 
@@ -523,49 +531,60 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
 #pragma mark Converting To String
 
+
 - (void)convertBookToString {
-//    NSUInteger rangeIndex;
-//    NSUInteger rangeLength;
+    NSNumber *rangeIndex;
+    NSNumber *rangeLength;
+    NSInteger counterValue = 0;
     
-    self.bookTextRawString = [self.bookContentView stringByEvaluatingJavaScriptFromString:@"document.body.textContent"];
-   self.bookTextString = [[self.bookTextRawString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
+    self.bookTextRawString = @"Speech is the vocalized form of human communication. It is based upon the syntactic combination of lexicals and names that are drawn from very large (usually about 1,000 different words) vocabularies. Each spoken word is created out of the phonetic combination of a limited set of vowel and consonant speech sound units. These vocabularies, the syntax which structures them, and their set of speech sound units differ, creating the existence of many thousands of different types of mutually unintelligible human languages. Most human speakers are able to communicate in two or more of them,[1] hence being polyglots. The vocal abilities that enable humans to produce speech also provide humans with the ability to sing. A gestural form of human communication exists for the deaf in the form of sign language. Speech in some cultures has become the basis of a written language, often one that differs in its vocabulary, syntax and phonetics from its associated spoken one, a situation called diglossia.";
     
-//    self.assistantTextRangeDictionary = [[NSMutableDictionary alloc]init];
-//    self.assistantTextRangeScanner = [[NSScanner alloc]initWithString:self.bookTextRawString];
-//    self.assistantTextRangeScanner.scanLocation = kZero;
-//    self.assistantTextRangeScanner.caseSensitive = YES;
-////    self.assistantTextRangeScanner.charactersToBeSkipped = [NSCharacterSet punctuationCharacterSet];
-//    
-//    NSString *textString = [[NSString alloc]init];
-//    
-//    [self.assistantTextRangeScanner scanUpToString:@" " intoString:nil];
-//    while (![self.assistantTextRangeScanner isAtEnd]) {
-//        for (rangeIndex = 0; rangeIndex < self.bookTextString.length; rangeIndex++) {
-//            //
-//        }
-//    }
-    
-    
-    
-//    for (self.wordIndex = 0; self.wordIndex < self.wordsArray.count; self.wordIndex++) {
-//        rangeIndex = textString.
-//        rangeLength = textString.length;
-//        
-//    }
-    
-//    [self.assistantTextRangeScanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet] intoString:&textString];
-//    
-//    NSLog(@"%@", textString);
-    
-    
-//    self.bookTextString = newString;
+    //    self.bookTextRawString = [self.bookContentView stringByEvaluatingJavaScriptFromString:@"document.body.textContent"];
+    self.bookTextString = [[self.bookTextRawString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
     //    NSLog(@"%@", self.bookTextString);
+    
+    self.assistantTextRangeScanner = [[NSScanner alloc]initWithString:self.bookTextRawString];
+    self.assistantTextRangeScanner.scanLocation = kZero;
+    self.assistantTextRangeScanner.caseSensitive = YES;
+    
+    NSScanner *chapterScanner = [[NSScanner alloc]initWithString:self.bookTextRawString];
+    chapterScanner.scanLocation = kZero;
+    chapterScanner.caseSensitive = YES;
+    
+    
+    NSString *chapterString = [[NSString alloc]init];
+    self.chaptersArray = [NSMutableArray array];
+    [chapterScanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet] intoString:&chapterString];
+    self.currentChapter = chapterString;
+    //    NSLog(@"%@", self.currentChapter);
+    
+    //    while (!self.assistantTextRangeScanner.isAtEnd) {
+    //    [self.assistantTextRangeScanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet] intoString:&chapterString];
+    //        [self.chaptersArray addObject:chapterString];
+    //    }
+    //    NSLog(@"%lu", (unsigned long)self.chaptersArray.count);
+    
+    NSString *textString = [[NSString alloc]init];
+    self.assistantTextRangeIndexArray = [NSMutableArray array];
+    self.assistantTextRangeLenghtArray = [NSMutableArray array];
+    self.wordsArray = [NSMutableArray array];
+    while (!self.assistantTextRangeScanner.isAtEnd) {
+        [self.assistantTextRangeScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&textString];
+        rangeLength = @(textString.length);
+        rangeIndex = @(self.assistantTextRangeScanner.scanLocation);
+        counterValue++;
+        [self.assistantTextRangeIndexArray addObject:rangeIndex];
+        [self.assistantTextRangeLenghtArray addObject:rangeLength];
+        [self.wordsArray addObject:textString];
+        //                 NSLog(@"%@, %@, %@, %lu", textString, rangeLength, rangeIndex, counterValue);
+    }
+    //    NSLog(@"%lu", (unsigned long)self.assistantTextRangeIndexArray.count);
+    //    NSLog(@"%lu", (unsigned long)self.assistantTextRangeLenghtArray.count);
+    //    NSLog(@"%lu", (unsigned long)self.wordsArray.count);
     
 }
 
 - (void)loadText {
-    self.wordIndex = MAX(self.wordIndex, self.wordsArray.count);
-    self.wordIndex = MIN(self.wordIndex, self.wordsArray.count);
     self.startTime = CACurrentMediaTime();
     //Label
     self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
@@ -576,22 +595,10 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.focusText.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.focusText];
     
-    //Label Layer
-//    self.focusTextLayer.contents = self.bookTextString;
-//    self.focusTextLayer.zPosition = 1.0f;
-//    [self.focusText.layer addSublayer:self.focusTextLayer];
-    
-    NSArray *words = [self.bookTextString componentsSeparatedByString: @" "];
-    self.wordsArray = [NSMutableArray arrayWithCapacity:[words count]];
-    [self.wordsArray addObjectsFromArray:words];
-    //    NSLog(@"%@", self.wordsArray);
-    
     self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 46.0f, 200.0f, 30.0f)];
     self.previousWord3.numberOfLines = kZero;
     self.previousWord3.textColor = self.dotColor;
     self.previousWord3.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
-    //    self.previousWord3.textColor = [UIColor blackColor];
-    //        self.previousWord2.backgroundColor = [UIColor redColor];
     self.previousWord3.alpha = kHiddenControlRevealedAlhpa;
     self.previousWord3.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.previousWord3];
@@ -600,7 +607,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.previousWord2.numberOfLines = kZero;
     self.previousWord2.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
     self.previousWord2.textColor = [UIColor blackColor];
-    //        self.previousWord2.backgroundColor = [UIColor redColor];
     self.previousWord2.alpha = kUINormaAlpha - 0.1;
     self.previousWord2.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.previousWord2];
@@ -609,7 +615,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.previousWord.numberOfLines = kZero;
     self.previousWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-10];
     self.previousWord.textColor = [UIColor blackColor];
-    //        self.previousWord.backgroundColor = [UIColor redColor];
     self.previousWord.alpha = kUINormaAlpha;
     self.previousWord.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.previousWord];
@@ -618,7 +623,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.nextWord.numberOfLines = kZero;
     self.nextWord.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-10];
     self.nextWord.textColor = [UIColor blackColor];
-    //    self.nextWord.backgroundColor = [UIColor redColor];
     self.nextWord.alpha = kUINormaAlpha;
     self.nextWord.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.nextWord];
@@ -627,7 +631,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.nextWord2.numberOfLines = kZero;
     self.nextWord2.font = [UIFont fontWithName:(@"AmericanTypewriter") size:self.mainFontSize-11];
     self.nextWord2.textColor = [UIColor blackColor];
-    //    self.nextWord.backgroundColor = [UIColor redColor];
     self.nextWord2.alpha = kUINormaAlpha-0.1f;
     self.nextWord2.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.nextWord2];
@@ -649,60 +652,71 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self.view addSubview:self.nextWord4];
     
 }
+# pragma mark Update
 
 - (void)update {
-    float angle = -(self.timeIntervalBetweenIndex *4.5)+8.5f;
-    angle = MAX(angle, 4.75);
-    angle = MIN(angle, 8.0);
-    //    NSLog(@"%f", angle);
-    self.speedometerReadLabel.text = [NSString stringWithFormat:@"%0.1fwpm",1/self.timeIntervalBetweenIndex*60];
-    self.pinView.layer.affineTransform = CGAffineTransformMakeRotation(angle);
-    if (self.timeIntervalBetweenIndex == self.normalSpeed) {
-        [self.deccelerationtimer invalidate];
-        self.deccelerationtimer = nil;
+//        self.wordIndex = MAX(self.wordIndex, self.wordsArray.count);
+//        self.wordIndex = MIN(self.wordIndex,  kZero);
+    
+    if (self.wordIndex < self.wordsArray.count) {
+        if (self.highlightAssistantTextActivated) {
+            [self highlightAssistantTextWithColor:self.dotColor];
+        }
+        float angle = -(self.timeIntervalBetweenIndex *4.5)+8.5f;
+        angle = MAX(angle, 4.75);
+        angle = MIN(angle, 8.0);
+        //    NSLog(@"%f", angle);
+        self.speedometerReadLabel.text = [NSString stringWithFormat:@"%0.1fwpm",1/self.timeIntervalBetweenIndex*60];
+        self.pinView.layer.affineTransform = CGAffineTransformMakeRotation(angle);
+        if (self.timeIntervalBetweenIndex == self.normalSpeed) {
+            [self.deccelerationtimer invalidate];
+            self.deccelerationtimer = nil;
+        }
+        if (self.timeIntervalBetweenIndex < self.minSpeed) {
+            self.wordIndex ++;
+        } else if (self.timeIntervalBetweenIndex >= self.minSpeed) {
+            self.wordIndex --;
+        }
+        //    if (self.wordIndex > 4 && self.wordsArray.count >4) {
+        //    }
+        
+        self.previousWord3.text = [self.wordsArray objectAtIndex:self.wordIndex];
+        self.previousWord2.text = [self.wordsArray objectAtIndex:self.wordIndex+1];
+        self.previousWord.text = [self.wordsArray objectAtIndex:self.wordIndex+2];
+        
+        self.focusText.text = [self.wordsArray objectAtIndex:self.wordIndex+3];
+        self.nextWord.text = [self.wordsArray objectAtIndex:self.wordIndex+4];
+        
+        self.nextWord2.text = [self.wordsArray objectAtIndex:self.wordIndex+5];
+        self.nextWord3.text = [self.wordsArray objectAtIndex:self.wordIndex+6];
+        self.nextWord4.text = [self.wordsArray objectAtIndex:self.wordIndex+7];
+        
+        
+        if (self.highlightVowelsActivated) {
+            [self highlightVowels];
+        }
+        
+        if (self.highlightConsonantsActivated) {
+            [self highlightConsonants];
+        }
+        
+        if (self.highlightUserSelectionActivated) {
+            [self highlightUserSelected];
+        }
+        
+        if (self.wordIndex == self.wordsArray.count) {
+            self.displaylink.paused = YES;
+        }
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeIntervalBetweenIndex target:self selector:@selector(update) userInfo:nil repeats:NO];
+        //        NSLog(@"%d, %lu, %0.2f", self.wordIndex, (unsigned long)self.wordsArray.count, self.timeIntervalBetweenIndex);
+        
+        self.dot.alpha = 0.8;
+        [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+            self.dot.alpha = kZero;
+        } completion:nil];
+    } else {
+        return;
     }
-    if (self.timeIntervalBetweenIndex < self.minSpeed) {
-        self.wordIndex ++;
-    } else if (self.timeIntervalBetweenIndex >= self.minSpeed) {
-        self.wordIndex --;
-    }
-//    if (self.wordIndex > 4 && self.wordsArray.count >4) {
-//    }
-
-    self.previousWord3.text = [self.wordsArray objectAtIndex:self.wordIndex];
-    self.previousWord2.text = [self.wordsArray objectAtIndex:self.wordIndex+1];
-    self.previousWord.text = [self.wordsArray objectAtIndex:self.wordIndex+2];
-    
-    self.focusText.text = [self.wordsArray objectAtIndex:self.wordIndex+3];
-    self.nextWord.text = [self.wordsArray objectAtIndex:self.wordIndex+4];
-    
-    self.nextWord2.text = [self.wordsArray objectAtIndex:self.wordIndex+5];
-    self.nextWord3.text = [self.wordsArray objectAtIndex:self.wordIndex+6];
-    self.nextWord4.text = [self.wordsArray objectAtIndex:self.wordIndex+7];
-    
-    
-    if (self.highlightVowelsActivated) {
-        [self highlightVowels];
-    }
-    
-    if (self.highlightConsonantsActivated) {
-        [self highlightConsonants];
-    }
-    
-    if (self.highlightUserSelectionActivated) {
-        [self highlightUserSelected];
-    }
-    
-    if (self.wordIndex == self.wordsArray.count) {
-        self.displaylink.paused = YES;
-    }
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeIntervalBetweenIndex target:self selector:@selector(update) userInfo:nil repeats:NO];
-    //        NSLog(@"%d, %lu, %0.2f", self.wordIndex, (unsigned long)self.wordsArray.count, self.timeIntervalBetweenIndex);
-    
-    self.dot.alpha = 0.8;
-    [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
-        self.dot.alpha = kZero;
-    } completion:nil];
 }
 
 - (void)modifyTimeInterval: (float)time {
@@ -719,7 +733,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)updateFrame {
-    //    NSLog(@"%@,%@", self.userSelectedTextTextField.text, self.userInputForHighlightedTextString);
+    
     if (self.breakPedalGesture.state == UIControlEventTouchDown) {
         [UIView animateWithDuration:4.0f animations:^{
             self.breakPedal.alpha = 0.50f;
@@ -736,6 +750,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
         self.breakPedal.layer.shadowRadius -= 0.5f;
         self.breakPedal.layer.shadowRadius = MIN(self.breakPedal.layer.shadowRadius, kZero);
     }
+    //    NSLog(@"%@,%@", self.userSelectedTextTextField.text, self.userInputForHighlightedTextString);
 }
 
 
@@ -830,6 +845,25 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
             [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(charIdx, 1)];
             //            NSLog(@"%C is a %@", currentCharacter, isCharacterSet ? @"vowel" : @"consonant");
             [self.focusText setAttributedText: attributedString];
+        }
+    }
+}
+
+- (void)highlightAssistantTextWithColor: (UIColor *)color {
+    NSCharacterSet *characterSet = [NSCharacterSet alphanumericCharacterSet];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString: self.assistantTextView.attributedText];
+    for (NSInteger charIdx = 0; charIdx < self.assistantTextView.text.length; charIdx++){
+        unichar currentWord = [self.assistantTextView.text characterAtIndex:charIdx];
+        BOOL isWord = [characterSet characterIsMember:currentWord];
+        if (isWord) {
+            NSInteger range = [([self.assistantTextRangeIndexArray objectAtIndex:self.wordIndex+3])integerValue];
+            NSInteger length =[([self.assistantTextRangeLenghtArray objectAtIndex:self.wordIndex+3])integerValue];
+            //            [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(range, self.focusText.text.length)];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(range, 10)];
+            
+            //            NSLog(@"%C is a %@", currentCharacter, isCharacterSet ? @"vowel" : @"consonant");
+            NSLog(@"%lu, %lu, %d", range, length, isWord);
+            [self.assistantTextView setAttributedText: attributedString];
         }
     }
 }
@@ -1269,6 +1303,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)revealAssistantText: (UIButton *)sender {
+    self.highlightAssistantTextActivated = YES;
     self.textFieldRevealed = YES;
     [self.view addSubview:self.assistantTextView];
     [self.view addSubview:self.expandTextViewButton];
@@ -1285,6 +1320,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)retractAssistantText {
+    self.highlightAssistantTextActivated = NO;
     self.textFieldRevealed = NO;
     [self.accessTextViewButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:kZero] forState:UIControlStateNormal];
     [UIView animateWithDuration:1.0f animations:^{
@@ -1315,7 +1351,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
         self.accessTextViewButton.backgroundColor = self.colorThree;
         self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.view.frame), kZero, 1.0f, CGRectGetHeight(self.view.frame));
         self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
-        
     }];
 }
 
