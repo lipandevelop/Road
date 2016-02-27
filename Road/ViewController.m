@@ -639,14 +639,13 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 }
 
 - (void)loadText {
+    static const float kLabelViewWidth = 200.0f;
+    static const float kLabelViewHeight = 150.0f;
+    static const float kLabelHeight = 30.0f;
+    static const float kLabelHeightOffset = 15.0;
     self.startTime = CACurrentMediaTime();
     //Label
     
-    self.labelView = [[UIView alloc]initWithFrame:self.view.frame];
-    
-    self.labelView.layer.zPosition = -1;
-    
-    [self.view addSubview:self.labelView];
     self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-175.0f, 50.0f, 150.0f, 130.0f)];
     self.chapterLabel.numberOfLines = kZero;
     self.chapterLabel.textColor = [UIColor blackColor];
@@ -657,58 +656,60 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.chapterLabel.layer.shadowOpacity = kShadowOpacity;
     [self.labelView addSubview:self.chapterLabel];
     
-    self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
+    self.labelView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-kLabelViewWidth/2, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne-kLabelViewHeight/2, kLabelViewWidth, kLabelViewHeight)];
+    [self.view addSubview:self.labelView];
+    
+    self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2, kLabelViewWidth, kLabelHeight)];
     self.focusText.numberOfLines = kZero;
     self.focusText.textColor = [UIColor blackColor];
     self.focusText.alpha = kGoldenRatioMinusOne;
     self.focusText.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.focusText];
     
-    self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 46.0f, 200.0f, 30.0f)];
+    self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2-3*kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
     self.previousWord3.numberOfLines = kZero;
     self.previousWord3.textColor = self.dotColor;
     self.previousWord3.alpha = kHiddenControlRevealedAlhpa;
     self.previousWord3.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.previousWord3];
     
-    self.previousWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 33.0f, 200.0f, 30.0f)];
+    self.previousWord2 = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2-2*kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
     self.previousWord2.numberOfLines = kZero;
     self.previousWord2.textColor = [UIColor blackColor];
     self.previousWord2.alpha = kUINormaAlpha - 0.1;
     self.previousWord2.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.previousWord2];
     
-    self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 20.0f, 200.0f, 30.0f)];
+    self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2-kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
     self.previousWord.numberOfLines = kZero;
-
-
     self.previousWord.textColor = [UIColor blackColor];
     self.previousWord.alpha = kUINormaAlpha;
     self.previousWord.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.previousWord];
     
-    self.nextWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 30.0f, 200.0f, 30.0f)];
+    self.nextWord = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2+kLabelHeight, kLabelViewWidth, kLabelHeight)];
     self.nextWord.numberOfLines = kZero;
     self.nextWord.textColor = [UIColor blackColor];
     self.nextWord.alpha = kUINormaAlpha;
     self.nextWord.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.nextWord];
     
-    self.nextWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 43.0f, 200.0f, 30.0f)];
+    self.nextWord2 = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2+kLabelHeight+kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
     self.nextWord2.numberOfLines = kZero;
     self.nextWord2.textColor = [UIColor blackColor];
     self.nextWord2.alpha = kUINormaAlpha-0.1f;
     self.nextWord2.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.nextWord2];
     
-    self.nextWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 56.0f, 200.0f, 30.0f)];self.nextWord3.numberOfLines = kZero;
+    self.nextWord3 = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2+kLabelHeight+2*kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
+    self.nextWord3.numberOfLines = kZero;
     self.nextWord3.textColor = [UIColor blackColor];
-    //    self.nextWord.backgroundColor = [UIColor redColor];
     self.nextWord3.alpha = kUINormaAlpha-0.15f;
     self.nextWord3.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.nextWord3];
     
-    self.nextWord4 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 69.0f, 200.0f, 30.0f)];self.nextWord4.numberOfLines = kZero;
+    self.nextWord4 = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2+kLabelHeight+3*kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
+    self.nextWord4.numberOfLines = kZero;
     self.nextWord4.textColor = [UIColor blackColor];
     //    self.nextWord.backgroundColor = [UIColor redColor];
     self.nextWord4.alpha = kUINormaAlpha-0.175;
