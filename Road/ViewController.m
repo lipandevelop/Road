@@ -273,6 +273,9 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 
 #pragma mark Load UIContents
 - (void)loadUIContents {
+    self.uiView = [[UIView alloc]initWithFrame:self.view.frame];
+    [self.view addSubview:self.uiView];
+    
     UIImage *paper = [UIImage imageNamed:@"ivoryPaper.png"];
     UIImage *breakPedal = [UIImage imageNamed:@"finger_clean.png"];
     UIImage *speedometerImage = [UIImage imageNamed:@"Speedometer.png"];
@@ -473,16 +476,15 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.color5.backgroundColor = self.colorFive;
     //    self.color5.layer.cornerRadius = 4.0;
     
-    [self.view addSubview:self.speedAdjusterSlider];
-    [self.view addSubview:self.breakPedal];
-    [self.view addSubview:self.hideControlButton];
-    [self.view addSubview:self.pinView];
-    [self.view addSubview:self.speedometerReadLabel];
-    [self.view addSubview:self.accessTextViewButton];
-    [self.view addSubview:self.speedometerView];
-    [self.view addSubview:self.toggleFocusTextModification];
-    
-    [self.view setNeedsDisplay];
+    [self.uiView addSubview:self.speedAdjusterSlider];
+    [self.uiView addSubview:self.breakPedal];
+    [self.uiView addSubview:self.hideControlButton];
+    [self.uiView addSubview:self.pinView];
+    [self.uiView addSubview:self.speedometerReadLabel];
+    [self.uiView addSubview:self.accessTextViewButton];
+    [self.uiView addSubview:self.speedometerView];
+    [self.uiView addSubview:self.toggleFocusTextModification];
+    [self.uiView setNeedsDisplay];
 }
 
 #pragma mark Modify Toggle Buttons
@@ -659,7 +661,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.focusText.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.focusText];
     
-    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2-kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
+    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.labelView.bounds)/2-4.0f, CGRectGetHeight(self.labelView.bounds)/2+kLabelHeightOffset, 8.0f, 8.0f)];
     self.dot.layer.cornerRadius = 4.0f;
     self.dot.layer.borderWidth = kBoarderWidth;
     self.dot.clipsToBounds = YES;
@@ -1252,8 +1254,8 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
             self.selectedSpeedToAdjustIndicator = @"normal speed";
             break;
     }
-    [self.view addSubview:self.speedLabel];
-    [self.view addSubview:self.speedPropertySelector];
+    [self.uiView addSubview:self.speedLabel];
+    [self.uiView addSubview:self.speedPropertySelector];
     self.speedShown = self.speedAdjusterSlider.value;
     float wordsPerMinute = 1/self.speedShown * 60;
     if (segmentSelected == Default) {
@@ -1353,11 +1355,11 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     if (longPress.state !=UIGestureRecognizerStateBegan) {
         return;
     }
-    [self.view addSubview:self.color5];
-    [self.view addSubview:self.color4];
-    [self.view addSubview:self.color3];
-    [self.view addSubview:self.color2];
-    [self.view addSubview:self.color1];
+    [self.uiView addSubview:self.color5];
+    [self.uiView addSubview:self.color4];
+    [self.uiView addSubview:self.color3];
+    [self.uiView addSubview:self.color2];
+    [self.uiView addSubview:self.color1];
     self.color1.tag = 1;
     self.color2.tag = 2;
     self.color3.tag = 3;
@@ -1404,7 +1406,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 }
 
 - (void)openUserInputTextField {
-    [self.view addSubview:self.userSelectedTextTextField];
+    [self.uiView addSubview:self.userSelectedTextTextField];
     [UIView animateWithDuration:1.20f animations:^{
         self.userSelectedTextTextField.frame = CGRectMake(kZero-1.0f, self.toggleUserSelections.frame.origin.y-155.0f, 90.0f, 30.0f);
     }];
@@ -1420,9 +1422,9 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 - (void)revealAssistantText: (UIButton *)sender {
     self.highlightAssistantTextActivated = YES;
     self.textFieldRevealed = YES;
-    [self.view addSubview:self.assistantTextView];
-    [self.view addSubview:self.expandTextViewButton];
-    [self.view addSubview:self.retractTextViewButton];
+    [self.uiView addSubview:self.assistantTextView];
+    [self.uiView addSubview:self.expandTextViewButton];
+    [self.uiView addSubview:self.retractTextViewButton];
     self.assistantTextView.text = self.bookTextRawString;
     
     [UIView animateWithDuration:1.0f animations:^{
@@ -1477,7 +1479,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.hideControlsActivated = YES;
     [self hideControlButton];
     [self hideSpeedometer];
-    [self.view addSubview:self.dividerLabel];
+    [self.uiView addSubview:self.dividerLabel];
     [self.accessTextViewButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:0.65f] forState:UIControlStateNormal];
     [self.accessTextViewButton setTitle:@"-" forState:UIControlStateNormal];
     [self.accessTextViewButton setTitleColor:self.defaultButtonColor forState:UIControlStateNormal];
@@ -1500,13 +1502,13 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 - (void)expandModifyFocusTextView: (UIButton *)sender {
     static const float kEdgeOffset = 5.0f;
     static const float kHeightOffset = 80.0f;
-    [self.view addSubview:self.modifyFocusTextFontSizeSlider];
-    [self.view addSubview:self.focusFontSizeLabel];
-    [self.view addSubview:self.color5];
-    [self.view addSubview:self.color4];
-    [self.view addSubview:self.color3];
-    [self.view addSubview:self.color2];
-    [self.view addSubview:self.color1];
+    [self.uiView addSubview:self.modifyFocusTextFontSizeSlider];
+    [self.uiView addSubview:self.focusFontSizeLabel];
+    [self.uiView addSubview:self.color5];
+    [self.uiView addSubview:self.color4];
+    [self.uiView addSubview:self.color3];
+    [self.uiView addSubview:self.color2];
+    [self.uiView addSubview:self.color1];
     self.color1.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     self.color2.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     self.color3.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
@@ -1551,7 +1553,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 }
 
 - (void)flipXAxis {
-//    self.view.layer.transform = CATransform3DRotate(self.view.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.uiView.layer.transform = CATransform3DRotate(self.view.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
 
 }
 
@@ -1576,16 +1578,16 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 //
 //
 //    
-//    self.assistantTextView.layer.transform = CATransform3DRotate(self.assistantTextView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.speedLabel.layer.transform = CATransform3DRotate(self.speedLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.speedometerReadLabel.layer.transform = CATransform3DRotate(self.speedometerReadLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.focusFontSizeLabel.layer.transform = CATransform3DRotate(self.focusFontSizeLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.hideControlButton.layer.transform = CATransform3DRotate(self.hideControlButton.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.toggleConsonates.layer.transform = CATransform3DRotate(self.toggleConsonates.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.toggleUserSelections.layer.transform = CATransform3DRotate(self.toggleUserSelections.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.pinView.layer.transform = CATransform3DRotate(self.pinView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.speedPropertySelector.layer.transform = CATransform3DRotate(self.speedPropertySelector.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.userSelectedTextTextField.layer.transform = CATransform3DRotate(self.userSelectedTextTextField.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.assistantTextView.layer.transform = CATransform3DRotate(self.assistantTextView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.speedLabel.layer.transform = CATransform3DRotate(self.speedLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.speedometerReadLabel.layer.transform = CATransform3DRotate(self.speedometerReadLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.focusFontSizeLabel.layer.transform = CATransform3DRotate(self.focusFontSizeLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.hideControlButton.layer.transform = CATransform3DRotate(self.hideControlButton.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.toggleConsonates.layer.transform = CATransform3DRotate(self.toggleConsonates.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.toggleUserSelections.layer.transform = CATransform3DRotate(self.toggleUserSelections.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.pinView.layer.transform = CATransform3DRotate(self.pinView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.speedPropertySelector.layer.transform = CATransform3DRotate(self.speedPropertySelector.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.userSelectedTextTextField.layer.transform = CATransform3DRotate(self.userSelectedTextTextField.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
 }
 
 - (void)flipLabelsRight {
