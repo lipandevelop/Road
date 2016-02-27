@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A034FCF1C814A4600DE94F8 /* leftHand.png */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497E1C7B9D9F009309F1 /* finger_noise.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A034FCF1C814A4600DE94F8 /* leftHand.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = leftHand.png; path = Images/leftHand.png; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF497E1C7B9D9F009309F1 /* finger_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_noise.png; path = Images/finger_noise.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				0AEF499B1C7D3508009309F1 /* Pin.png */,
 				0AEF49801C7C2FBC009309F1 /* finger_clean.png */,
 				0AEF497E1C7B9D9F009309F1 /* finger_noise.png */,
+				0A034FCF1C814A4600DE94F8 /* leftHand.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */,
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
 				0AF741831C778205000C3CC2 /* LaunchScreen.storyboard in Resources */,
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,

@@ -101,6 +101,7 @@ typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
 @property (nonatomic, assign) BOOL hideControlsActivated;
 @property (nonatomic, assign) BOOL textFieldRevealed;
 @property (nonatomic, assign) BOOL highlightAssistantTextActivated;
+@property (nonatomic, assign) BOOL xAxisFlipped;
 
 #pragma mark Speed Properties
 
@@ -125,6 +126,7 @@ typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
 @property (nonatomic, strong) UIButton *accessTextViewButton;
 @property (nonatomic, strong) UIButton *expandTextViewButton;
 @property (nonatomic, strong) UIButton *retractTextViewButton;
+@property (nonatomic, strong) UIButton *flipXAxisButton;
 
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
@@ -198,17 +200,16 @@ static const float kAccessButtonHeight = 45.0f;
 
 //PaletteConstants
 static const float kColorPaletteheightMultiple = kGoldenRatioMinusOne;
-static const float kColorPaletteXOrigin = -35.0f;
-static const float kColorPaletteWidth = 23.0f;
-static const float kColorPaletteHeight = 15.0f;
+static const float kColorPaletteXOrigin = 0.0f;
+static const float kColorPaletteWidth = 35.0f;
+static const float kColorPaletteHeight = 25.0f;
 
-static const float kToggleButtonDimension = 25.0f;
-static const float kToggleButtonOffsetX = 300.0f;
+static const float kToggleButtonDimension = 35.0f;
+static const float kToggleButtonOffsetX = 200.0f;
 
 
 NSString *const kVowels = @"aeiouAEIOU";
 NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
-NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 - (void)viewWillAppear:(BOOL)animated {
 }
@@ -229,8 +230,6 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [super viewDidLoad];
     [self loadValues];
     [self loadUIContents];
-    [self flipXAxis];
-    [self flipUI];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -280,10 +279,19 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     UIImage *breakPedal = [UIImage imageNamed:@"finger_clean.png"];
     UIImage *speedometerImage = [UIImage imageNamed:@"Speedometer.png"];
     UIImage *pinImage= [UIImage imageNamed:@"Pin.png"];
+    UIImage *leftHandImage = [UIImage imageNamed:@"leftHand"];
     
     self.view.layer.contents = (__bridge id)paper.CGImage;
     
-    self.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-150.0f, 35, 140, 140)];
+    
+//    UIView *innerRing = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-132.0f, 47.0f, 110, 110)];
+//    innerRing.layer.borderWidth = 0.70f;
+//    innerRing.layer.borderColor = [UIColor blackColor].CGColor;
+//    innerRing.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+//    innerRing.layer.shadowOpacity = kShadowOpacity;
+//    innerRing.layer.cornerRadius = 55.0f;
+    
+    self.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-150.0f, 35, 140, 140)];
     self.speedometerView.layer.contents = (__bridge id)speedometerImage.CGImage;
     self.speedometerView.layer.contentsGravity = kCAGravityResizeAspect;
     self.speedometerView.alpha = 0.15f;
@@ -297,20 +305,20 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.pinView.layer.shadowOffset = CGSizeMake(-1.0, 4.0);
     self.pinView.layer.shadowOpacity = kShadowOpacity;
     
-    self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-107.0f, 114.0f, 60.0f, 15.0f)];
+    self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-107.0f, 114.0f, 60.0f, 15.0f)];
     //    self.speedometerReadLabel.layer.borderWidth = 0.75;
     self.speedometerReadLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.speedometerReadLabel.alpha = kUINormaAlpha;
     self.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
     
-    self.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX, kAccessButtonWidth, kAccessButtonHeight)];
+    self.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX, kAccessButtonWidth, kAccessButtonHeight)];
     self.toggleFocusTextModification.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.toggleFocusTextModification.layer.shadowOpacity = kShadowOpacity;
     self.toggleFocusTextModification.layer.cornerRadius = kAccessButtonHeight;
-    self.toggleFocusTextModification.backgroundColor = self.colorFive;
+    self.toggleFocusTextModification.backgroundColor = self.defaultButtonColor;
     [self.toggleFocusTextModification addTarget:self action:@selector(expandModifyFocusTextView:) forControlEvents:UIControlEventTouchDown];
     
-    self.modifyFocusTextFontSizeSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)+120, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX + 110.0f, 120.0f, 30.0f)];
+    self.modifyFocusTextFontSizeSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)+120, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0f, 120.0f, 30.0f)];
     self.modifyFocusTextFontSizeSlider.layer.affineTransform = CGAffineTransformRotate(self.modifyFocusTextFontSizeSlider.layer.affineTransform, M_PI/180.0 * 180);
     self.modifyFocusTextFontSizeSlider.tintColor = self.colorFive;
     self.modifyFocusTextFontSizeSlider.layer.shadowOffset = CGSizeMake(-1.0f, 6.0);
@@ -320,12 +328,12 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.modifyFocusTextFontSizeSlider.minimumValue = 22.0f;
     [self.modifyFocusTextFontSizeSlider addTarget:self action:@selector(adjustFontSize:) forControlEvents:UIControlEventValueChanged];
     
-    self.focusFontSizeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)+120, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX + 110.0f, 30.0f, 30.0f)];
+    self.focusFontSizeLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)+120, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0, 30.0f, 30.0f)];
     self.focusFontSizeLabel.text = @"+A";
     self.focusFontSizeLabel.textColor = self.defaultButtonColor;
-//    self.focusFontSizeLabel.alpha = kUINormaAlpha;
-
-    self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/1.15203398875, 35.0f, 35.0f)];
+    //    self.focusFontSizeLabel.alpha = kUINormaAlpha;
+    
+    self.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/1.15203398875, 35.0f, 35.0f)];
     self.hideControlButton.layer.borderWidth = kBoarderWidth;
     self.hideControlButton.layer.borderColor = [UIColor blackColor].CGColor;
     [self.hideControlButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -338,7 +346,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     
     self.breakPedalGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(breaking)];
     self.breakPedalGesture.minimumPressDuration = 0.01;
-    self.breakPedalFrame = CGRectMake(CGRectGetWidth(self.view.frame)*0.38196601125, CGRectGetMaxY(self.view.frame)/kGoldenRatio, 220.0f, 220.0f);
+    self.breakPedalFrame = CGRectMake(CGRectGetWidth(self.uiView.frame)*0.38196601125, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 220.0f, 220.0f);
     CGAffineTransform pedalPosition = CGAffineTransformIdentity;
     pedalPosition = CGAffineTransformScale(pedalPosition, 0.50f, 0.50f);
     pedalPosition = CGAffineTransformRotate(pedalPosition, M_PI/180.0 * -37);
@@ -353,7 +361,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.openColorOptionsGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(openColorPalette:)];
     self.openColorOptionsGesture.minimumPressDuration = 0.30f;
     
-    self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.view.frame) - 95, kToggleButtonDimension, kToggleButtonDimension);
+    self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.uiView.frame) - 95, kToggleButtonDimension, kToggleButtonDimension);
     self.toggleVowels = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
     [self.toggleVowels addTarget:self action:@selector(toggleVowelsSelected) forControlEvents:UIControlEventTouchUpInside];
     [self modifyToggleButtonWithButton:self.toggleVowels buttonLayer:self.toggleVowels.layer color: self.defaultButtonColor string:@"æ"];
@@ -368,7 +376,19 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self modifyToggleButtonWithButton:self.toggleUserSelections buttonLayer:self.toggleUserSelections.layer color:self.defaultButtonColor string:@"u"];
     self.toggleUserSelections.layer.affineTransform = CGAffineTransformMakeTranslation(-65, -100);
     
-    self.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/kGoldenRatio, 120, 30)];
+    self.flipXAxisButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(self.uiView.frame)+25.0f, CGRectGetHeight(self.uiView.frame)-80.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    [self.flipXAxisButton addTarget:self action:@selector(flipXAxis:) forControlEvents:UIControlEventTouchUpInside];
+    self.flipXAxisButton.layer.borderWidth = kBoarderWidth;
+    self.flipXAxisButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.flipXAxisButton.layer.shadowOpacity = kShadowOpacity;
+    self.flipXAxisButton.layer.cornerRadius = kAccessButtonHeight/2;
+    self.flipXAxisButton.layer.contents = (__bridge id)leftHandImage.CGImage;
+    self.flipXAxisButton.layer.contentsGravity = kCAGravityResizeAspect;
+    self.flipXAxisButton.layer.transform = CATransform3DRotate(self.flipXAxisButton.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    
+    self.flipXAxisButton.alpha = kUINormaAlpha;
+    
+    self.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 120, 30)];
     [self.speedAdjusterSlider addTarget:self action:@selector(adjustSpeedUsingSlider:) forControlEvents:UIControlEventValueChanged];
     self.speedAdjusterSlider.layer.affineTransform = CGAffineTransformRotate(self.speedAdjusterSlider.layer.affineTransform, M_PI/180.0 * -40);
     self.speedAdjusterSlider.layer.affineTransform = CGAffineTransformTranslate(self.speedAdjusterSlider.layer.affineTransform, 30.0f, 40.0f);
@@ -376,7 +396,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.speedAdjusterSlider.alpha = kZero;
     self.speedAdjusterSlider.value = 1/self.normalSpeed;
     
-    self.speedLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)/kGoldenRatio, 220, 60)];
+    self.speedLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 220, 60)];
     self.speedLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.speedLabel.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.speedLabel.layer.shadowOpacity = kShadowOpacity;
@@ -384,7 +404,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.speedLabel.alpha = kZero;
     
     self.speedPropertySelector = [[UISegmentedControl alloc]initWithItems:self.speedArray];
-    self.speedPropertySelector.frame = CGRectMake(kZero, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
+    self.speedPropertySelector.frame = CGRectMake(kZero, CGRectGetHeight(self.uiView.frame), CGRectGetWidth(self.uiView.frame), 30);
     self.speedPropertySelector.selectedSegmentIndex = kZero;
     self.speedPropertySelector.layer.borderWidth = kBoarderWidth;
     self.speedPropertySelector.layer.borderColor = [UIColor blackColor].CGColor;
@@ -408,7 +428,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.userSelectedTextTextField.keyboardAppearance = UIKeyboardAppearanceDark;
     self.userSelectedTextTextField.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     
-    self.accessTextViewButton = [[UIButton alloc]initWithFrame:CGRectMake(-kAccessButtonWidth/2, CGRectGetMidY(self.view.frame), kAccessButtonWidth, kAccessButtonHeight)];
+    self.accessTextViewButton = [[UIButton alloc]initWithFrame:CGRectMake(-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame), kAccessButtonWidth, kAccessButtonHeight)];
     self.accessTextViewButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.accessTextViewButton.layer.shadowOpacity = kShadowOpacity;
     self.accessTextViewButton.layer.cornerRadius = kAccessButtonHeight;
@@ -437,7 +457,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.retractTextViewButton.layer.shadowOpacity = kShadowOpacity;
     [self.retractTextViewButton addTarget:self action:@selector(retractAssistantText:) forControlEvents:UIControlEventTouchDown];
     
-    self.assistantTextView = [[UITextView alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40, 120.0f, 120.0f)];
+    self.assistantTextView = [[UITextView alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.uiView.frame)-40, 120.0f, 120.0f)];
     self.assistantTextView.layer.zPosition = 0.9;
     self.assistantTextView.text = self.bookTextRawString;
     self.assistantTextView.textColor = self.defaultButtonColor;
@@ -449,7 +469,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.dividerLabel.backgroundColor = self.defaultButtonColor;
     self.dividerLabel.alpha = 0.20f;
     
-    self.color1 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.view.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight)];
+    self.color1 = [[UIButton alloc]initWithFrame:CGRectMake(kColorPaletteXOrigin, CGRectGetHeight(self.uiView.frame)*kColorPaletteheightMultiple, kColorPaletteWidth, kColorPaletteHeight)];
     self.userSelectedTextTextField.delegate = self;
     self.color1.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.color1.layer.shadowOpacity = kShadowOpacity;
@@ -484,6 +504,8 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self.uiView addSubview:self.accessTextViewButton];
     [self.uiView addSubview:self.speedometerView];
     [self.uiView addSubview:self.toggleFocusTextModification];
+    [self.uiView  addSubview:self.flipXAxisButton];
+//    [self.uiView addSubview:innerRing];
     [self.uiView setNeedsDisplay];
 }
 
@@ -499,7 +521,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     button.alpha = kZero;
     button.backgroundColor = color;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:button];
+    [self.uiView addSubview:button];
 }
 
 - (void)loadBook {
@@ -641,7 +663,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     static const float kLabelHeightOffset = 15.0;
     self.startTime = CACurrentMediaTime();
     
-    self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-175.0f, 50.0f, 150.0f, 130.0f)];
+    self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)-175.0f, 50.0f, 150.0f, 130.0f)];
     self.chapterLabel.numberOfLines = kZero;
     self.chapterLabel.textColor = [UIColor blackColor];
     self.chapterLabel.alpha = kZero;
@@ -652,6 +674,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self.labelView addSubview:self.chapterLabel];
     
     self.labelView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-kLabelViewWidth/2, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne-kLabelViewHeight/2, kLabelViewWidth, kLabelViewHeight)];
+    
     [self.view addSubview:self.labelView];
     
     self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2, kLabelViewWidth, kLabelHeight)];
@@ -869,7 +892,11 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self retractColorPalette];
     [self retractUserInputTextField];
     [self retractModifyFocusTextView];
-    
+    float index = self.wordIndex;
+    float wordArray = self.wordsArray.count;
+    float textFieldContentOffsetY = index/wordArray * self.assistantTextView.contentSize.height;
+    self.assistantTextView.contentOffset = CGPointMake(kZero, textFieldContentOffsetY);
+
 }
 
 - (void)pauseforPunctuation {
@@ -961,7 +988,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
             NSInteger length = [([self.assistantTextRangeLenghtArray objectAtIndex:self.wordIndex+4])integerValue];
             //            [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(range, self.focusText.text.length+1)];
             [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(range, length+1)];
-//            NSLog(@"%lu, %lu, %d, %@", range, length, isWord, self.focusText.text);
+            //            NSLog(@"%lu, %lu, %d, %@", range, length, isWord, self.focusText.text);
             [self.assistantTextView setAttributedText: attributedString];
         }
     }
@@ -977,7 +1004,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     if (self.highlightVowelsActivated) {
         [self.toggleVowels addGestureRecognizer:self.openColorOptionsGesture];
         [UIView animateWithDuration:0.5 animations:^{
-            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 140, kToggleButtonDimension, kToggleButtonDimension);
+            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.uiView.frame) - 140, kToggleButtonDimension, kToggleButtonDimension);
             self.toggleVowels.layer.shadowOpacity = 0.55f;
             self.toggleVowels.layer.shadowOffset = CGSizeMake(-1.5, 7.0);
             self.toggleVowels.backgroundColor = self.colorOne;
@@ -988,7 +1015,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
         [self.toggleConsonates removeGestureRecognizer:self.openColorOptionsGesture];
         [self retractColorPalette];
         [UIView animateWithDuration:0.5 animations:^{
-            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.view.frame) - 138, kToggleButtonDimension, kToggleButtonDimension);
+            self.toggleVowels.frame = CGRectMake(55, CGRectGetHeight(self.uiView.frame) - 138, kToggleButtonDimension, kToggleButtonDimension);
             self.toggleVowels.layer.shadowOpacity = 0.30f;
             self.toggleVowels.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
             self.toggleVowels.backgroundColor = self.defaultButtonColor;
@@ -1264,7 +1291,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
         self.speedLabel.text = [NSString stringWithFormat:@"%@\n%0.1f\nwords/min",self.selectedSpeedToAdjustIndicator, wordsPerMinute];
         [UIView animateWithDuration:1.0 animations:^{
             self.speedLabel.alpha = kUINormaAlpha;
-            self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 30, CGRectGetWidth(self.view.frame), 30);
+            self.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.uiView.frame) - 30, CGRectGetWidth(self.uiView.frame), 30);
             self.speedPropertySelector.alpha = kHiddenControlRevealedAlhpa;
             
         }];
@@ -1370,14 +1397,18 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self.color3 addTarget:self action:@selector(changeSelectedTextColor:) forControlEvents:UIControlEventTouchUpInside];
     [self.color4 addTarget:self action:@selector(changeSelectedTextColor:) forControlEvents:UIControlEventTouchUpInside];
     [self.color5 addTarget:self action:@selector(changeSelectedTextColor:) forControlEvents:UIControlEventTouchUpInside];
-    
+    self.color1.alpha = 1.0f;
+    self.color2.alpha = 1.0f;
+    self.color3.alpha = 1.0f;
+    self.color4.alpha = 1.0f;
+    self.color5.alpha = 1.0f;
     [UIView animateWithDuration:0.0 animations:^{
         [self updatePaletteOrigin];
-        self.color1.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color2.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color3.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color4.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color5.frame = CGRectMake(self.colorPaletteXOrigin+5, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color1.frame = CGRectMake(self.colorPaletteXOrigin-15, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color2.frame = CGRectMake(self.colorPaletteXOrigin-15, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color3.frame = CGRectMake(self.colorPaletteXOrigin-15, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color4.frame = CGRectMake(self.colorPaletteXOrigin-15, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+        self.color5.frame = CGRectMake(self.colorPaletteXOrigin-15, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:1.0 animations:^{
             self.color1.frame = CGRectMake(self.colorPaletteXOrigin, self.colorPaletteYOrigin, kColorPaletteWidth, kColorPaletteHeight);
@@ -1390,12 +1421,18 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     
 }
 - (void)retractColorPalette {
-    [UIView animateWithDuration:1.0 animations:^{
-        self.color1.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color2.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color3.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color4.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
-        self.color5.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+    [UIView animateWithDuration:0.25 animations:^{
+        self.color1.alpha = kZero;
+        self.color2.alpha = kZero;
+        self.color3.alpha = kZero;
+        self.color4.alpha = kZero;
+        self.color5.alpha = kZero;
+
+//        self.color1.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+//        self.color2.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+//        self.color3.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+//        self.color4.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
+//        self.color5.frame = CGRectMake(self.colorPaletteXOrigin-10, self.colorPaletteYOrigin, kZero, kColorPaletteHeight);
     }completion:^(BOOL finished) {
         [self.color1 removeFromSuperview];
         [self.color2 removeFromSuperview];
@@ -1428,10 +1465,11 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.assistantTextView.text = self.bookTextRawString;
     
     [UIView animateWithDuration:1.0f animations:^{
+        self.flipXAxisButton.alpha = kUINormaAlpha;
         self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
         self.accessTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
         self.accessTextViewButton.alpha = kZero;
-        self.assistantTextView.frame = CGRectMake(kZero, CGRectGetMidY(self.view.frame)-40.0f, CGRectGetWidth(self.view.frame)/2, 120.0f);
+        self.assistantTextView.frame = CGRectMake(kZero, CGRectGetMidY(self.uiView.frame)-40.0f, CGRectGetWidth(self.uiView.frame)/2, 120.0f);
         self.expandTextViewButton.alpha = 1.0f;
         self.retractTextViewButton.alpha = 1.0f;
         self.expandTextViewButton.frame = CGRectMake(87.5f, self.assistantTextView.frame.origin.y-65, 45, 45);
@@ -1445,7 +1483,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
         [self.accessTextViewButton setTitle:@"+" forState:UIControlStateNormal];
         [self.accessTextViewButton setTitleColor:self.defaultButtonColor forState:UIControlStateNormal];
         self.accessTextViewButton.layer.cornerRadius = kAccessButtonHeight/2;
-        self.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.view.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.view.frame), kAccessButtonHeight, kAccessButtonHeight);
+        self.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight);
         
     }];
 }
@@ -1454,15 +1492,15 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.highlightAssistantTextActivated = NO;
     self.textFieldRevealed = NO;
     [self.accessTextViewButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:kZero] forState:UIControlStateNormal];
-    self.assistantTextView.frame = CGRectMake(-120.0f, CGRectGetMidY(self.view.frame)-40.0f, 120.0f, 120.0f);
+    self.assistantTextView.frame = CGRectMake(-120.0f, CGRectGetMidY(self.uiView.frame)-40.0f, 120.0f, 120.0f);
     self.accessTextViewButton.backgroundColor = self.colorThree;
-    self.accessTextViewButton.frame = CGRectMake(-kAccessButtonWidth/2, CGRectGetMidY(self.view.frame), kAccessButtonWidth, kAccessButtonHeight);
+    self.accessTextViewButton.frame = CGRectMake(-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame), kAccessButtonWidth, kAccessButtonHeight);
     self.accessTextViewButton.layer.borderWidth = kZero;
     self.accessTextViewButton.layer.cornerRadius = kAccessButtonHeight;
     [UIView animateWithDuration:1.0f animations:^{
         self.expandTextViewButton.alpha = kZero;
         self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
-        self.expandTextViewButton.frame = CGRectMake(87.5f, self.view.frame.origin.y-65, 45, 45);
+        self.expandTextViewButton.frame = CGRectMake(87.5f, self.uiView.frame.origin.y-65, 45, 45);
         self.accessTextViewButton.alpha = 1.0f;
         self.retractTextViewButton.alpha = kZero;
         
@@ -1483,16 +1521,17 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self.accessTextViewButton setTitleColor:[UIColor colorWithWhite:1.0f alpha:0.65f] forState:UIControlStateNormal];
     [self.accessTextViewButton setTitle:@"-" forState:UIControlStateNormal];
     [self.accessTextViewButton setTitleColor:self.defaultButtonColor forState:UIControlStateNormal];
-    self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.view.frame), CGRectGetMidY(self.view.frame)+90.0f, 1.0f, 1.0f);
+    self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.uiView.frame), CGRectGetMidY(self.uiView.frame)+90.0f, 1.0f, 1.0f);
     [UIView animateWithDuration:1.0f animations:^{
+        self.flipXAxisButton.alpha = kZero;
         self.expandTextViewButton.alpha = kZero;
         self.retractTextViewButton.alpha = kZero;
-        self.expandTextViewButton.frame = CGRectMake(87.5f, self.view.frame.origin.y-65, 45, 45);
-        self.retractTextViewButton.frame = CGRectMake(37.5f, self.view.frame.origin.y-65, 45, 45);
-        self.assistantTextView.frame = CGRectMake(kZero, CGRectGetMinY(self.view.frame)+30.0f, CGRectGetMidX(self.view.frame)-4.0f, CGRectGetHeight(self.view.frame)-70.0f);
+        self.expandTextViewButton.frame = CGRectMake(87.5f, self.uiView.frame.origin.y-65, 45, 45);
+        self.retractTextViewButton.frame = CGRectMake(37.5f, self.uiView.frame.origin.y-65, 45, 45);
+        self.assistantTextView.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, CGRectGetMidX(self.uiView.frame)-4.0f, CGRectGetHeight(self.uiView.frame)-70.0f);
         self.accessTextViewButton.alpha = 1.0f;
-        self.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.view.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.view.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
-        self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.view.frame), kZero, 1.0f, CGRectGetHeight(self.view.frame));
+        self.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
+        self.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.uiView.frame), kZero, 1.0f, CGRectGetHeight(self.uiView.frame));
         self.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
         self.accessTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.expandTextViewButton.layer.affineTransform, M_PI/180.0 * 180);
         
@@ -1501,7 +1540,7 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 
 - (void)expandModifyFocusTextView: (UIButton *)sender {
     static const float kEdgeOffset = 5.0f;
-    static const float kHeightOffset = 80.0f;
+    static const float kHeightOffset = -60.0f;
     [self.uiView addSubview:self.modifyFocusTextFontSizeSlider];
     [self.uiView addSubview:self.focusFontSizeLabel];
     [self.uiView addSubview:self.color5];
@@ -1509,14 +1548,19 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self.uiView addSubview:self.color3];
     [self.uiView addSubview:self.color2];
     [self.uiView addSubview:self.color1];
+    self.color1.alpha = 1.0f;
+    self.color2.alpha = 1.0f;
+    self.color3.alpha = 1.0f;
+    self.color4.alpha = 1.0f;
+    self.color5.alpha = 1.0f;
     self.color1.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     self.color2.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     self.color3.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     self.color4.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     self.color5.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kZero, kColorPaletteHeight);
     [UIView animateWithDuration:1.50f animations:^{
-        self.focusFontSizeLabel.frame = CGRectMake(CGRectGetMaxX(self.view.frame)-145.0f, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX + 110.0f, 30.0f, 30.0f);
-        self.modifyFocusTextFontSizeSlider.frame = CGRectMake(CGRectGetMaxX(self.view.frame)-120.0f, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX + 110.0f, 120.0f, 30.0f);
+        self.focusFontSizeLabel.frame = CGRectMake(CGRectGetMaxX(self.uiView.frame)-145.0f, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0f, 30.0f, 30.0f);
+        self.modifyFocusTextFontSizeSlider.frame = CGRectMake(CGRectGetMaxX(self.uiView.frame)-120.0f, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0f, 120.0f, 30.0f);
         self.toggleFocusTextModification.alpha = kZero;
         self.color1.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kColorPaletteWidth, kColorPaletteHeight);
         self.color2.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x-kColorPaletteWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y+kHeightOffset, kColorPaletteWidth, kColorPaletteHeight);
@@ -1530,8 +1574,8 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     static const float kEdgeOffset = 5.0f;
     static const float kHeightOffset = -14.0f;
     [UIView animateWithDuration:0.75f animations:^{
-        self.focusFontSizeLabel.frame = CGRectMake(CGRectGetMaxX(self.view.frame)+120, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX + 110.0f, 30.0f, 30.0f);
-        self.modifyFocusTextFontSizeSlider.frame = CGRectMake(CGRectGetMaxX(self.view.frame)+120, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX + 110.0f, 120.0f, 30.0f);
+        self.focusFontSizeLabel.frame = CGRectMake(CGRectGetMaxX(self.uiView.frame)+120, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0f, 30.0f, 30.0f);
+        self.modifyFocusTextFontSizeSlider.frame = CGRectMake(CGRectGetMaxX(self.uiView.frame)+120, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0f, 120.0f, 30.0f);
         self.toggleFocusTextModification.alpha = 1.0f;
         self.color1.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y-kHeightOffset, kZero, kColorPaletteHeight);
         self.color2.frame = CGRectMake(self.toggleFocusTextModification.frame.origin.x+kAccessButtonWidth+kEdgeOffset, self.toggleFocusTextModification.frame.origin.y-kHeightOffset, kZero, kColorPaletteHeight);
@@ -1552,66 +1596,44 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     [self updateFontSize];
 }
 
-- (void)flipXAxis {
-    self.uiView.layer.transform = CATransform3DRotate(self.view.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-
+- (void)flipXAxis: (UIButton *)sender {
+    self.uiView.layer.transform = CATransform3DRotate(self.uiView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    [self flipUI];
+    
 }
-
 - (void)flipUI {
-//    self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-175.0f, 50.0f, 150.0f, 130.0f)];
-//
-//    
-//    self.focusText.layer.transform = CATransform3DRotate(self.focusText.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.previousWord3.layer.transform = CATransform3DRotate(self.previousWord3.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//
-//    self.previousWord2.layer.transform = CATransform3DRotate(self.previousWord2.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//
-//    self.previousWord.layer.transform = CATransform3DRotate(self.previousWord.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//
-//    self.nextWord.layer.transform = CATransform3DRotate(self.nextWord.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//
-//    self.nextWord2.layer.transform = CATransform3DRotate(self.nextWord2.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.nextWord3.layer.transform = CATransform3DRotate(self.nextWord3.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//    self.nextWord4.layer.transform = CATransform3DRotate(self.nextWord4.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-//
-//
-//
-//
-//    
-    self.assistantTextView.layer.transform = CATransform3DRotate(self.assistantTextView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.speedLabel.layer.transform = CATransform3DRotate(self.speedLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.speedometerReadLabel.layer.transform = CATransform3DRotate(self.speedometerReadLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.focusFontSizeLabel.layer.transform = CATransform3DRotate(self.focusFontSizeLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.hideControlButton.layer.transform = CATransform3DRotate(self.hideControlButton.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.toggleConsonates.layer.transform = CATransform3DRotate(self.toggleConsonates.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.toggleUserSelections.layer.transform = CATransform3DRotate(self.toggleUserSelections.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.pinView.layer.transform = CATransform3DRotate(self.pinView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.speedPropertySelector.layer.transform = CATransform3DRotate(self.speedPropertySelector.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-    self.userSelectedTextTextField.layer.transform = CATransform3DRotate(self.userSelectedTextTextField.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
-}
+    self.xAxisFlipped = !self.xAxisFlipped;
+    //    self.uiView.layer.borderWidth = kBoarderWidth;
+    //    self.labelView.layer.borderWidth = kBoarderWidth;
+    
+    UIView *transitionView = [[UIView alloc]initWithFrame:self.uiView.frame];
+    [self.uiView addSubview:transitionView];
+    transitionView.backgroundColor = [UIColor blackColor];
+    
+    [UIView animateWithDuration:0.5f animations:^{
+        transitionView.alpha = 1.0f;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.25 animations:^{
+            transitionView.alpha = kZero;
+        }];
+        if (self.xAxisFlipped) {
+            self.labelView.frame = CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-150, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne-15.0f, 200.0f, 150.0f);
+        }
+        if (!self.xAxisFlipped) {
+            self.labelView.frame = CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne-15.0f, 200.0f, 150.0f);
+        }
+        [transitionView removeFromSuperview];
+        self.assistantTextView.layer.transform = CATransform3DRotate(self.assistantTextView.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.speedLabel.layer.transform = CATransform3DRotate(self.speedLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.speedometerReadLabel.layer.transform = CATransform3DRotate(self.speedometerReadLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.focusFontSizeLabel.layer.transform = CATransform3DRotate(self.focusFontSizeLabel.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.hideControlButton.layer.transform = CATransform3DRotate(self.hideControlButton.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.toggleConsonates.layer.transform = CATransform3DRotate(self.toggleConsonates.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.toggleUserSelections.layer.transform = CATransform3DRotate(self.toggleUserSelections.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.speedPropertySelector.layer.transform = CATransform3DRotate(self.speedPropertySelector.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+        self.userSelectedTextTextField.layer.transform = CATransform3DRotate(self.userSelectedTextTextField.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    }];
 
-- (void)flipLabelsRight {
-    self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-175.0f, 50.0f, 150.0f, 130.0f)];
-    
-    self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
-    self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 46.0f, 200.0f, 30.0f)];
-    self.previousWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 33.0f, 200.0f, 30.0f)];
-    self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 20.0f, 200.0f, 30.0f)];
-    self.nextWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 30.0f, 200.0f, 30.0f)];
-    self.nextWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 43.0f, 200.0f, 30.0f)];
-    self.nextWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 56.0f, 200.0f, 30.0f)];
-    self.nextWord4 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 69.0f, 200.0f, 30.0f)];
-    
-    
-    
-    self.focusText = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne, 200, 30.0f)];
-    self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 46.0f, 200.0f, 30.0f)];
-    self.previousWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 33.0f, 200.0f, 30.0f)];
-    self.previousWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne - 20.0f, 200.0f, 30.0f)];
-    self.nextWord = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 30.0f, 200.0f, 30.0f)];
-    self.nextWord2 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 43.0f, 200.0f, 30.0f)];
-    self.nextWord3 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 56.0f, 200.0f, 30.0f)];
-    self.nextWord4 = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kOneMinusGoldenRatioMinusOne-100.0f, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne + 69.0f, 200.0f, 30.0f)];
 }
 
 #pragma TextField Delegate Methods
