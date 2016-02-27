@@ -61,6 +61,7 @@ typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
 
 #pragma mark UI Display Properties
 @property (nonatomic, strong) UIView *labelView;
+@property (nonatomic, strong) UIView *uiView;
 @property (nonatomic, strong) UILabel *dot;
 @property (nonatomic, strong) UILabel *chapterLabel;
 @property (nonatomic, strong) UILabel *focusText;
@@ -299,12 +300,6 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.speedometerReadLabel.alpha = kUINormaAlpha;
     self.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
     
-    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)*kGoldenRatioMinusOne, CGRectGetMaxY(self.view.frame)*kOneMinusGoldenRatioMinusOne+30.0f, 8.0f, 8.0f)];
-    self.dot.layer.cornerRadius = 4.0f;
-    self.dot.layer.borderWidth = kBoarderWidth;
-    self.dot.clipsToBounds = YES;
-    self.dot.layer.borderColor = self.dotColor.CGColor;
-    
     self.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.view.frame)-kToggleButtonOffsetX, kAccessButtonWidth, kAccessButtonHeight)];
     self.toggleFocusTextModification.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.toggleFocusTextModification.layer.shadowOpacity = kShadowOpacity;
@@ -478,7 +473,6 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.color5.backgroundColor = self.colorFive;
     //    self.color5.layer.cornerRadius = 4.0;
     
-    [self.view addSubview:self.dot];
     [self.view addSubview:self.speedAdjusterSlider];
     [self.view addSubview:self.breakPedal];
     [self.view addSubview:self.hideControlButton];
@@ -644,7 +638,6 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     static const float kLabelHeight = 30.0f;
     static const float kLabelHeightOffset = 15.0;
     self.startTime = CACurrentMediaTime();
-    //Label
     
     self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-175.0f, 50.0f, 150.0f, 130.0f)];
     self.chapterLabel.numberOfLines = kZero;
@@ -665,6 +658,13 @@ NSString *const kalphabet = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
     self.focusText.alpha = kGoldenRatioMinusOne;
     self.focusText.textAlignment = NSTextAlignmentCenter;
     [self.labelView addSubview:self.focusText];
+    
+    self.dot = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2-kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
+    self.dot.layer.cornerRadius = 4.0f;
+    self.dot.layer.borderWidth = kBoarderWidth;
+    self.dot.clipsToBounds = YES;
+    self.dot.layer.borderColor = self.dotColor.CGColor;
+    [self.labelView addSubview:self.dot];
     
     self.previousWord3 = [[UILabel alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2-3*kLabelHeightOffset, kLabelViewWidth, kLabelHeight)];
     self.previousWord3.numberOfLines = kZero;
