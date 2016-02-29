@@ -10,8 +10,11 @@
 
 @interface Utilities : NSObject
 
-+ (id) unarchiveFile: (NSString *) path;
-+ (BOOL) archiveFile: (id) objectToArchive toFile: (NSString *) path;
-+ (NSString *) getSavedProfilePath;
++ (id)unarchiveFile: (NSString *) path;
++ (BOOL)archiveFile: (id) objectToArchive toFile: (NSString *) path;
++ (NSString *)getSavedProfilePath;
+
+
+
 
 @end

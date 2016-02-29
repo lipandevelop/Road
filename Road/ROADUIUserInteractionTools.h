@@ -7,12 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+@interface ROADUIUserInteractionTools : NSObject
 
-@interface UIUserInteractionTools : NSObject
-
-@property (nonatomic, strong) UIView *breakPedal;
 @property (nonatomic, strong) UILongPressGestureRecognizer *breakPedalGesture;
-@property (nonatomic, assign) CGRect breakPedalFrame;
 @property (nonatomic, strong) UIButton *toggleFocusTextModification;
 @property (nonatomic, strong) UIButton *hideControlButton;
 @property (nonatomic, strong) UIButton *toggleConsonates;
@@ -23,6 +21,7 @@
 @property (nonatomic, strong) UIButton *restoreDefaultButton;
 @property (nonatomic, strong) UIButton *accessTextViewButton;
 @property (nonatomic, strong) UIButton *expandTextViewButton;
+@property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UIButton *fullScreenTextViewButton;
 @property (nonatomic, strong) UIButton *lightsOffButton;
 @property (nonatomic, strong) UIButton *exitReadView;
@@ -31,8 +30,6 @@
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
 @property (nonatomic, strong) UISlider *modifyFocusTextFontSizeSlider;
-@property (nonatomic, strong) UIView *speedometerView;
-@property (nonatomic, strong) UIView *pinView;
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;
 @property (nonatomic, strong) UITextField *userSelectedTextTextField;
 
