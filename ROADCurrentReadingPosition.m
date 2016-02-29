@@ -18,6 +18,11 @@ NSString * const kHighlightConsonantColor = @"kHighlightConsonantColor";
 NSString * const kHighlightUserSelectedTextColor = @"kHighlightUserSelectedTextColor";
 NSString * const kHighlightMovingTextColor = @"kHighlightMovingTextColor";
 
+NSString * const kNormalSpeed = @"kNormalSpeed";
+NSString * const kMaxSpeed = @"kMaxSpeed";
+NSString * const kMinSpeed = @"kMinSpeed";
+NSString * const kAcceleration = @"kAcceleration";
+
 @implementation ROADCurrentReadingPosition
 
 - (void) encodeWithCoder: (NSCoder *) coder {
@@ -30,6 +35,14 @@ NSString * const kHighlightMovingTextColor = @"kHighlightMovingTextColor";
     [coder encodeObject:self.highlightConsonantColor forKey:kHighlightConsonantColor];
     [coder encodeObject:self.highlightUserSelectedTextColor forKey:kHighlightUserSelectedTextColor];
     [coder encodeObject:self.highlightMovingTextColor forKey:kHighlightMovingTextColor];
+    
+    [coder encodeFloat:self.normalSpeed forKey:kNormalSpeed];
+    [coder encodeFloat:self.maxSpeed forKey:kMaxSpeed];
+    [coder encodeFloat:self.minSpeed forKey:kMinSpeed];
+    [coder encodeFloat:self.acceleration forKey:kAcceleration];
+
+    
+
     
 }
 
@@ -46,6 +59,12 @@ NSString * const kHighlightMovingTextColor = @"kHighlightMovingTextColor";
     self.highlightConsonantColor = [coder decodeObjectForKey:kHighlightConsonantColor];
     self.highlightUserSelectedTextColor = [coder decodeObjectForKey:kHighlightUserSelectedTextColor];
     self.highlightMovingTextColor = [coder decodeObjectForKey:kHighlightMovingTextColor];
+    self.normalSpeed = [coder decodeFloatForKey:kNormalSpeed];
+    self.maxSpeed = [coder decodeFloatForKey:kMaxSpeed];
+    self.minSpeed = [coder decodeFloatForKey:kMinSpeed];
+    self.acceleration = [coder decodeFloatForKey:kAcceleration];
+
+
     
     return self;
 }

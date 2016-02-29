@@ -20,5 +20,9 @@
 @property (nonatomic, strong) UIColor *highlightConsonantColor;
 @property (nonatomic, strong) UIColor *highlightUserSelectedTextColor;
 @property (nonatomic, strong) UIColor *highlightMovingTextColor;
+@property (nonatomic, assign) float normalSpeed;
+@property (nonatomic, assign) float maxSpeed;
+@property (nonatomic, assign) float minSpeed;
+@property (nonatomic, assign) float acceleration;
 
 @end
