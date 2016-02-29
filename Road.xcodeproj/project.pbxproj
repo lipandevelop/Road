@@ -13,6 +13,8 @@
 		0A35B29E1C822CC700EA6A43 /* ROADDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */; };
 		0AE9523F1C83F72D0022C40A /* ROADCurrentReadingPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */; };
 		0AE952421C83F7980022C40A /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE952411C83F7980022C40A /* Utilities.m */; };
+		0AE952441C8411F00022C40A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE952431C8411F00022C40A /* QuartzCore.framework */; };
+		0AE952471C8418A60022C40A /* UIUserInteractionTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE952461C8418A60022C40A /* UIUserInteractionTools.m */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497E1C7B9D9F009309F1 /* finger_noise.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
@@ -52,6 +54,9 @@
 		0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADCurrentReadingPosition.m; sourceTree = "<group>"; };
 		0AE952401C83F7980022C40A /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
 		0AE952411C83F7980022C40A /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
+		0AE952431C8411F00022C40A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0AE952451C8418A60022C40A /* UIUserInteractionTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIUserInteractionTools.h; path = Road/UIUserInteractionTools.h; sourceTree = "<group>"; };
+		0AE952461C8418A60022C40A /* UIUserInteractionTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIUserInteractionTools.m; path = Road/UIUserInteractionTools.m; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF497E1C7B9D9F009309F1 /* finger_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_noise.png; path = Images/finger_noise.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
@@ -84,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AE952441C8411F00022C40A /* QuartzCore.framework in Frameworks */,
 				0A35B29B1C8224D300EA6A43 /* UIKit.framework in Frameworks */,
 				469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */,
 			);
@@ -111,6 +117,8 @@
 		0A034FD51C820F6000DE94F8 /* UITools */ = {
 			isa = PBXGroup;
 			children = (
+				0AE952451C8418A60022C40A /* UIUserInteractionTools.h */,
+				0AE952461C8418A60022C40A /* UIUserInteractionTools.m */,
 				0A034FD21C820F4D00DE94F8 /* ROADUITextHighlighter.h */,
 				0A034FD31C820F4D00DE94F8 /* ROADUITextHighlighter.m */,
 				0A35B29C1C822CC700EA6A43 /* ROADDictionary.h */,
@@ -213,6 +221,7 @@
 		B07C31BDF6E55BC74C11E449 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AE952431C8411F00022C40A /* QuartzCore.framework */,
 				0A35B29A1C8224D300EA6A43 /* UIKit.framework */,
 				12C868AEC418B7542B3D89A3 /* libPods-Road.a */,
 			);
@@ -394,6 +403,7 @@
 				0AE952421C83F7980022C40A /* Utilities.m in Sources */,
 				0AE9523F1C83F72D0022C40A /* ROADCurrentReadingPosition.m in Sources */,
 				0AF7417B1C778205000C3CC2 /* ROADReadingInterface.m in Sources */,
+				0AE952471C8418A60022C40A /* UIUserInteractionTools.m in Sources */,
 				0AF741781C778205000C3CC2 /* AppDelegate.m in Sources */,
 				0AEFA66F1C7F963000E696BE /* TextProperties.m in Sources */,
 				0AF741751C778205000C3CC2 /* main.m in Sources */,

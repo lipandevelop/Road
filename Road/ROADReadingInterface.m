@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import "AppDelegate.h"
 #import "ROADReadingInterface.h"
 #import "KFEpubController.h"
 #import "KFEpubContentModel.h"
 #import "ROADCurrentReadingPosition.h"
 #import "Utilities.h"
+#import "UIUserInteractionTools.h"
 
 #pragma mark ENUMs
 
@@ -132,16 +135,13 @@ typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
 @property (nonatomic, strong) UIButton *fullScreenTextViewButton;
 @property (nonatomic, strong) UIButton *lightsOffButton;
 @property (nonatomic, strong) UIButton *exitReadView;
-
 @property (nonatomic, strong) UIButton *retractTextViewButton;
 @property (nonatomic, strong) UIButton *flipXAxisButton;
-
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
 @property (nonatomic, strong) UISlider *modifyFocusTextFontSizeSlider;
 @property (nonatomic, strong) UIView *speedometerView;
 @property (nonatomic, strong) UIView *pinView;
-
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;
 @property (nonatomic, strong) UITextField *userSelectedTextTextField;
 
@@ -179,8 +179,6 @@ typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
 
 @property (nonatomic, assign) ModifyColorForTextActivated textColorBeingModified;
 
-
-
 @end
 
 @implementation ROADReadingInterface
@@ -217,7 +215,7 @@ static const float kControlButtonYOffset = 65.0f;
 static const float kControlButtonDimension = 45.0f;
 static const float kAssistantTextViewWidth = 120.0f;
 
-static const float k180Rotation;
+static const float k180Rotation = 180;
 
 static const float kLabelViewWidth = 200.0f;
 static const float kLabelViewHeight = 150.0f;
@@ -251,6 +249,32 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     [self saveData];
 }
 
+#pragma mark Data Managment
+
+- (void)saveData {
+    NSLog(@"saveing to %@", [Utilities getSavedProfilePath]);
+    [Utilities archiveFile:self.currentReadingPosition toFile:[Utilities getSavedProfilePath]];
+}
+
+- (void)loadData {
+    NSLog(@"attempting to load %@", [Utilities getSavedProfilePath]);
+    self.currentReadingPosition = [Utilities unarchiveFile:[Utilities getSavedProfilePath]];
+    if (!self.currentReadingPosition) {
+        NSLog(@"failed to load, loading%@", [Utilities getSavedProfilePath]);
+        self.currentReadingPosition = [[ROADCurrentReadingPosition alloc]init];
+        [self initCurrentDefaultPostionValues];
+        
+    }
+}
+
+- (void) initCurrentDefaultPostionValues {
+    self.currentReadingPosition.highlightVowelColor = self.colorOne;
+    self.currentReadingPosition.highlightConsonantColor = self.colorTwo;
+    self.currentReadingPosition.highlightUserSelectedTextColor = self.colorThree;
+    self.currentReadingPosition.highlightMovingTextColor = [UIColor blackColor];
+    self.currentReadingPosition.mainFontSize = 24.0f;
+}
+
 #pragma mark Loading Contents
 
 - (void)loadValues {
@@ -267,10 +291,6 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.highlightConsonantsActivated = NO;
     self.hideControlsActivated = YES;
     self.colorAdjusterValue = 254.0;
-    
-    self.currentReadingPosition.mainFontSize = 24.0f;
-    
-    
     
     self.dotColor = [UIColor colorWithRed:195.0f/255.0f green:25.0f/255.0f blue:25.0f/255.0f alpha:1.0f];
     
@@ -309,39 +329,59 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     UIImage *pinImage= [UIImage imageNamed:@"Pin.png"];
     UIImage *leftHandImage = [UIImage imageNamed:@"leftHand"];
     
+    static const float kSpeedometerDimension = 140.0f;
+    static const float kProgressOffSetFromProgressBar = 2.0f;
+    static const float kProgressBarWidth = 90.0f;
+    static const float kProgressBarHeight = 14.0f;
+    
     self.uiView.layer.contents = (__bridge id)paper.CGImage;
-    self.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-150.0f, 35.0f, 140.0f, 140.0f)];
+    self.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-kSpeedometerDimension, 35.0f, kSpeedometerDimension, kSpeedometerDimension)];
     self.speedometerView.layer.contents = (__bridge id)speedometerImage.CGImage;
     self.speedometerView.layer.contentsGravity = kCAGravityResizeAspect;
     self.speedometerView.alpha = 0.20f;
     
     //84 is max
-    self.progress = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-169.0f, 177.0f, 14.0f, 6.5f)];
-    self.progress.layer.borderWidth = 0.75f;
+    self.progress = [[UIView alloc]initWithFrame:CGRectMake(self.speedometerView.frame.size.width + kSpeedometerDimension/2 + kProgressOffSetFromProgressBar, CGRectGetMidY(self.speedometerView.frame)+kProgressOffSetFromProgressBar, kProgressBarHeight, kProgressBarHeight/2 + 0.5)];
+    self.progress.layer.borderWidth = kBoarderWidth/2;
     self.progress.layer.cornerRadius = 3.0f;
     self.progress.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.progress.layer.shadowOpacity = kShadowOpacity;
     self.progress.alpha = kUINormaAlpha;
     self.progress.backgroundColor = self.dotColor;
     
-    self.progressBar = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-172.0f, 175.0f, 90.0f, 12.0f)];
+    self.progressBar = [[UIView alloc]initWithFrame:CGRectMake(self.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.speedometerView.frame), kProgressBarWidth, kProgressBarHeight - kProgressOffSetFromProgressBar)];
     self.progressBar.layer.borderWidth = 0.75f;
     self.progressBar.layer.cornerRadius = 5.0f;
     self.progressBar.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.progressBar.layer.shadowOpacity = kShadowOpacity;
     self.progressBar.alpha = kUINormaAlpha;
     
-    UIImageView *pinImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 400, 400)];
+//    UILabel *averageSpeedLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.speedometerView.frame)-kProgressBarHeight, kProgressBarWidth, kProgressBarHeight - kProgressOffSetFromProgressBar)];
+//    
+//    UIBezierPath *path = [[UIBezierPath alloc]init];
+//    CAShapeLayer *shapeLayer = [[CAShapeLayer alloc]init];
+//    [path moveToPoint:CGPointMake(kZero, kZero)];
+//    [path moveToPoint:CGPointMake(averageSpeedLabel.frame.size.width, kZero)];
+//    [path moveToPoint:CGPointMake(averageSpeedLabel.frame.size.width - 4.0f, averageSpeedLabel.frame.size.height)];
+//    [path moveToPoint:CGPointMake(kZero, averageSpeedLabel.frame.size.height)];
+//    shapeLayer.path = (__bridge CGPathRef _Nullable)(path);
+//    [averageSpeedLabel.layer addSublayer:shapeLayer];
+//    averageSpeedLabel.backgroundColor = [UIColor blackColor];
+//    averageSpeedLabel.layer.borderWidth = kBoarderWidth;
+//    averageSpeedLabel.clipsToBounds = YES;
+//    [self.uiView addSubview:averageSpeedLabel];
+
+    
+    UIImageView *pinImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 15.0f, 70.0f)];
     pinImageView.image = [UIImage imageNamed:@"Pin.png"];
     
-    self.pinView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-85.1f, 65.0f, 15.0f, 70.0f)];
+    self.pinView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-75.1f, 65.0f, 15.0f, 70.0f)];
     self.pinView.layer.contents = (__bridge id)pinImage.CGImage;
     self.pinView.layer.contentsGravity = kCAGravityResizeAspect;
     self.pinView.layer.shadowOffset = CGSizeMake(-1.0, 4.0);
     self.pinView.layer.shadowOpacity = kShadowOpacity;
     
-    self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-107.0f, 114.0f, 60.0f, 15.0f)];
-    //    self.speedometerReadLabel.layer.borderWidth = 0.75;
+    self.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-97.0f, 114.0f, 60.0f, 15.0f)];
     self.speedometerReadLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
     self.speedometerReadLabel.alpha = kUINormaAlpha;
     self.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
@@ -882,6 +922,12 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     //    NSLog(@"%f", textFieldContentOffsetY);
     self.assistantTextView.contentOffset = CGPointMake(kZero, textFieldContentOffsetY);
     
+    
+    NSInteger range = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+3])integerValue];
+    NSInteger length = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+4])integerValue];
+    
+    NSLog(@"%d %d %d", range, length, self.currentReadingPosition.wordIndex);
+    
 }
 
 - (void)beginTimer {
@@ -1039,9 +1085,11 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
         unichar currentWord = [self.focusText.text characterAtIndex:charIdx];
         BOOL isWord = [characterSet characterIsMember:currentWord];
         if (isWord) {
-            NSInteger index = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+3])integerValue];
-            NSInteger length = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+4])integerValue];
-            [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(index, length+1)];
+            
+            self.currentReadingPosition.assistantTextRangeIndex = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+3])integerValue];
+            self.currentReadingPosition.assistantTextRangeLength = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+4])integerValue];
+            
+            [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(self.currentReadingPosition.assistantTextRangeIndex, self.currentReadingPosition.assistantTextRangeLength+1)];
             //                        NSLog(@"%lu, %lu, %d, %@", range, length, isWord, self.focusText.text);
             [self.assistantTextView setAttributedText: attributedString];
         }
@@ -1787,7 +1835,7 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 }
 
 - (void)rotationTransformation: (CALayer *)layer degrees: (float)degrees{
-    layer.affineTransform = CGAffineTransformRotate(layer.affineTransform, M_PI/180.0 * degrees);
+    layer.affineTransform = CGAffineTransformRotate(layer.affineTransform, M_PI/k180Rotation * degrees);
 }
 
 - (void)presentDictionary: (UIButton *)sender {
@@ -1806,14 +1854,14 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     
     self.retractDictionaryButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight)];
     [self.retractDictionaryButton setTitle:@"<" forState:UIControlStateNormal];
-    [self rotationTransformation:self.retractDictionaryButton.layer degrees:-90.0f];
+    [self rotationTransformation:self.retractDictionaryButton.layer degrees:-k180Rotation/2];
     self.retractDictionaryButton.layer.zPosition = 1.50f;
     [self.retractDictionaryButton addTarget:self action:@selector(retractDictionary:) forControlEvents:UIControlEventTouchUpInside];
     [self configureRoundButton:self.retractDictionaryButton dimension:kAccessButtonHeight];
     [UIView animateWithDuration:0.5f animations:^{
         self.retractDictionaryButton.frame = CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame)/2-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         self.dictionaryViewController.view.frame = CGRectMake(kZero, CGRectGetHeight(self.uiView.frame)/2, CGRectGetWidth(self.uiView.frame), CGRectGetHeight(self.uiView.frame)/2);
-        [self rotationTransformation:self.presentDictionaryButton.layer degrees:180];
+        [self rotationTransformation:self.presentDictionaryButton.layer degrees:k180Rotation];
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.5f animations:^{
             self.presentDictionaryButton.alpha = kZero;
@@ -1827,34 +1875,15 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
         self.presentDictionaryButton.alpha = 1.0f;
         self.retractDictionaryButton.frame = CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight);
         self.dictionaryViewController.view.frame = CGRectMake(kZero, CGRectGetHeight(self.uiView.frame), CGRectGetWidth(self.uiView.frame), CGRectGetHeight(self.uiView.frame)/2);
-        [self rotationTransformation:self.presentDictionaryButton.layer degrees:180];
+        [self rotationTransformation:self.presentDictionaryButton.layer degrees:k180Rotation];
     }completion:^(BOOL finished) {
         [self.retractDictionaryButton removeFromSuperview];
         [self.dictionaryViewController.view removeFromSuperview];
     }];
 }
 
-- (void)saveData {
-    NSLog(@"saveing to %@", [Utilities getSavedProfilePath]);
-    [Utilities archiveFile:self.currentReadingPosition toFile:[Utilities getSavedProfilePath]];
-}
-
-- (void)loadData {
-    NSLog(@"attempting to load %@", [Utilities getSavedProfilePath]);
-    self.currentReadingPosition = [Utilities unarchiveFile:[Utilities getSavedProfilePath]];
-    if (!self.currentReadingPosition) {
-        [self initCurrentDefaultPostionValues];
-        NSLog(@"failed to load, loading%@", [Utilities getSavedProfilePath]);
-        self.currentReadingPosition = [[ROADCurrentReadingPosition alloc]init];
-    }
-}
-
-- (void) initCurrentDefaultPostionValues {
-    self.currentReadingPosition.highlightVowelColor = self.colorOne;
-    self.currentReadingPosition.highlightConsonantColor = self.colorTwo;
-    self.currentReadingPosition.highlightUserSelectedTextColor = self.colorThree;
-    self.currentReadingPosition.highlightMovingTextColor = [UIColor blackColor];
-    self.currentReadingPosition.mainFontSize = 24.0f;
+- (void)toggleSpeedometerDetails: (UIButton *)sender {
+    
 }
 
 #pragma TextField Delegate Methods
