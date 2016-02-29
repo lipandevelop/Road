@@ -28,6 +28,7 @@
 @property (nonatomic, strong) UIButton *retractTextViewButton;
 @property (nonatomic, strong) UIButton *flipXAxisButton;
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureDrawTool;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
 @property (nonatomic, strong) UISlider *modifyFocusTextFontSizeSlider;
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;

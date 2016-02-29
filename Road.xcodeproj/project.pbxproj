@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A034FCF1C814A4600DE94F8 /* leftHand.png */; };
 		0A034FD41C820F4D00DE94F8 /* ROADUITextHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A034FD31C820F4D00DE94F8 /* ROADUITextHighlighter.m */; };
+		0A044A241C848459007F9D75 /* ROADDrawToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A231C848459007F9D75 /* ROADDrawToolView.m */; };
+		0A044A281C848693007F9D75 /* ROADNoneInteractiveViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A271C848693007F9D75 /* ROADNoneInteractiveViews.m */; };
 		0A35B29B1C8224D300EA6A43 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A35B29A1C8224D300EA6A43 /* UIKit.framework */; };
 		0A35B29E1C822CC700EA6A43 /* ROADDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */; };
 		0AE9523F1C83F72D0022C40A /* ROADCurrentReadingPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */; };
@@ -50,6 +52,10 @@
 		0A034FCF1C814A4600DE94F8 /* leftHand.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = leftHand.png; path = Images/leftHand.png; sourceTree = "<group>"; };
 		0A034FD21C820F4D00DE94F8 /* ROADUITextHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADUITextHighlighter.h; sourceTree = "<group>"; };
 		0A034FD31C820F4D00DE94F8 /* ROADUITextHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADUITextHighlighter.m; sourceTree = "<group>"; };
+		0A044A221C848459007F9D75 /* ROADDrawToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADDrawToolView.h; sourceTree = "<group>"; };
+		0A044A231C848459007F9D75 /* ROADDrawToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADDrawToolView.m; sourceTree = "<group>"; };
+		0A044A261C848693007F9D75 /* ROADNoneInteractiveViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoneInteractiveViews.h; sourceTree = "<group>"; };
+		0A044A271C848693007F9D75 /* ROADNoneInteractiveViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoneInteractiveViews.m; sourceTree = "<group>"; };
 		0A35B29A1C8224D300EA6A43 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0A35B29C1C822CC700EA6A43 /* ROADDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ROADDictionary.h; path = Road/ROADDictionary.h; sourceTree = "<group>"; };
 		0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ROADDictionary.m; path = Road/ROADDictionary.m; sourceTree = "<group>"; };
@@ -126,6 +132,7 @@
 		0A034FD51C820F6000DE94F8 /* UITools */ = {
 			isa = PBXGroup;
 			children = (
+				0A044A251C848461007F9D75 /* VIews */,
 				0AE9524B1C8429FC0022C40A /* Buttons */,
 				0AE952451C8418A60022C40A /* ROADUIUserInteractionTools.h */,
 				0AE952461C8418A60022C40A /* ROADUIUserInteractionTools.m */,
@@ -139,6 +146,17 @@
 				0AE952531C8435D90022C40A /* ConfigureView.m */,
 			);
 			name = UITools;
+			sourceTree = "<group>";
+		};
+		0A044A251C848461007F9D75 /* VIews */ = {
+			isa = PBXGroup;
+			children = (
+				0A044A221C848459007F9D75 /* ROADDrawToolView.h */,
+				0A044A231C848459007F9D75 /* ROADDrawToolView.m */,
+				0A044A261C848693007F9D75 /* ROADNoneInteractiveViews.h */,
+				0A044A271C848693007F9D75 /* ROADNoneInteractiveViews.m */,
+			);
+			name = VIews;
 			sourceTree = "<group>";
 		};
 		0AE9523C1C83F71D0022C40A /* Model */ = {
@@ -421,8 +439,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A044A241C848459007F9D75 /* ROADDrawToolView.m in Sources */,
 				0A034FD41C820F4D00DE94F8 /* ROADUITextHighlighter.m in Sources */,
 				0A35B29E1C822CC700EA6A43 /* ROADDictionary.m in Sources */,
+				0A044A281C848693007F9D75 /* ROADNoneInteractiveViews.m in Sources */,
 				0AE952421C83F7980022C40A /* Utilities.m in Sources */,
 				0AE9523F1C83F72D0022C40A /* ROADCurrentReadingPosition.m in Sources */,
 				0AF7417B1C778205000C3CC2 /* ROADReadingInterface.m in Sources */,
