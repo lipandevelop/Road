@@ -68,12 +68,20 @@ extern const float kLabelViewHeight;
 extern const float kLabelHeight;
 extern const float kLabelHeightOffset;
 
+extern const float kAccessButtonWidth;
+extern const float kAccessButtonHeight;
+
 extern const float kDefaultNormalSpeed;
 extern const float kDefaultMaxSpeed;;
 extern const float kDefaultMinSpeed;;
 extern const float kDefaultAcceleration;;
 
 extern const float kDefaultMainFontSize;
+
+extern const float kSpeedometerDimension;
+extern const float kProgressOffSetFromProgressBar;
+extern const float kProgressBarWidth;
+extern const float kProgressBarHeight;
 
 
 extern NSString *const kVowels;

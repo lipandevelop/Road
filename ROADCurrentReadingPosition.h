@@ -24,5 +24,8 @@
 @property (nonatomic, assign) float maxSpeed;
 @property (nonatomic, assign) float minSpeed;
 @property (nonatomic, assign) float acceleration;
+@property (nonatomic, assign) float progress;
+
+@property (nonatomic, strong) NSMutableArray *userNotesArray;
 
 @end

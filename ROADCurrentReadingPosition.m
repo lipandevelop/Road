@@ -22,6 +22,11 @@ NSString * const kNormalSpeed = @"kNormalSpeed";
 NSString * const kMaxSpeed = @"kMaxSpeed";
 NSString * const kMinSpeed = @"kMinSpeed";
 NSString * const kAcceleration = @"kAcceleration";
+NSString * const kProgress = @"kProgress";
+
+NSString * const kUserNotesArray = @"kUserNotesArray";
+
+
 
 @implementation ROADCurrentReadingPosition
 
@@ -40,10 +45,9 @@ NSString * const kAcceleration = @"kAcceleration";
     [coder encodeFloat:self.maxSpeed forKey:kMaxSpeed];
     [coder encodeFloat:self.minSpeed forKey:kMinSpeed];
     [coder encodeFloat:self.acceleration forKey:kAcceleration];
-
+    [coder encodeFloat:self.progress forKey:kProgress];
     
-
-    
+    [coder encodeObject:self.userNotesArray forKey:kUserNotesArray];
 }
 
 - (id) initWithCoder: (NSCoder *) coder
@@ -63,6 +67,10 @@ NSString * const kAcceleration = @"kAcceleration";
     self.maxSpeed = [coder decodeFloatForKey:kMaxSpeed];
     self.minSpeed = [coder decodeFloatForKey:kMinSpeed];
     self.acceleration = [coder decodeFloatForKey:kAcceleration];
+    self.progress = [coder decodeFloatForKey:kProgress];
+    
+    self.userNotesArray = [coder decodeObjectForKey:kProgress];
+
 
 
     

@@ -20,5 +20,6 @@
 @property (nonatomic, assign) BOOL textFieldRevealed;
 @property (nonatomic, assign) BOOL highlightAssistantTextActivated;
 @property (nonatomic, assign) BOOL lightsOffActivated;
+@property (nonatomic, assign) BOOL speedometerDetailOpened;
 
 @end

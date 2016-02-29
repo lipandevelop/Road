@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIButton *retractDictionaryButton;
 @property (nonatomic, strong) UIButton *restoreDefaultButton;
 @property (nonatomic, strong) UIButton *accessTextViewButton;
+@property (nonatomic, strong) UIButton *accessUserNotesTextFieldButton;
 @property (nonatomic, strong) UIButton *expandTextViewButton;
 @property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UIButton *fullScreenTextViewButton;
@@ -33,5 +34,9 @@
 @property (nonatomic, strong) UISlider *modifyFocusTextFontSizeSlider;
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;
 @property (nonatomic, strong) UITextField *userSelectedTextTextField;
+@property (nonatomic, strong) UIButton *openSpeedometerDetailButton;
+@property (nonatomic, strong) UITextField *userNotesTextField;
+@property (nonatomic, strong) UIButton *retractUserNotesTextField;
+
 
 @end
