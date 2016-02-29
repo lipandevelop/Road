@@ -8,56 +8,75 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
+    Vowels,
+    Consonants,
+    UserSelection,
+};
+
+typedef NS_ENUM(NSInteger, SpeedAdjustmentSegmentSelected) {
+    NormalSpeed,
+    MaximumSpeed,
+    MinimumSpeed,
+    AccelerationSpeed,
+    Default,
+};
+
+typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
+    ColorOne,
+    ColorTwo,
+    ColorThree,
+    ColorFour,
+    ColorFive,
+};
+
 @interface ROADConstants : NSObject
 
-//static const float kUpdateSpeed = 0.1f;
-////static const CGSize kShadowSize = CGSizeMake(-1.0, 6.0);
-//static const float kShadowOpacity = 0.35f;
-//static const float kBoarderWidth = 1.5f;
-//static const float kMoney = 1000000000.00f;
-//static const float kGoldenRatio = 1.61803398875;
-//static const float kGoldenRatioMinusOne = 0.68903398875f;
-//static const float kOneMinusGoldenRatioMinusOne = 0.38196601125;
-//static const float kSmallFontSize = 10.0f;
-//static const float kHiddenControlRevealedAlhpa = 0.7f;
-//static const float kZero = 0.0f;
-//static const float kUINormaAlpha = 0.45f;
-//
-//static const float kAccessButtonWidth = 50.0f;
-//static const float kAccessButtonHeight = 45.0f;
-//
-////PaletteConstants
-//static const float kColorPaletteheightMultiple = kGoldenRatioMinusOne;
-//static const float kColorPaletteXOrigin = 0.0f;
-//static const float kColorPaletteWidth = 35.0f;
-//static const float kColorPaletteHeight = 25.0f;
-//
-//static const float kToggleButtonDimension = 35.0f;
-//static const float kToggleButtonOffsetX = 200.0f;
-//
-//static const float kControlButtonXOrigin = 17.5f;
-//static const float kControlButtonXOffset = 50.0f;
-//static const float kControlButtonMidYOffset = 40.0f;
-//static const float kControlButtonYOffset = 65.0f;
-//static const float kControlButtonDimension = 45.0f;
-//static const float kAssistantTextViewWidth = 120.0f;
-//
-//static const float k180Rotation = 180;
-//
-//static const float kLabelViewWidth = 200.0f;
-//static const float kLabelViewHeight = 150.0f;
-//static const float kLabelHeight = 30.0f;
-//static const float kLabelHeightOffset = 15.0;
-//
-//static const float kDefaultNormalSpeed = 0.45f;
-//static const float kDefaultMaxSpeed = 1.0f;
-//static const float kDefaultMinSpeed = 0.15f;
-//static const float kDefaultAcceleration = 0.005f;
-//
-//static const float kDefaultMainFontSize = 24.0f;
-//
-//
-//NSString *const kVowels;
-//NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+extern const float kUpdateSpeed;
+extern const float kShadowOpacity;
+extern const float kBoarderWidth;
+extern const float kMoney;
+extern const float kGoldenRatio;
+extern const float kGoldenRatioMinusOne;
+extern const float kOneMinusGoldenRatioMinusOne;
+extern const float kSmallFontSize;
+extern const float kHiddenControlRevealedAlhpa;
+extern const float kZero;
+extern const float kUINormaAlpha;
+extern const float kAccessButtonHeight;
+
+//PaletteConstants
+extern const float kColorPaletteheightMultiple;
+extern const float kColorPaletteXOrigin;
+extern const float kColorPaletteWidth;
+extern const float kColorPaletteHeight;
+
+extern const float kToggleButtonDimension;
+extern const float kToggleButtonOffsetX;
+
+extern const float kControlButtonXOrigin;
+extern const float kControlButtonXOffset;
+extern const float kControlButtonMidYOffset;
+extern const float kControlButtonYOffset;
+extern const float kControlButtonDimension;
+extern const float kAssistantTextViewWidth;
+
+extern const float k180Rotation;
+
+extern const float kLabelViewWidth;
+extern const float kLabelViewHeight;
+extern const float kLabelHeight;
+extern const float kLabelHeightOffset;
+
+extern const float kDefaultNormalSpeed;
+extern const float kDefaultMaxSpeed;;
+extern const float kDefaultMinSpeed;;
+extern const float kDefaultAcceleration;;
+
+extern const float kDefaultMainFontSize;
+
+
+extern NSString *const kVowels;
+extern NSString *const kConsonants;
 
 @end

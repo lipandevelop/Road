@@ -9,14 +9,5 @@
 #import "ROADPalette.h"
 
 @implementation ROADPalette
-//- (instancetype)init
-//{
-//    self = [super init];
-//    if (self) {
-//        self.color1.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
-//        self.color1.layer.shadowOpacity = kShadowOpacity;
-//    }
-//    return self;
-//}
 
 @end

@@ -69,8 +69,8 @@
 		0A383B3D1C84A57000A019D7 /* ROADPaletteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADPaletteButton.m; sourceTree = "<group>"; };
 		0A383B411C84AEDF00A019D7 /* UIColorSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIColorSelection.h; sourceTree = "<group>"; };
 		0A383B421C84AEDF00A019D7 /* UIColorSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIColorSelection.m; sourceTree = "<group>"; };
-		0A383B4A1C84B25D00A019D7 /* ROADConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADConstants.h; sourceTree = "<group>"; };
-		0A383B4B1C84B25D00A019D7 /* ROADConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADConstants.m; sourceTree = "<group>"; };
+		0A383B4A1C84B25D00A019D7 /* ROADConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ROADConstants.h; path = Road/ROADConstants.h; sourceTree = "<group>"; };
+		0A383B4B1C84B25D00A019D7 /* ROADConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ROADConstants.m; path = Road/ROADConstants.m; sourceTree = "<group>"; };
 		0AE9523D1C83F72D0022C40A /* ROADCurrentReadingPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADCurrentReadingPosition.h; sourceTree = "<group>"; };
 		0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADCurrentReadingPosition.m; sourceTree = "<group>"; };
 		0AE952401C83F7980022C40A /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
@@ -253,6 +253,8 @@
 				0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */,
 				0AE9524C1C842B570022C40A /* ROADReadInterfaceBOOLs.h */,
 				0AE9524D1C842B570022C40A /* ROADReadInterfaceBOOLs.m */,
+				0A383B4A1C84B25D00A019D7 /* ROADConstants.h */,
+				0A383B4B1C84B25D00A019D7 /* ROADConstants.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -314,8 +316,6 @@
 				0AF741771C778205000C3CC2 /* AppDelegate.m */,
 				0AF741791C778205000C3CC2 /* ROADReadingInterface.h */,
 				0AF7417A1C778205000C3CC2 /* ROADReadingInterface.m */,
-				0A383B4A1C84B25D00A019D7 /* ROADConstants.h */,
-				0A383B4B1C84B25D00A019D7 /* ROADConstants.m */,
 				0AF7417C1C778205000C3CC2 /* Main.storyboard */,
 				0AF7417F1C778205000C3CC2 /* Assets.xcassets */,
 				0AF741811C778205000C3CC2 /* LaunchScreen.storyboard */,

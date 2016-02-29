@@ -7,11 +7,9 @@
 //
 
 #import "ROADDisplayReadingTextLabel.h"
+#import "ROADConstants.h"
 
 @implementation ROADDisplayReadingTextLabel
-
-static const float kZero = 0.0f;
-static const float kUINormaAlpha = 0.45f;
 
 - (instancetype)init
 {
