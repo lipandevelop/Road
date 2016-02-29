@@ -334,12 +334,13 @@ NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
     self.speedometerReadLabel.alpha = kUINormaAlpha;
     self.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
     
-    self.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX, kAccessButtonWidth, kAccessButtonHeight)];
-    self.toggleFocusTextModification.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.toggleFocusTextModification.layer.shadowOpacity = kShadowOpacity;
+    self.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame)-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight)];
+    [self configureRoundButton:self.toggleFocusTextModification dimension:kAccessButtonHeight];
     self.toggleFocusTextModification.layer.cornerRadius = kAccessButtonHeight;
-    self.toggleFocusTextModification.backgroundColor = self.defaultButtonColor;
-    [self.toggleFocusTextModification addTarget:self action:@selector(expandModifyFocusTextView:) forControlEvents:UIControlEventTouchDown];
+    [self.toggleFocusTextModification setTitle:@"+A" forState:UIControlStateNormal];
+    [self.toggleFocusTextModification setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.toggleFocusTextModification.titleLabel.font = [UIFont fontWithName:(@"AmericanTypewriter") size:kSmallFontSize];
+    [self.toggleFocusTextModification addTarget:self action:@selector(expandModifyFocusTextView:) forControlEvents:UIControlEventTouchUpInside];
     
     self.modifyFocusTextFontSizeSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)+120, CGRectGetMidY(self.uiView.frame)-kToggleButtonOffsetX + 30.0f, 120.0f, 30.0f)];
     [self rotationTransformation:self.modifyFocusTextFontSizeSlider.layer degrees:180.0f];
