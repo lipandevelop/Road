@@ -26,6 +26,8 @@
 @property (nonatomic, assign) float acceleration;
 @property (nonatomic, assign) float progress;
 
+@property (nonatomic, assign) float averageReadingSpeed;
+
 @property (nonatomic, strong) NSMutableArray *userNotesArray;
 
 @end

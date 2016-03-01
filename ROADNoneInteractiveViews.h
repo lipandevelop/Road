@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UILabel *speedometerReadLabel;
 
 @property (nonatomic, strong) UILabel *progressLabel;
+@property (nonatomic, strong) UILabel *averageSpeedLabel;
 
 
 @property (nonatomic, strong) UILabel *focusFontSizeLabel;

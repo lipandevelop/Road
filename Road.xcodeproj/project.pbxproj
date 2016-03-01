@@ -17,6 +17,7 @@
 		0A383B3E1C84A57000A019D7 /* ROADPaletteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A383B3D1C84A57000A019D7 /* ROADPaletteButton.m */; };
 		0A383B431C84AEDF00A019D7 /* UIColorSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A383B421C84AEDF00A019D7 /* UIColorSelection.m */; };
 		0A383B4C1C84B25D00A019D7 /* ROADConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A383B4B1C84B25D00A019D7 /* ROADConstants.m */; };
+		0A383B541C850CC300A019D7 /* digits.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A383B531C850CC300A019D7 /* digits.png */; };
 		0AE9523F1C83F72D0022C40A /* ROADCurrentReadingPosition.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */; };
 		0AE952421C83F7980022C40A /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE952411C83F7980022C40A /* Utilities.m */; };
 		0AE952441C8411F00022C40A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE952431C8411F00022C40A /* QuartzCore.framework */; };
@@ -71,6 +72,7 @@
 		0A383B421C84AEDF00A019D7 /* UIColorSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIColorSelection.m; sourceTree = "<group>"; };
 		0A383B4A1C84B25D00A019D7 /* ROADConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ROADConstants.h; path = Road/ROADConstants.h; sourceTree = "<group>"; };
 		0A383B4B1C84B25D00A019D7 /* ROADConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ROADConstants.m; path = Road/ROADConstants.m; sourceTree = "<group>"; };
+		0A383B531C850CC300A019D7 /* digits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = digits.png; path = Images/digits.png; sourceTree = "<group>"; };
 		0AE9523D1C83F72D0022C40A /* ROADCurrentReadingPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADCurrentReadingPosition.h; sourceTree = "<group>"; };
 		0AE9523E1C83F72D0022C40A /* ROADCurrentReadingPosition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADCurrentReadingPosition.m; sourceTree = "<group>"; };
 		0AE952401C83F7980022C40A /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0A383B531C850CC300A019D7 /* digits.png */,
 				0AEF497C1C78010F009309F1 /* ivoryPaper.png */,
 				0AEF49991C7D3236009309F1 /* Speedometer.png */,
 				0AEF499B1C7D3508009309F1 /* Pin.png */,
@@ -460,6 +463,7 @@
 				0AF741831C778205000C3CC2 /* LaunchScreen.storyboard in Resources */,
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,
 				0AEF499C1C7D3508009309F1 /* Pin.png in Resources */,
+				0A383B541C850CC300A019D7 /* digits.png in Resources */,
 				0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */,
 				0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */,
 				0AF7417E1C778205000C3CC2 /* Main.storyboard in Resources */,

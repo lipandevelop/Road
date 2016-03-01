@@ -25,6 +25,7 @@ NSString * const kAcceleration = @"kAcceleration";
 NSString * const kProgress = @"kProgress";
 
 NSString * const kUserNotesArray = @"kUserNotesArray";
+NSString * const kAverageReadingSpeed = @"kAverageReadingSpeed";
 
 
 
@@ -46,6 +47,8 @@ NSString * const kUserNotesArray = @"kUserNotesArray";
     [coder encodeFloat:self.minSpeed forKey:kMinSpeed];
     [coder encodeFloat:self.acceleration forKey:kAcceleration];
     [coder encodeFloat:self.progress forKey:kProgress];
+    [coder encodeFloat:self.averageReadingSpeed forKey:kAverageReadingSpeed];
+
     
     [coder encodeObject:self.userNotesArray forKey:kUserNotesArray];
 }
@@ -68,6 +71,8 @@ NSString * const kUserNotesArray = @"kUserNotesArray";
     self.minSpeed = [coder decodeFloatForKey:kMinSpeed];
     self.acceleration = [coder decodeFloatForKey:kAcceleration];
     self.progress = [coder decodeFloatForKey:kProgress];
+    self.averageReadingSpeed = [coder decodeFloatForKey:kAverageReadingSpeed];
+
     
     self.userNotesArray = [coder decodeObjectForKey:kProgress];
 
