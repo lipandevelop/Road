@@ -240,20 +240,21 @@
     self.nonInteractiveViews.averageSpeedLabel.layer.shadowOpacity = kShadowOpacity;
     self.nonInteractiveViews.averageSpeedLabel.alpha = kGoldenRatioMinusOne;
     self.nonInteractiveViews.averageSpeedLabel.font = [UIFont fontWithName:(self.fontType) size:8.0f];
-    self.nonInteractiveViews.averageSpeedLabel.textAlignment = NSTextAlignmentCenter;
+    self.nonInteractiveViews.averageSpeedLabel.textAlignment = NSTextAlignmentLeft;
     
     self.nonInteractiveViews.timerLabel = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2 + 65.0f, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kZero, kProgressBarHeight*1.5)];
     self.nonInteractiveViews.timerLabel.layer.cornerRadius = kProgressBarHeight/1.80f;
     self.nonInteractiveViews.timerLabel.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.nonInteractiveViews.timerLabel.layer.shadowOpacity = kShadowOpacity;
+    self.nonInteractiveViews.timerLabel.layer.shadowOpacity = kShadowOpacity+0.20f;
     self.nonInteractiveViews.timerLabel.alpha = kHiddenControlRevealedAlhpa;
     self.nonInteractiveViews.timerLabel.titleLabel.font = [UIFont fontWithName:(self.fontType) size:8.0f];
-    self.nonInteractiveViews.timerLabel.backgroundColor = self.userColor.colorFour;
+    self.nonInteractiveViews.timerLabel.backgroundColor = self.userColor.colorTwo;
     self.nonInteractiveViews.timerLabel.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.nonInteractiveViews.timerLabel setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    self.nonInteractiveViews.timerLabel.alpha = 0.67f;
+    [self.nonInteractiveViews.timerLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.nonInteractiveViews.timerLabel.alpha = 0.65f;
     self.nonInteractiveViews.timerLabel.layer.borderWidth = kBoarderWidth;
-    self.nonInteractiveViews.timerLabel.layer.borderWidth = kBoarderWidth/2;
+    self.nonInteractiveViews.timerLabel.layer.borderWidth = kBoarderWidth*1.7f;
+    self.nonInteractiveViews.timerLabel.layer.borderColor = [UIColor colorWithWhite:1.0f alpha:0.40f].CGColor;
     
     self.nonInteractiveViews.progressBar = [[UIView alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kZero, kProgressBarHeight - kProgressOffSetFromProgressBar)];
     self.nonInteractiveViews.progressBar.layer.borderWidth = 0.75f;
@@ -745,7 +746,7 @@
 - (void)updateFontSize {
     self.nonInteractiveViews.focusText.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize];
     self.chapterLabel.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize-11];
-    self.userInteractionTools.assistantTextView.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize-8];
+    self.userInteractionTools.assistantTextView.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize-10];
     self.nonInteractiveViews.previousWord3.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize-11];
     self.nonInteractiveViews.previousWord2.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize-11];
     self.nonInteractiveViews.previousWord.font = [UIFont fontWithName:(self.fontType) size:self.currentReadingPosition.mainFontSize-10];
@@ -831,7 +832,7 @@
     self.userInteractionTools.assistantTextView.contentOffset = CGPointMake(kZero, textFieldContentOffsetY);
     [self progressCalculation];
     self.nonInteractiveViews.progressLabel.text = [NSString stringWithFormat:@"%0.2f%%", self.currentReadingPosition.progress];
-    self.nonInteractiveViews.averageSpeedLabel.text = [NSString stringWithFormat:@"avg spd:%0.1f", self.currentReadingPosition.averageReadingSpeed];
+    self.nonInteractiveViews.averageSpeedLabel.text = [NSString stringWithFormat:@"   avg spd:%0.1f", self.currentReadingPosition.averageReadingSpeed];
     [self.nonInteractiveViews.timerLabel setTitle:[NSString stringWithFormat:@"%0.0fs",self.timeElapsed] forState:UIControlStateNormal];
     self.timeCount++;
 }
@@ -886,9 +887,7 @@
     [self.userInteractionTools.userSelectedTextTextField resignFirstResponder];
     [self.nextResponder touchesBegan:touches withEvent:event];
     if (self.timeIntervalBetweenIndex < 6.575) {
-        [UIView animateWithDuration:0.5 animations:^{
-            self.nonInteractiveViews.pinView.layer.affineTransform = CGAffineTransformMakeRotation(self.timeIntervalBetweenIndex);
-        }];
+    self.nonInteractiveViews.pinView.layer.affineTransform = CGAffineTransformMakeRotation(self.timeIntervalBetweenIndex);
     }
     self.readingInterfaceBOOLs.accelerationBegan = YES;
     self.accelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
@@ -1327,7 +1326,7 @@
 - (void)hideControls {
     if (!self.readingInterfaceBOOLs.hideControlsActivated) {
         [UIView animateWithDuration:1.0f animations:^{
-            self.chapterLabel.alpha = kHiddenControlRevealedAlhpa;
+            self.chapterLabel.alpha = kGoldenRatioMinusOne;
             [self.userInteractionTools.hideControlButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.userInteractionTools.hideControlButton setTitle:@"hide" forState:UIControlStateNormal];
             self.userInteractionTools.hideControlButton.backgroundColor = [UIColor blackColor];
@@ -1882,7 +1881,7 @@
 
             self.nonInteractiveViews.progress.frame = CGRectMake(2.0f, 1.50f, kProgressBarHeight, kProgressBarHeight/2 + 0.5);
             
-            self.nonInteractiveViews.averageSpeedLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kProgressBarWidth - 30.0f, 14.0f*1.5);
+            self.nonInteractiveViews.averageSpeedLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kProgressBarWidth, 14.0f*1.5);
 
         }];
         
