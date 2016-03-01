@@ -56,7 +56,7 @@ const float kDefaultAcceleration = 0.005f;
 const float kSpeedometerDimension = 140.0f;
 const float kProgressOffSetFromProgressBar = 2.0f;
 const float kProgressBarWidth = 90.0f;
-const float kProgressBarHeight = 14.0f;
+const float kProgressBarHeight = 18.0f;
 
 const float kDefaultMainFontSize = 24.0f;
 NSString *const kVowels = @"aeiouAEIOU";

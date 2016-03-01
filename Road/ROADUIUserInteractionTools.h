@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) UILongPressGestureRecognizer *breakPedalGesture;
 @property (nonatomic, strong) UIButton *toggleFocusTextModification;
+@property (nonatomic, strong) UIButton *togglePunctuationButton;
 @property (nonatomic, strong) UIButton *hideControlButton;
 @property (nonatomic, strong) UIButton *toggleConsonates;
 @property (nonatomic, strong) UIButton *toggleVowels;
@@ -24,10 +25,13 @@
 @property (nonatomic, strong) UIButton *expandTextViewButton;
 @property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UIButton *fullScreenTextViewButton;
-@property (nonatomic, strong) UIButton *lightsOffButton;
 @property (nonatomic, strong) UIButton *exitReadView;
 @property (nonatomic, strong) UIButton *retractTextViewButton;
+
 @property (nonatomic, strong) UIButton *flipXAxisButton;
+@property (nonatomic, strong) UIButton *lightsOffButton;
+@property (nonatomic, strong) UIButton *toggleSoundButton;
+
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureDrawTool;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;

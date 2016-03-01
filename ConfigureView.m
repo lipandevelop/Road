@@ -7,17 +7,13 @@
 //
 
 #import "ConfigureView.h"
+
 @interface ConfigureView ()
 @property (nonatomic, strong) UIColor *defaultButtonColor;
 
 @end
 
 @implementation ConfigureView
-static const float kZero = 0.0f;
-static const float kAccessButtonHeight = 45.0f;
-static const float kSmallFontSize = 10.0f;
-static const float kBoarderWidth = 1.5f;
-static const float kShadowOpacity = 0.35f;
 
 
 + (void)configureReadingTextLabel: (UILabel *)label alpha:(float)alpha {
@@ -32,6 +28,7 @@ static const float kShadowOpacity = 0.35f;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont fontWithName:(font) size:kSmallFontSize];
+    button.alpha = kGoldenRatioMinusOne;
 }
 
 + (void)configureCircleButton:(UIButton *)button title:(NSString *)title {
@@ -58,14 +55,13 @@ static const float kShadowOpacity = 0.35f;
     }
 }
 
-+ (void)highlighPunctuationWithColor: (UIColor *)color toLabel: (UILabel *)label {
++ (void)highlighPunctuationWithColor: (UIColor *)color toLabel: (UILabel *)label{
     NSCharacterSet *characterSet = [NSCharacterSet punctuationCharacterSet];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString: label.attributedText];
     for (NSInteger charIdx = 0; charIdx < label.text.length; charIdx++){
         unichar currentCharacter = [label.text characterAtIndex:charIdx];
         BOOL isCharacterSet = [characterSet characterIsMember:currentCharacter];
         if (isCharacterSet) {
-            //            [self pauseforPunctuation];
             [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(charIdx, 1)];
             [label setAttributedText: attributedString];
         }

@@ -30,6 +30,7 @@
 
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, strong) UILabel *averageSpeedLabel;
+@property (nonatomic, strong) UIButton *timerLabel;
 
 
 @property (nonatomic, strong) UILabel *focusFontSizeLabel;

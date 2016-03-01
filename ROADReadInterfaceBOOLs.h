@@ -21,5 +21,9 @@
 @property (nonatomic, assign) BOOL highlightAssistantTextActivated;
 @property (nonatomic, assign) BOOL lightsOffActivated;
 @property (nonatomic, assign) BOOL speedometerDetailOpened;
+@property (nonatomic, assign) BOOL soundActivated;
+@property (nonatomic, assign) BOOL punctuationActivated;
+@property (nonatomic, assign) BOOL modifyTextActivated;
+
 
 @end
