@@ -32,6 +32,8 @@
 		0AEA78191C8675F600D62BB6 /* ROADNoteBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEA78181C8675F600D62BB6 /* ROADNoteBookView.m */; };
 		0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA781B1C8681B300D62BB6 /* pencil.png */; };
 		0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA781D1C8683D200D62BB6 /* drawingPencil.png */; };
+		0AEA782E1C86C0E300D62BB6 /* playImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA782D1C86C0E300D62BB6 /* playImage.png */; };
+		0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78331C86C57100D62BB6 /* pauseImage.png */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497E1C7B9D9F009309F1 /* finger_noise.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
@@ -101,6 +103,8 @@
 		0AEA78181C8675F600D62BB6 /* ROADNoteBookView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoteBookView.m; sourceTree = "<group>"; };
 		0AEA781B1C8681B300D62BB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pencil.png; path = Images/pencil.png; sourceTree = "<group>"; };
 		0AEA781D1C8683D200D62BB6 /* drawingPencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = drawingPencil.png; path = Images/drawingPencil.png; sourceTree = "<group>"; };
+		0AEA782D1C86C0E300D62BB6 /* playImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playImage.png; path = Images/playImage.png; sourceTree = "<group>"; };
+		0AEA78331C86C57100D62BB6 /* pauseImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pauseImage.png; path = Images/pauseImage.png; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF497E1C7B9D9F009309F1 /* finger_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_noise.png; path = Images/finger_noise.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
@@ -301,6 +305,8 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AEA78331C86C57100D62BB6 /* pauseImage.png */,
+				0AEA782D1C86C0E300D62BB6 /* playImage.png */,
 				0AEA780F1C86708100D62BB6 /* pen.png */,
 				0AEA781D1C8683D200D62BB6 /* drawingPencil.png */,
 				0AEA78071C86283F00D62BB6 /* bulbDark.png */,
@@ -491,6 +497,7 @@
 			files = (
 				0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */,
 				0AEA780E1C86285600D62BB6 /* darkPaper.png in Resources */,
+				0AEA782E1C86C0E300D62BB6 /* playImage.png in Resources */,
 				0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */,
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
 				0AEA780D1C86285300D62BB6 /* noteBook.png in Resources */,
@@ -505,6 +512,7 @@
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
 				0AEA78101C86708100D62BB6 /* pen.png in Resources */,
 				0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */,
+				0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */,
 				0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */,
 				0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */,
 			);

@@ -9,12 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @protocol ROADReadingInterfaceDelegate <NSObject>
-- (void)storeNote:(NSMutableArray *)notesArray;
+
 
 @end
 
 @interface ROADReadingInterface : UIViewController
 @property (nonatomic, weak) id <ROADReadingInterfaceDelegate> delegate;
+
 
 
 @end
