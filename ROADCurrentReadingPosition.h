@@ -20,6 +20,8 @@
 @property (nonatomic, strong) UIColor *highlightConsonantColor;
 @property (nonatomic, strong) UIColor *highlightUserSelectedTextColor;
 @property (nonatomic, strong) UIColor *highlightMovingTextColor;
+@property (nonatomic, strong) UIColor *dotColor;
+@property (nonatomic, strong) UIColor *defaultButtonColor;
 @property (nonatomic, assign) float normalSpeed;
 @property (nonatomic, assign) float maxSpeed;
 @property (nonatomic, assign) float minSpeed;

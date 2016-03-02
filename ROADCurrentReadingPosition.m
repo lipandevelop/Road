@@ -17,6 +17,9 @@ NSString * const kHighlightVowelColor = @"kHighlightVowelColor";
 NSString * const kHighlightConsonantColor = @"kHighlightConsonantColor";
 NSString * const kHighlightUserSelectedTextColor = @"kHighlightUserSelectedTextColor";
 NSString * const kHighlightMovingTextColor = @"kHighlightMovingTextColor";
+NSString * const kDotColor = @"kDotColor";
+NSString * const kdefaultButtonColor = @"kdefaultButtonColor";
+
 
 NSString * const kNormalSpeed = @"kNormalSpeed";
 NSString * const kMaxSpeed = @"kMaxSpeed";
@@ -41,6 +44,8 @@ NSString * const kAverageReadingSpeed = @"kAverageReadingSpeed";
     [coder encodeObject:self.highlightConsonantColor forKey:kHighlightConsonantColor];
     [coder encodeObject:self.highlightUserSelectedTextColor forKey:kHighlightUserSelectedTextColor];
     [coder encodeObject:self.highlightMovingTextColor forKey:kHighlightMovingTextColor];
+    [coder encodeObject:self.dotColor forKey:kDotColor];
+    [coder encodeObject:self.defaultButtonColor forKey:kdefaultButtonColor];
     
     [coder encodeFloat:self.normalSpeed forKey:kNormalSpeed];
     [coder encodeFloat:self.maxSpeed forKey:kMaxSpeed];
@@ -66,6 +71,10 @@ NSString * const kAverageReadingSpeed = @"kAverageReadingSpeed";
     self.highlightConsonantColor = [coder decodeObjectForKey:kHighlightConsonantColor];
     self.highlightUserSelectedTextColor = [coder decodeObjectForKey:kHighlightUserSelectedTextColor];
     self.highlightMovingTextColor = [coder decodeObjectForKey:kHighlightMovingTextColor];
+    self.dotColor = [coder decodeObjectForKey:kDotColor];
+    self.defaultButtonColor = [coder decodeObjectForKey:kdefaultButtonColor];
+    
+    
     self.normalSpeed = [coder decodeFloatForKey:kNormalSpeed];
     self.maxSpeed = [coder decodeFloatForKey:kMaxSpeed];
     self.minSpeed = [coder decodeFloatForKey:kMinSpeed];
@@ -73,7 +82,6 @@ NSString * const kAverageReadingSpeed = @"kAverageReadingSpeed";
     self.progress = [coder decodeFloatForKey:kProgress];
     self.averageReadingSpeed = [coder decodeFloatForKey:kAverageReadingSpeed];
 
-    
     self.userNotesArray = [coder decodeObjectForKey:kProgress];
 
 

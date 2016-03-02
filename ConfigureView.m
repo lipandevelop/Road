@@ -16,17 +16,17 @@
 @implementation ConfigureView
 
 
-+ (void)configureReadingTextLabel: (UILabel *)label alpha:(float)alpha {
++ (void)configureReadingTextLabel: (UILabel *)label alpha:(float)alpha andColor: (UIColor *)color{
     label.numberOfLines = kZero;
-    label.textColor = [UIColor blackColor];
+    label.textColor = color;
     label.alpha = alpha;
     label.textAlignment = NSTextAlignmentCenter;
 }
 
-+ (void)configureTrapezoidButton: (UIButton *)button title:(NSString *)title font: (NSString *)font{
++ (void)configureTrapezoidButton: (UIButton *)button title:(NSString *)title font: (NSString *)font andColor: (UIColor *)color{
     button.layer.cornerRadius = kAccessButtonHeight;
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:color forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont fontWithName:(font) size:kSmallFontSize];
     button.alpha = kGoldenRatioMinusOne;
 }

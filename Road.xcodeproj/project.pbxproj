@@ -24,6 +24,14 @@
 		0AE9524E1C842B570022C40A /* ROADReadInterfaceBOOLs.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE9524D1C842B570022C40A /* ROADReadInterfaceBOOLs.m */; };
 		0AE952511C842FC50022C40A /* ROADDisplayReadingTextLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE952501C842FC50022C40A /* ROADDisplayReadingTextLabel.m */; };
 		0AE952541C8435D90022C40A /* ConfigureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE952531C8435D90022C40A /* ConfigureView.m */; };
+		0AEA780B1C86284800D62BB6 /* bulbDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78071C86283F00D62BB6 /* bulbDark.png */; };
+		0AEA780C1C86284F00D62BB6 /* bulbLight.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78081C86283F00D62BB6 /* bulbLight.png */; };
+		0AEA780D1C86285300D62BB6 /* noteBook.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA77F11C8617A400D62BB6 /* noteBook.png */; };
+		0AEA780E1C86285600D62BB6 /* darkPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA77F91C86203C00D62BB6 /* darkPaper.png */; };
+		0AEA78101C86708100D62BB6 /* pen.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA780F1C86708100D62BB6 /* pen.png */; };
+		0AEA78191C8675F600D62BB6 /* ROADNoteBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEA78181C8675F600D62BB6 /* ROADNoteBookView.m */; };
+		0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA781B1C8681B300D62BB6 /* pencil.png */; };
+		0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA781D1C8683D200D62BB6 /* drawingPencil.png */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497E1C7B9D9F009309F1 /* finger_noise.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
@@ -84,6 +92,15 @@
 		0AE952501C842FC50022C40A /* ROADDisplayReadingTextLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADDisplayReadingTextLabel.m; sourceTree = "<group>"; };
 		0AE952521C8435D90022C40A /* ConfigureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigureView.h; sourceTree = "<group>"; };
 		0AE952531C8435D90022C40A /* ConfigureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigureView.m; sourceTree = "<group>"; };
+		0AEA77F11C8617A400D62BB6 /* noteBook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = noteBook.png; path = Images/noteBook.png; sourceTree = "<group>"; };
+		0AEA77F91C86203C00D62BB6 /* darkPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = darkPaper.png; path = Images/darkPaper.png; sourceTree = "<group>"; };
+		0AEA78071C86283F00D62BB6 /* bulbDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bulbDark.png; path = Images/bulbDark.png; sourceTree = "<group>"; };
+		0AEA78081C86283F00D62BB6 /* bulbLight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bulbLight.png; path = Images/bulbLight.png; sourceTree = "<group>"; };
+		0AEA780F1C86708100D62BB6 /* pen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pen.png; path = Images/pen.png; sourceTree = "<group>"; };
+		0AEA78171C8675F600D62BB6 /* ROADNoteBookView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoteBookView.h; sourceTree = "<group>"; };
+		0AEA78181C8675F600D62BB6 /* ROADNoteBookView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoteBookView.m; sourceTree = "<group>"; };
+		0AEA781B1C8681B300D62BB6 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pencil.png; path = Images/pencil.png; sourceTree = "<group>"; };
+		0AEA781D1C8683D200D62BB6 /* drawingPencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = drawingPencil.png; path = Images/drawingPencil.png; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF497E1C7B9D9F009309F1 /* finger_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_noise.png; path = Images/finger_noise.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
@@ -220,10 +237,11 @@
 		0A383B471C84AF9000A019D7 /* FeatureTools */ = {
 			isa = PBXGroup;
 			children = (
-				0A044A221C848459007F9D75 /* ROADDrawToolView.h */,
-				0A044A231C848459007F9D75 /* ROADDrawToolView.m */,
+				0AEA781A1C8677A100D62BB6 /* NoteBookView */,
 				0A35B29C1C822CC700EA6A43 /* ROADDictionary.h */,
 				0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */,
+				0AEA78171C8675F600D62BB6 /* ROADNoteBookView.h */,
+				0AEA78181C8675F600D62BB6 /* ROADNoteBookView.m */,
 			);
 			name = FeatureTools;
 			sourceTree = "<group>";
@@ -271,9 +289,25 @@
 			name = Buttons;
 			sourceTree = "<group>";
 		};
+		0AEA781A1C8677A100D62BB6 /* NoteBookView */ = {
+			isa = PBXGroup;
+			children = (
+				0A044A221C848459007F9D75 /* ROADDrawToolView.h */,
+				0A044A231C848459007F9D75 /* ROADDrawToolView.m */,
+			);
+			name = NoteBookView;
+			sourceTree = "<group>";
+		};
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AEA780F1C86708100D62BB6 /* pen.png */,
+				0AEA781D1C8683D200D62BB6 /* drawingPencil.png */,
+				0AEA78071C86283F00D62BB6 /* bulbDark.png */,
+				0AEA78081C86283F00D62BB6 /* bulbLight.png */,
+				0AEA77F11C8617A400D62BB6 /* noteBook.png */,
+				0AEA77F91C86203C00D62BB6 /* darkPaper.png */,
+				0AEA781B1C8681B300D62BB6 /* pencil.png */,
 				0AEF497C1C78010F009309F1 /* ivoryPaper.png */,
 				0AEF49991C7D3236009309F1 /* Speedometer.png */,
 				0AEF499B1C7D3508009309F1 /* Pin.png */,
@@ -456,14 +490,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */,
+				0AEA780E1C86285600D62BB6 /* darkPaper.png in Resources */,
+				0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */,
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
+				0AEA780D1C86285300D62BB6 /* noteBook.png in Resources */,
 				0AF741831C778205000C3CC2 /* LaunchScreen.storyboard in Resources */,
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,
+				0AEA780C1C86284F00D62BB6 /* bulbLight.png in Resources */,
 				0AEF499C1C7D3508009309F1 /* Pin.png in Resources */,
 				0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */,
 				0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */,
 				0AF7417E1C778205000C3CC2 /* Main.storyboard in Resources */,
+				0AEA780B1C86284800D62BB6 /* bulbDark.png in Resources */,
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
+				0AEA78101C86708100D62BB6 /* pen.png in Resources */,
+				0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */,
 				0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */,
 				0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */,
 			);
@@ -547,6 +588,7 @@
 				0A044A2B1C8493AE007F9D75 /* ROADColors.m in Sources */,
 				0AF741751C778205000C3CC2 /* main.m in Sources */,
 				0A383B4C1C84B25D00A019D7 /* ROADConstants.m in Sources */,
+				0AEA78191C8675F600D62BB6 /* ROADNoteBookView.m in Sources */,
 				0A383B431C84AEDF00A019D7 /* UIColorSelection.m in Sources */,
 				0AE952541C8435D90022C40A /* ConfigureView.m in Sources */,
 			);

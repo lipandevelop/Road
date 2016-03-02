@@ -11,12 +11,12 @@
 
 @interface ROADColors : NSObject
 
-@property (nonatomic, strong) UIColor *dotColor;
+@property (nonatomic, strong) UIColor *colorZero;
 @property (nonatomic, strong) UIColor *colorOne;
 @property (nonatomic, strong) UIColor *colorTwo;
 @property (nonatomic, strong) UIColor *colorThree;
 @property (nonatomic, strong) UIColor *colorFour;
 @property (nonatomic, strong) UIColor *colorFive;
-@property (nonatomic, strong) UIColor *defaultButtonColor;
+@property (nonatomic, strong) UIColor *colorSix;
 
 @end

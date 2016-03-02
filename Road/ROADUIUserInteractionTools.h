@@ -41,7 +41,7 @@
 @property (nonatomic, strong) UIButton *openSpeedometerDetailButton;
 @property (nonatomic, strong) UITextField *userNotesTextField;
 @property (nonatomic, strong) UIButton *retractUserNotesTextFieldButton;
-@property (nonatomic, strong) UIButton *toggleDrawingToolButton;
+@property (nonatomic, strong) UIButton *toggleNoteBookButton;
 @property (nonatomic, strong) UIButton *snapShotButton;
 @property (nonatomic, strong) UIButton *chooseDrawingToolColorButton;
 
