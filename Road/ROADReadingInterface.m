@@ -420,9 +420,9 @@
     self.userInteractionTools.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 120, 30)];
     [self.userInteractionTools.speedAdjusterSlider addTarget:self action:@selector(adjustSpeedUsingSlider:) forControlEvents:UIControlEventValueChanged];
     [self rotationTransformation:self.userInteractionTools.speedAdjusterSlider.layer degrees:-40.0f];
-    self.userInteractionTools.speedAdjusterSlider.layer.affineTransform = CGAffineTransformTranslate(self.userInteractionTools.speedAdjusterSlider.layer.affineTransform, 30.0f, 40.0f);
+    self.userInteractionTools.speedAdjusterSlider.layer.affineTransform = CGAffineTransformTranslate(self.userInteractionTools.speedAdjusterSlider.layer.affineTransform, 20.0f, 20.0f);
     self.userInteractionTools.speedAdjusterSlider.tintColor = self.userColor.colorSix;
-    self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
+    self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
     self.userInteractionTools.speedAdjusterSlider.value = 1/self.currentReadingPosition.normalSpeed;
     
     //Speed Label
@@ -1356,7 +1356,7 @@
             self.userInteractionTools.toggleVowels.alpha = kHiddenControlRevealedAlhpa + 0.1f;
             self.userInteractionTools.toggleConsonates.alpha = kHiddenControlRevealedAlhpa;
             self.userInteractionTools.toggleUserSelections.alpha = kHiddenControlRevealedAlhpa + 0.2f;
-            self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
+//            self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:5.0f animations:^{
                 self.chapterLabel.alpha = 0.25;
@@ -1373,7 +1373,7 @@
             self.userInteractionTools.toggleVowels.alpha = kZero;
             self.userInteractionTools.toggleConsonates.alpha = kZero;
             self.userInteractionTools.toggleUserSelections.alpha = kZero;
-            self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
+//            self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
             self.chapterLabel.alpha = kZero;
         }];
     }
@@ -1563,7 +1563,7 @@
         self.userInteractionTools.expandTextViewButton.frame = CGRectMake(kControlButtonXOrigin+kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
         self.userInteractionTools.retractTextViewButton.frame = CGRectMake(kControlButtonXOrigin, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
         self.userInteractionTools.fullScreenTextViewButton.frame = CGRectMake(kControlButtonXOrigin+2*kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
-        self.userInteractionTools.lightsOffButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight-10.0f, kAccessButtonHeight, kAccessButtonHeight);
+        self.userInteractionTools.lightsOffButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         
         
     }completion:^(BOOL finished) {
@@ -1862,7 +1862,7 @@
     self.dictionaryViewController.view.layer.borderColor = self.currentReadingPosition.defaultButtonColor.CGColor;
     self.dictionaryViewController.view.alpha = kGoldenRatioMinusOne;
     self.dictionaryViewController.view.frame = CGRectMake(kZero, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.uiView.frame), CGRectGetHeight(self.uiView.frame)/2);
-    self.dictionaryViewController.view.tintColor = self.currentReadingPosition.defaultButtonColor;
+    self.dictionaryViewController.view.tintColor = self.userColor.colorSix;
     [self.uiView addSubview:self.dictionaryViewController.view];
     
     self.userInteractionTools.retractDictionaryButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight)];
