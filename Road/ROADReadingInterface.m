@@ -374,7 +374,7 @@
     
     //Pause
     UIImage *pauseButtonImage = [UIImage imageNamed:@"pauseImage.png"];
-    self.userInteractionTools.pauseButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*0.67f-35.0f, CGRectGetMaxY(self.uiView.frame)*0.80f, 25.0f, 25.0f)];
+    self.userInteractionTools.pauseButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*0.67f-35.0f, CGRectGetMaxY(self.uiView.frame)*0.82f, 35.0f, 35.0f)];
     self.userInteractionTools.pauseButton.layer.contents = (__bridge id)pauseButtonImage.CGImage;
     self.userInteractionTools.pauseButton.layer.borderWidth = kBoarderWidth;
     self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
@@ -382,15 +382,18 @@
     [self.userInteractionTools.pauseButton addTarget:self action:@selector(pause:) forControlEvents:UIControlEventTouchUpInside];
     [self.uiView addSubview:self.userInteractionTools.pauseButton];
     
-    //Play
-    UIImage *playButtonImage = [UIImage imageNamed:@"playImage.png"];
-    self.userInteractionTools.playButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*0.67f-30.0f-35.0f, CGRectGetMaxY(self.uiView.frame)*0.80f, 25.0f, 25.0f)];
-    self.userInteractionTools.playButton.layer.borderWidth = kBoarderWidth;
-    self.userInteractionTools.playButton.layer.contents = (__bridge id)playButtonImage.CGImage;
-    self.userInteractionTools.playButton.alpha = kUINormaAlpha;
-    self.userInteractionTools.playButton.layer.cornerRadius = self.userInteractionTools.hideControlButton.frame.size.width/2;
-    [self.userInteractionTools.playButton addTarget:self action:@selector(play:) forControlEvents:UIControlEventTouchUpInside];
-    [self.uiView addSubview:self.userInteractionTools.playButton];
+    //Swipte
+    self.userInteractionTools.swipeUpToPreviousWord = [[UISwipeGestureRecognizer alloc]init];
+    [self.userInteractionTools.swipeUpToPreviousWord setDirection:UISwipeGestureRecognizerDirectionUp];
+    [self.userInteractionTools.swipeUpToPreviousWord setEnabled:NO];
+    [self.userInteractionTools.swipeUpToPreviousWord addTarget:self action:@selector(scrollToPreviousWord:)];
+    [self.uiView addGestureRecognizer:self.userInteractionTools.swipeUpToPreviousWord];
+    
+    self.userInteractionTools.swipeDownToNextWord = [[UISwipeGestureRecognizer alloc]init];
+    [self.userInteractionTools.swipeDownToNextWord setDirection:UISwipeGestureRecognizerDirectionUp];
+    [self.userInteractionTools.swipeDownToNextWord addTarget:self action:@selector(scrollToNextWord:)];
+    [self.userInteractionTools.swipeDownToNextWord setEnabled:NO];
+    [self.uiView addGestureRecognizer:self.userInteractionTools.swipeDownToNextWord];
     
 #pragma Bottom Left Controls
     
@@ -469,7 +472,6 @@
     [self.userInteractionTools.speedPropertySelector setTitleTextAttributes:speedAttributes forState:UIControlStateNormal];
     
     //User Notes Text Field
-    
     self.userInteractionTools.userNotesTextField = [[UITextField alloc]initWithFrame:CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, kZero, CGRectGetHeight(self.uiView.frame)-70.0f)];
     self.userInteractionTools.userNotesTextField.layer.shadowOffset = CGSizeMake(-1.0, 6.0);
     self.userInteractionTools.userNotesTextField.layer.shadowOpacity = kShadowOpacity;
@@ -478,6 +480,7 @@
     self.userInteractionTools.userNotesTextField.keyboardAppearance = UIKeyboardAppearanceDark;
     self.userInteractionTools.userNotesTextField.font = [UIFont fontWithName:(self.fontType) size:16];
     self.userInteractionTools.userNotesTextField.delegate = self;
+    
     self.userNotesString = [[NSString alloc]init];
     
     //Access Assistant Text View
@@ -595,13 +598,48 @@
 #pragma mark Modify Toggle Buttons
 
 - (void)pause: (UIButton *)sender {
-    NSLog(@"Pause");
-    [self stopTimer];
+    self.readingInterfaceBOOLs.paused = !self.readingInterfaceBOOLs.paused;
+    if (self.readingInterfaceBOOLs.paused) {
+        UIImage *paused = [UIImage imageNamed:@"pauseImage.png"];
+        self.userInteractionTools.pauseButton.alpha = 0.2f;
+        self.userInteractionTools.pauseButton.layer.contents = (__bridge id)paused.CGImage;
+        [UIView animateWithDuration:1.0f animations:^{
+            self.userInteractionTools.pauseButton.alpha = kHiddenControlRevealedAlhpa;
+        }];
+        [self stopTimer];
+    }
+    if (!self.readingInterfaceBOOLs.paused) {
+        UIImage *play = [UIImage imageNamed:@"playImage.png"];
+        self.userInteractionTools.pauseButton.alpha = 0.2f;
+        self.userInteractionTools.pauseButton.layer.contents = (__bridge id)play.CGImage;
+        [UIView animateWithDuration:1.0f animations:^{
+            self.userInteractionTools.pauseButton.alpha = kHiddenControlRevealedAlhpa;
+        }];
+        [self beginTimer];
+    }
 }
 
-- (void)play: (UIButton *)sender {
-    NSLog(@"Play");
-    [self beginTimer];
+- (void)scrollToPreviousWord: (UIGestureRecognizer *)sender {
+    NSLog(@"Swiped up");
+    self.userInteractionTools.swipeUpToPreviousWord.enabled = YES;
+
+    if (self.readingInterfaceBOOLs.paused) {
+        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3+1];
+    }
+    else {
+        return;
+    }
+}
+
+- (void)scrollToNextWord: (UIGestureRecognizer *)sender {
+    NSLog(@"Swiped down");
+    self.userInteractionTools.swipeDownToNextWord.enabled = YES;
+    if (self.readingInterfaceBOOLs.paused) {
+        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3-1];
+    }
+    else {
+        return;
+    }
 }
 
 - (void)modifyToggleButtonWithButton: (UIButton *)button buttonLayer:(CALayer *)layer color: (UIColor*)color string: (NSString *)string {
