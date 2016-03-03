@@ -189,7 +189,7 @@
 }
 
 - (void)toggleMusic: (UIButton *)button {
-    NSLog(@"Music Presed");
+    NSLog(@"Music Pressed in Title Screen");
     self.musicActivated = !self.musicActivated;
     if (self.musicActivated) {
         [UIView animateWithDuration:1.0f animations:^{

@@ -64,6 +64,7 @@
 		0AF995961C87FAAB00ACFB3B /* twitterIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995951C87FAAB00ACFB3B /* twitterIcon.png */; };
 		0AF995981C88BA8500ACFB3B /* Road.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995971C88BA8400ACFB3B /* Road.mp3 */; };
 		0AF9959A1C88BCAD00ACFB3B /* musicIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995991C88BCAD00ACFB3B /* musicIcon.png */; };
+		0AF9959C1C88D22700ACFB3B /* musicIconDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9959B1C88D22700ACFB3B /* musicIconDark.png */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -158,6 +159,7 @@
 		0AF995951C87FAAB00ACFB3B /* twitterIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = twitterIcon.png; path = Images/twitterIcon.png; sourceTree = "<group>"; };
 		0AF995971C88BA8400ACFB3B /* Road.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Road.mp3; path = Music/Road.mp3; sourceTree = "<group>"; };
 		0AF995991C88BCAD00ACFB3B /* musicIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = musicIcon.png; path = Images/musicIcon.png; sourceTree = "<group>"; };
+		0AF9959B1C88D22700ACFB3B /* musicIconDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = musicIconDark.png; path = Images/musicIconDark.png; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -340,6 +342,7 @@
 			children = (
 				0AF995971C88BA8400ACFB3B /* Road.mp3 */,
 				0AF995991C88BCAD00ACFB3B /* musicIcon.png */,
+				0AF9959B1C88D22700ACFB3B /* musicIconDark.png */,
 				0AF995931C87FA9400ACFB3B /* instagramIcon.png */,
 				0AF9958F1C87FA8300ACFB3B /* faceBookIcon.png */,
 				0AF995951C87FAAB00ACFB3B /* twitterIcon.png */,
@@ -569,6 +572,7 @@
 				0AF9958C1C87E41A00ACFB3B /* florence.jpg in Resources */,
 				0AEA780B1C86284800D62BB6 /* bulbDark.png in Resources */,
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
+				0AF9959C1C88D22700ACFB3B /* musicIconDark.png in Resources */,
 				0AEA78101C86708100D62BB6 /* pen.png in Resources */,
 				0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */,
 				0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */,

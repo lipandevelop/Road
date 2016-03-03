@@ -40,11 +40,11 @@
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *voiceButton;
 
+@property (nonatomic, strong) UIButton *toggleMusicButton;
+
 @property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UITextField *userSelectedTextTextField;
 @property (nonatomic, strong) UITextField *userNotesTextField;
-
-
 
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeUpToPreviousWord;
 @property (nonatomic, strong) UISwipeGestureRecognizer *swipeDownToNextWord;

@@ -111,6 +111,11 @@
 @implementation ROADReadingInterface
 
 - (void)viewWillAppear:(BOOL)animated {
+    NSString *backGroundMusicPath = [[NSBundle mainBundle] pathForResource:@"Road" ofType:@"mp3"];
+    NSURL *backGroundMusicURL = [NSURL fileURLWithPath:backGroundMusicPath];
+    self.backgroundMusicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:backGroundMusicURL error:nil];
+    self.backgroundMusicPlayer.numberOfLoops = -1;
+    [self.backgroundMusicPlayer prepareToPlay];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -178,6 +183,7 @@
     self.readingInterfaceBOOLs.hideControlsActivated = YES;
     self.readingInterfaceBOOLs.speedometerDetailOpened = NO;
     self.readingInterfaceBOOLs.punctuationActivated = NO;
+    self.readingInterfaceBOOLs.musicActivated = NO;
     self.toggleFocusTextHighlightPaletteButton = [[ROADPalette alloc]init];
     self.fontType = @"AmericanTypewriter";
     self.deceleration = 0.0007;
@@ -218,7 +224,7 @@
     UIImage *leftHandImage = [UIImage imageNamed:@"leftHand"];
     UIImage *penImage = [UIImage imageNamed:@"pen.png"];
     UIImage *notebookImage = [UIImage imageNamed:@"noteBook.png"];
-    
+    UIImage *musicPlayerImage = [UIImage imageNamed:@"musicIconDark.png"];
     
 #pragma Speedometer Set
     
@@ -471,6 +477,17 @@
     self.userInteractionTools.lightsOffButton.alpha = kUINormaAlpha;
     self.userInteractionTools.lightsOffButton.layer.contentsGravity = kCAGravityResizeAspect;
     
+    //Switch On Music
+    self.userInteractionTools.toggleMusicButton = [[UIButton alloc]initWithFrame: CGRectMake(CGRectGetMinX(self.uiView.frame)+145.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight+10.0f, 25.0f, 25.0f)];
+    [self.userInteractionTools.toggleMusicButton addTarget:self action:@selector(toggleMusic:) forControlEvents:UIControlEventTouchUpInside];
+    self.userInteractionTools.toggleMusicButton.layer.borderWidth = kBoarderWidth;
+    self.userInteractionTools.toggleMusicButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.userInteractionTools.toggleMusicButton.layer.shadowOpacity = kShadowOpacity;
+    self.userInteractionTools.toggleMusicButton.layer.cornerRadius = 25.0f/2;
+    self.userInteractionTools.toggleMusicButton.layer.contents = (__bridge id)musicPlayerImage.CGImage;
+    self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
+    self.userInteractionTools.toggleMusicButton.layer.contentsGravity = kCAGravityResizeAspect;
+    
     //Speed Adjuster Slider
     self.userInteractionTools.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 100, 30)];
     [self.userInteractionTools.speedAdjusterSlider addTarget:self action:@selector(adjustSpeedUsingSlider:) forControlEvents:UIControlEventValueChanged];
@@ -623,6 +640,8 @@
     [self.uiView addSubview:self.userInteractionTools.togglePunctuationButton];
     [self.uiView  addSubview:self.userInteractionTools.flipXAxisButton];
     [self.uiView addSubview:self.userInteractionTools.lightsOffButton];
+    [self.uiView addSubview:self.userInteractionTools.toggleMusicButton];
+
     
     [self.uiView setNeedsDisplay];
 }
@@ -798,12 +817,10 @@
 #pragma mark KFEpubControllerDelegate Methods
 
 
-- (void)epubController:(KFEpubController *)controller willOpenEpub:(NSURL *)epubURL
-{
+- (void)epubController:(KFEpubController *)controller willOpenEpub:(NSURL *)epubURL {
     NSLog(@"will open epub");
 }
-- (void)epubController:(KFEpubController *)controller didOpenEpub:(KFEpubContentModel *)contentModel
-{
+- (void)epubController:(KFEpubController *)controller didOpenEpub:(KFEpubContentModel *)contentModel {
     NSLog(@"opened: %@", contentModel.metaData[@"title"]);
     self.contentModel = contentModel;
     self.spineIndex = 4;
@@ -960,7 +977,6 @@
 }
 
 - (void)update {
-
     //    NSLog(@"%f", self.timeIntervalBetweenIndex);
     self.nonInteractiveViews.dot.alpha = 0.8f;
     self.nonInteractiveViews.layer.borderColor = self.userColor.colorZero.CGColor;
@@ -1105,6 +1121,8 @@
         self.nonInteractiveViews.speedLabel.alpha = kZero;
         self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
         self.userInteractionTools.lightsOffButton.alpha = kUINormaAlpha;
+        self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
+
     }];
     
     [self retractColorPalette];
@@ -1119,7 +1137,7 @@
 - (void)startBreaking {
     [self modifyTimeInterval:+0.03f];
     [UIView animateWithDuration:4.0f animations:^{
-        self.breakPedal.alpha = 0.50f;
+        self.breakPedal.alpha = 1.0f;
         self.breakPedal.layer.shadowOpacity = 2.60f;
         self.breakPedal.layer.shadowOffset = CGSizeMake(2.0f, 5.0f);
         self.breakPedal.layer.shadowRadius = 30.0f;
@@ -1144,13 +1162,12 @@
     } if (self.userInteractionTools.breakPedalGesture.state == UIGestureRecognizerStateEnded) {
         [self beginTimer];
         [UIView animateWithDuration:4.0f animations:^{
-            self.breakPedal.alpha = kUINormaAlpha;
             self.breakPedal.layer.shadowOpacity = kZero;
             self.breakPedal.layer.shadowRadius = kZero;
         }];
         [UIView animateWithDuration:1.5 animations:^{
             self.nonInteractiveViews.pinView.layer.affineTransform = CGAffineTransformMakeRotation(self.timeIntervalBetweenIndex);
-            self.breakPedal.alpha = 0.25;
+            self.breakPedal.alpha = kUINormaAlpha;
             
         }];
         self.readingInterfaceBOOLs.breakingBegan = NO;
@@ -1516,6 +1533,7 @@
             self.userInteractionTools.speedPropertySelector.alpha = kHiddenControlRevealedAlhpa;
             self.userInteractionTools.flipXAxisButton.alpha = kZero;
             self.userInteractionTools.lightsOffButton.alpha = kZero;
+            self.userInteractionTools.toggleMusicButton.alpha = kZero;
             
         }];
     }
@@ -1586,7 +1604,7 @@
     self.userInteractionTools.toggleVowels.alpha = kZero;
     self.userInteractionTools.toggleConsonates.alpha = kZero;
     self.userInteractionTools.toggleUserSelections.alpha = kZero;
-//    self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
+    self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
     self.chapterLabel.alpha = kZero;
     self.breakPedal.alpha = kZero;
     self.userInteractionTools.expandTextViewButton.alpha = kZero;
@@ -1733,8 +1751,10 @@
     self.userInteractionTools.assistantTextView.text = self.bookTextRawString;
     self.userInteractionTools.fullScreenTextViewButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kAccessButtonHeight, kAccessButtonHeight);
     self.userInteractionTools.fullScreenTextViewButton.alpha = kZero;
+    self.userInteractionTools.toggleMusicButton.layer.cornerRadius = 25.0f/2.0f;
     
     [UIView animateWithDuration:1.0f animations:^{
+        self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
         self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
         [self rotationTransformation:self.userInteractionTools.expandTextViewButton.layer degrees:k180Rotation];
         self.userInteractionTools.accessTextViewButton.alpha = kZero;
@@ -1746,6 +1766,7 @@
         self.userInteractionTools.expandTextViewButton.frame = CGRectMake(kControlButtonXOrigin+kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
         self.userInteractionTools.retractTextViewButton.frame = CGRectMake(kControlButtonXOrigin, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
         self.userInteractionTools.fullScreenTextViewButton.frame = CGRectMake(kControlButtonXOrigin+2*kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
+        self.userInteractionTools.toggleMusicButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+145.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight+10.0f, 25.0f, 25.0f);
         self.userInteractionTools.lightsOffButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         self.userInteractionTools.flipXAxisButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+25.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         
@@ -1776,6 +1797,7 @@
     self.userInteractionTools.accessTextViewButton.titleLabel.textAlignment = NSTextAlignmentRight;
     self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kGoldenRatioMinusOne;
     [UIView animateWithDuration:1.0f animations:^{
+        self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
         self.userInteractionTools.expandTextViewButton.alpha = kZero;
         self.userInteractionTools.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.userInteractionTools.expandTextViewButton.layer.affineTransform, M_PI/k180Rotation * k180Rotation);
         self.userInteractionTools.expandTextViewButton.frame = CGRectMake(kControlButtonXOrigin+kControlButtonXOffset, self.uiView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
@@ -1783,6 +1805,7 @@
         self.userInteractionTools.retractTextViewButton.alpha = kZero;
         self.userInteractionTools.fullScreenTextViewButton.alpha= kZero;
         
+        self.userInteractionTools.toggleMusicButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+145.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight+10.0f, 25.0f, 25.0f);
         self.userInteractionTools.lightsOffButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight-10.0f, kAccessButtonHeight, kAccessButtonHeight);
         self.userInteractionTools.flipXAxisButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+25.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight-10.0f, kAccessButtonHeight, kAccessButtonHeight);
         
@@ -1809,6 +1832,7 @@
     self.userInteractionTools.fullScreenTextViewButton.alpha = kZero;
     
     [UIView animateWithDuration:1.0f animations:^{
+        self.userInteractionTools.toggleMusicButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+145.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight, 25.0f, 25.0f);
         self.userInteractionTools.lightsOffButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         self.nonInteractiveViews.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.uiView.frame), kZero, 1.0f, CGRectGetHeight(self.uiView.frame));
         self.userInteractionTools.flipXAxisButton.alpha = kZero;
@@ -1830,7 +1854,9 @@
 - (void)fullScreenTextView: (UIButton *)sender {
     [self hideSpeedometer];
     [self configureRoundButton:self.userInteractionTools.lightsOffButton dimension:kAccessButtonHeight];
+    [self configureRoundButton:self.userInteractionTools.toggleMusicButton dimension:kAccessButtonHeight];
     self.userInteractionTools.lightsOffButton.alpha = kZero;
+    self.userInteractionTools.toggleMusicButton.alpha = kZero;
     self.userInteractionTools.accessTextViewButton.alpha = 1.0f;
     
     [UIView animateWithDuration:0.75f animations:^{
@@ -1841,6 +1867,8 @@
         self.userInteractionTools.toggleFocusTextModification.alpha = kZero;
         self.userInteractionTools.pauseButton.alpha = kZero;
         self.userInteractionTools.togglePunctuationButton.alpha = kZero;
+        self.userInteractionTools.toggleMusicButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+185.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
+        self.userInteractionTools.toggleMusicButton.layer.cornerRadius = kAccessButtonHeight/2;
         
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.75f animations:^{
@@ -1849,6 +1877,7 @@
             self.userInteractionTools.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMaxY(self.uiView.frame)-kControlButtonDimension, kAccessButtonHeight, kAccessButtonHeight);
             self.userInteractionTools.accessTextViewButton.alpha = 1.0f;
             self.userInteractionTools.lightsOffButton.alpha = 1.0f;
+            self.userInteractionTools.toggleMusicButton.alpha = 1.0f;
             
         }];
     }
@@ -2142,6 +2171,24 @@
     
     return YES;
 }
+
+- (void)toggleMusic: (UIButton *)button {
+    NSLog(@"Music Pressed in Reading Interface");
+    self.readingInterfaceBOOLs.musicActivated = !self.readingInterfaceBOOLs.musicActivated;
+    if (self.readingInterfaceBOOLs.musicActivated) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.userInteractionTools.toggleMusicButton.backgroundColor = self.userColor.colorZero;
+        }];
+        [self.backgroundMusicPlayer play];
+    }
+    if (!self.readingInterfaceBOOLs.musicActivated) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.userInteractionTools.toggleMusicButton.backgroundColor = self.userColor.colorSix;
+        }];
+        [self.backgroundMusicPlayer pause];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

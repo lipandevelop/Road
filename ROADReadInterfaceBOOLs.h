@@ -25,6 +25,7 @@
 @property (nonatomic, assign) BOOL punctuationActivated;
 @property (nonatomic, assign) BOOL modifyTextActivated;
 @property (nonatomic, assign) BOOL paused;
+@property (nonatomic, assign) BOOL musicActivated;
 
 
 @end
