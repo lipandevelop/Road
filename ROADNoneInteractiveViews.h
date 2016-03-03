@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ROADNoneInteractiveViews : UIView
-@property (nonatomic, strong) UILabel *dot;
+@property (nonatomic, strong) UIView *dot;
 @property (nonatomic, strong) UIView *progressBar;
 @property (nonatomic, strong) UIView *progress;
 @property (nonatomic, strong) UIView *speedometerView;

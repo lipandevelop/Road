@@ -18,13 +18,16 @@
 @property (nonatomic, strong) UIWebView *webViewBG;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *quoteLabel;
+@property (nonatomic, strong) UILabel *currentBookLabel;
+
 @property (nonatomic, strong) ROADColors *userColor;
 
 @property (nonatomic, strong) UIButton *currentBookButton;
 @property (nonatomic, strong) UIButton *libraryButton;
 
-@property (nonatomic, strong) UILabel *currentBookLabel;
 @property (nonatomic, strong) UIView *currentBookLabelContainer;
+
+
 
 
 
@@ -49,12 +52,12 @@
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"TitleScreenImage" ofType:@"gif"];
     NSData *gif = [NSData dataWithContentsOfFile:filePath];
     self.webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 466.0f, 825.0f)];
-    
-    [self.webViewBG loadData:gif MIMEType:@"image/gif" textEncodingName:nil baseURL:nil];
+    NSURL *url;
+    [self.webViewBG loadData:gif MIMEType:@"image/gif" textEncodingName:@"" baseURL:url];
     self.webViewBG.userInteractionEnabled = NO;
     self.webViewBG.translatesAutoresizingMaskIntoConstraints = NO;
     self.webViewBG.alpha = kZero;
-
+    
     [UIView animateWithDuration:2.0f animations:^{
         self.webViewBG.alpha = 1.0f;
     }];
@@ -70,26 +73,23 @@
     dot.layer.borderColor = self.userColor.colorZero.CGColor;
     dot.layer.cornerRadius = 5.0f;
     
-    [UIView animateWithDuration:3.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+    [UIView animateKeyframesWithDuration:3.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
         dot.alpha = kZero;
     } completion:nil];
     
-    [UIView animateWithDuration:40 animations:^{
-    }];
-    self.quoteLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.titleLabel.frame.origin.x-70.0f, self.view.frame.size.height * kOneMinusGoldenRatioMinusOne-85.0f, 300, 100)];
+    self.quoteLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.titleLabel.frame.origin.x-40.0f, self.view.frame.size.height * kOneMinusGoldenRatioMinusOne-85.0f, 300, 100)];
     self.quoteLabel.font = [UIFont fontWithName:(@"American Typewriter") size:14];
-    self.quoteLabel.text = @"Wisdom is not a product of schooling\nbut of the lifelong attempt to acquire it\n-Albert Einstein.";
+    self.quoteLabel.text = @"Wisdom is not a product of schooling\nbut of the lifelong attempt to acquire it\n                   -Albert Einstein.";
     self.quoteLabel.textAlignment = NSTextAlignmentCenter;
     self.quoteLabel.alpha = kOneMinusGoldenRatioMinusOne;
     self.quoteLabel.numberOfLines = kZero;
     
-    
-    [UIView animateWithDuration:30.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
-        self.quoteLabel.frame = CGRectMake(self.titleLabel.frame.origin.x-130.0f, self.view.frame.size.height * kOneMinusGoldenRatioMinusOne-85.0f, 300, 100);
+    [UIView animateKeyframesWithDuration:30.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+        self.quoteLabel.frame = CGRectMake(self.titleLabel.frame.origin.x-100.0f, self.view.frame.size.height * kOneMinusGoldenRatioMinusOne-85.0f, 300, 100);
         self.quoteLabel.alpha = kOneMinusGoldenRatioMinusOne+0.2;
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:30 animations:^{
-            self.quoteLabel.frame = CGRectMake(self.titleLabel.frame.origin.x-700.0f, self.view.frame.size.height * kOneMinusGoldenRatioMinusOne-85.0f, 300, 100);
+            self.quoteLabel.frame = CGRectMake(self.titleLabel.frame.origin.x-40.0f, self.view.frame.size.height * kOneMinusGoldenRatioMinusOne-85.0f, 300, 100);
             self.quoteLabel.alpha = kOneMinusGoldenRatioMinusOne-0.2;
         }];
     }];
@@ -106,6 +106,7 @@
     
     self.currentBookLabelContainer = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-100, 446, 100, 20)];
     self.currentBookLabelContainer.backgroundColor = self.userColor.colorZero;
+    self.currentBookLabelContainer.alpha = kHiddenControlRevealedAlhpa;
     self.currentBookLabelContainer.clipsToBounds = YES;
     
     self.currentBookLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 20)];
@@ -113,10 +114,9 @@
     self.currentBookLabel.text = @"Niccolo Machiavelli - The Prince 1532 AD";
     self.currentBookLabel.textColor = [UIColor whiteColor];
     
-    [UIView animateWithDuration:15.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+    [UIView animateKeyframesWithDuration:15.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
         self.currentBookLabel.frame = CGRectMake(-300, 0, 300, 20);
     }completion:nil];
-
     
     self.libraryButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-110, 475, 120, 30)];
     [self.libraryButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -126,7 +126,7 @@
     self.libraryButton.titleLabel.font = [UIFont fontWithName:@"American Typewriter" size:16];
     [self.libraryButton setTitle:@"library" forState:UIControlStateNormal];
     self.libraryButton.alpha = kGoldenRatioMinusOne;
-//    [self.libraryButton addTarget:self action:@selector(presentReadingInterface:) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.libraryButton addTarget:self action:@selector(presentReadingInterface:) forControlEvents:UIControlEventTouchUpInside];
     
     self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.webViewBG.frame), CGRectGetHeight(self.webViewBG.frame));
     self.scrollView.backgroundColor = [UIColor blackColor];
@@ -162,7 +162,6 @@
         self.quoteLabel.alpha = kZero;
     }completion:^(BOOL finished) {
         [self presentViewController:readingInterface animated:YES completion:nil];
-        //    gameController.delegate = self;
         //    [self.backgroundMusicPlayer pause];
     }];
 }
@@ -178,7 +177,7 @@
     return YES;
 }
 
--(NSUInteger)supportedInterfaceOrientations
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
 }

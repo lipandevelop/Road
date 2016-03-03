@@ -15,15 +15,21 @@
 @property (nonatomic, strong) ROADDrawToolView *drawToolView;
 @property (nonatomic, strong) UIView *canvasView;
 @property (nonatomic, strong) UIView *imageView;
+
 @property (nonatomic, strong) UIButton *returnButton;
 @property (nonatomic, strong) UIButton *pencilButton;
 @property (nonatomic, strong) UIButton *pictureButton;
 @property (nonatomic, strong) UIButton *exportButton;
 
+@property (nonatomic, strong) UIButton *shareInstagramButton;
+@property (nonatomic, strong) UIButton *shareFacebookButton;
+@property (nonatomic, strong) UIButton *shareTwitterButton;
+@property (nonatomic, strong) UIView *shareButtonsContainer;
 
 @property (nonatomic, strong) ROADColors *userColors;
 @property (nonatomic, assign) BOOL drawingToolActivated;
 @property (nonatomic, assign) BOOL imageViewActivated;
+@property (nonatomic, assign) BOOL shareViewActivated;
 
 @property (nonatomic, strong) UILabel *notesLabel;
 
@@ -40,7 +46,8 @@
     NSLog(@"Notes %@", self.arrayOfNotes);
     
     self.drawingToolActivated = NO;
-    self.drawingToolActivated = NO;
+    self.imageViewActivated = NO;
+    self.shareViewActivated = NO;
     
     self.userColors = [[ROADColors alloc]init];
     UIView *backgroundView = [[UIView alloc]initWithFrame:self.view.frame];
@@ -49,6 +56,10 @@
     UIImage *imageImage = [UIImage imageNamed:@"imageIcon"];
     UIImage *florenceImage = [UIImage imageNamed:@"florence.jpg"];
     UIImage *shareImage = [UIImage imageNamed:@"share.png"];
+    
+    UIImage *instagrameIconImage = [UIImage imageNamed:@"instagramIcon"];
+    UIImage *facebookIconImage = [UIImage imageNamed:@"faceBookIcon"];
+    UIImage *twitterIconImage = [UIImage imageNamed:@"twitterIcon"];
     backgroundView.layer.contents = (__bridge id)ivoryPaper.CGImage;
     [self.view addSubview:backgroundView];
     
@@ -89,6 +100,42 @@
     self.exportButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.exportButton.layer.shadowOpacity = kShadowOpacity;
     self.exportButton.alpha = kUINormaAlpha;
+    [self.exportButton addTarget:self action:@selector(toggleShareView:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.shareButtonsContainer = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 10.0f, kAccessButtonHeight, kZero)];
+    self.shareButtonsContainer.backgroundColor = [UIColor whiteColor];
+    self.shareButtonsContainer.layer.borderWidth = kBoarderWidth;
+    self.shareButtonsContainer.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareButtonsContainer.layer.cornerRadius = kAccessButtonHeight/2;
+    self.shareButtonsContainer.layer.shadowOpacity = kShadowOpacity;
+    
+    self.shareInstagramButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.shareInstagramButton.layer.borderWidth = kBoarderWidth;
+    self.shareInstagramButton.layer.contents = (__bridge id)instagrameIconImage.CGImage;
+    self.shareInstagramButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareInstagramButton.layer.cornerRadius = kAccessButtonHeight/2;
+    self.shareInstagramButton.layer.shadowOpacity = kShadowOpacity;
+    self.shareInstagramButton.alpha = kUINormaAlpha;
+    
+    self.shareFacebookButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.shareFacebookButton.layer.borderWidth = kBoarderWidth;
+    self.shareFacebookButton.layer.contents = (__bridge id)facebookIconImage.CGImage;
+    self.shareFacebookButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareFacebookButton.layer.cornerRadius = kAccessButtonHeight/2;
+    self.shareFacebookButton.layer.shadowOpacity = kShadowOpacity;
+    self.shareFacebookButton.alpha = kUINormaAlpha;
+    
+    self.shareTwitterButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.shareTwitterButton.layer.borderWidth = kBoarderWidth;
+    self.shareTwitterButton.layer.contents = (__bridge id)twitterIconImage.CGImage;
+    self.shareTwitterButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareTwitterButton.layer.cornerRadius = kAccessButtonHeight/2;
+    self.shareTwitterButton.layer.shadowOpacity = kShadowOpacity;
+    self.shareTwitterButton.alpha = kUINormaAlpha;
+    
+    self.shareInstagramButton.alpha = kZero;
+    self.shareFacebookButton.alpha = kZero;
+    self.shareTwitterButton.alpha = kZero;
     
     self.canvasView = [[UIView alloc]initWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-80)];
     self.canvasView.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
@@ -107,6 +154,7 @@
     [self setDrawingTool];
     
     [self.view addSubview:self.canvasView];
+    [self.view addSubview:self.shareButtonsContainer];
     [self.canvasView addSubview:self.imageView];
     [self.canvasView addSubview:self.drawToolView];
     [self.view addSubview:self.returnButton];
@@ -169,7 +217,7 @@
 
 - (void)setDrawingTool {
     self.drawToolView = [[ROADDrawToolView alloc] initWithFrame:self.canvasView.bounds];
-    self.drawToolView.currentColor = [UIColor blackColor];
+    self.drawToolView.currentColor = self.userColors.colorZero;
     self.drawToolView.backgroundColor = [UIColor colorWithRed:28.0/255.0 green:47.0/255.0 blue:64.0/255.0 alpha:0.01];
     self.drawToolView.userInteractionEnabled = YES;
     self.drawToolView.alpha = kZero;
@@ -185,7 +233,7 @@
         //        notesLabel.font = [UIFont fontWithName:@"American Typewriter" size:13.0f];
         //        [self.imageView addSubview:notesLabel];
         
-        indexCount++;
+        indexCount ++;
         self.notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 400.0f, 100.0f)];
         self.notesLabel.text = notesString;
         self.notesLabel.textColor = self.userColors.colorSix;
@@ -195,9 +243,61 @@
     }
 }
 
+- (void)toggleShareView: (UIButton *)sender {
+    self.shareViewActivated = !self.shareViewActivated;
+    if (self.shareViewActivated) {
+        [self.view addSubview:self.shareInstagramButton];
+        [self.view addSubview:self.shareFacebookButton];
+        [self.view addSubview:self.shareTwitterButton];
+
+        [UIView animateWithDuration:0.75f animations:^{
+            self.exportButton.alpha = 1.0f;
+            
+            self.shareInstagramButton.alpha = 1.0f;
+            self.shareFacebookButton.alpha = 1.0f;
+            self.shareTwitterButton.alpha = 1.0f;
+            
+            self.shareButtonsContainer.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 4*kAccessButtonHeight-10, kAccessButtonHeight, 4*kAccessButtonHeight-5);
+
+            self.shareFacebookButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 3* kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            
+            self.shareTwitterButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 4* kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            
+            self.shareInstagramButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 2* kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+        }];
+    }
+    if (!self.shareViewActivated) {
+        [UIView animateWithDuration:1.5 animations:^{
+            self.exportButton.alpha = kUINormaAlpha;
+            self.shareInstagramButton.alpha = kZero;
+            self.shareFacebookButton.alpha = kZero;
+            self.shareTwitterButton.alpha = kZero;
+            
+            self.shareButtonsContainer.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 10.0f, kAccessButtonHeight, kZero);
+
+            self.shareFacebookButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            
+            self.shareTwitterButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            
+            self.shareInstagramButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+        }completion:^(BOOL finished) {
+            [self.shareInstagramButton removeFromSuperview];
+            [self.shareFacebookButton removeFromSuperview];
+            [self.shareTwitterButton removeFromSuperview];
+
+        }];
+    }
+    
+}
+
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     CGPoint touchLabelPoint = [[touches anyObject] locationInView:self.canvasView];
     self.notesLabel.center = touchLabelPoint;
+}
+
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 /*

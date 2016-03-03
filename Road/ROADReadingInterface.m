@@ -123,8 +123,8 @@
     [self loadData];
     [self loadValues];
     [self loadBook];
-    [self loadUIContents];
     [self loadText];
+    [self loadUIContents];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -532,7 +532,7 @@
     self.userInteractionTools.accessUserNotesTextFieldButton.layer.shadowOpacity = kShadowOpacity;
     self.userInteractionTools.accessUserNotesTextFieldButton.layer.contents = (__bridge id)penImage.CGImage;
     self.userInteractionTools.accessUserNotesTextFieldButton.layer.contentsGravity = kCAGravityResizeAspect;
-    self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kUINormaAlpha;
+    self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kGoldenRatioMinusOne;
     [self.userInteractionTools.accessUserNotesTextFieldButton addTarget:self action:@selector(revealUserNotesView:) forControlEvents:UIControlEventTouchDown];
     [self.uiView addSubview:self.userInteractionTools.accessUserNotesTextFieldButton];
     
@@ -884,10 +884,11 @@
 }
 
 - (void)loadText {
+    
     self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(15.0f, CGRectGetMidY(self.uiView.frame)-85.0f, 150.0f, 130.0f)];
     [self.uiView addSubview:self.chapterLabel];
     
-    self.nonInteractiveViews.dot = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.labelView.bounds)/2-4.0f, CGRectGetHeight(self.labelView.bounds)/2+kLabelHeightOffset, 8.0f, 8.0f)];
+    self.nonInteractiveViews.dot = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.labelView.bounds)/2-4.0f, CGRectGetHeight(self.labelView.bounds)/2+kLabelHeightOffset, 8.0f, 8.0f)];
     [self.labelView addSubview:self.nonInteractiveViews.dot];
     
     self.nonInteractiveViews.focusText = [[UILabel alloc]initWithFrame:CGRectMake(kZero, CGRectGetHeight(self.labelView.bounds)/2-kLabelHeight/2, kLabelViewWidth, kLabelHeight)];
@@ -953,9 +954,19 @@
 #pragma mark Modify Time Methods
 
 - (void)displayLinkLoop {
+
 }
 
 - (void)update {
+
+    //    NSLog(@"%f", self.timeIntervalBetweenIndex);
+    self.nonInteractiveViews.dot.alpha = 0.8f;
+    self.nonInteractiveViews.layer.borderColor = self.userColor.colorZero.CGColor;
+    [UIView animateKeyframesWithDuration:self.timeIntervalBetweenIndex delay:0.1f options:UIViewKeyframeAnimationOptionRepeat animations:^{
+        self.nonInteractiveViews.dot.alpha = kZero;
+        
+    } completion:nil];
+    
     self.userInteractionTools.assistantTextView.textColor = self.userColor.colorSix;
     float angle = -(self.timeIntervalBetweenIndex *4.5)+8.5f;
     angle = MAX(angle, 4.75);
@@ -971,6 +982,7 @@
     
     if (self.timeIntervalBetweenIndex < self.currentReadingPosition.minSpeed) {
         self.currentReadingPosition.wordIndex ++;
+        
     } else if (self.timeIntervalBetweenIndex >= self.currentReadingPosition.minSpeed) {
         self.currentReadingPosition.wordIndex --;
     }
@@ -1015,11 +1027,6 @@
         
     }
     [ConfigureView highlighPunctuationWithColor:self.userColor.colorZero toLabel:self.nonInteractiveViews.focusText];
-    
-    self.nonInteractiveViews.dot.alpha = 0.8;
-    [UIView animateWithDuration:self.timeIntervalBetweenIndex delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
-        self.nonInteractiveViews.dot.alpha = kZero;
-    } completion:nil];
     
     [self progressCalculation];
     self.nonInteractiveViews.progressLabel.text = [NSString stringWithFormat:@"%0.2f%%", self.currentReadingPosition.progress];
@@ -1761,7 +1768,7 @@
     [self.userInteractionTools.accessTextViewButton setTitle:@"t" forState:UIControlStateNormal];
     [self.userInteractionTools.accessTextViewButton setTitleColor:[UIColor colorWithWhite:0.0f alpha:kGoldenRatioMinusOne] forState:UIControlStateNormal];
     self.userInteractionTools.accessTextViewButton.titleLabel.textAlignment = NSTextAlignmentRight;
-    self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kUINormaAlpha;
+    self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kGoldenRatioMinusOne;
     [UIView animateWithDuration:1.0f animations:^{
         self.userInteractionTools.expandTextViewButton.alpha = kZero;
         self.userInteractionTools.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.userInteractionTools.expandTextViewButton.layer.affineTransform, M_PI/k180Rotation * k180Rotation);
@@ -1843,6 +1850,7 @@
 - (void)revealUserNotesView: (UIButton *)sender {
     self.noteBook = [[ROADNoteBookView alloc]init];
     self.noteBook.arrayOfNotes = [NSMutableArray array];
+    [self stopTimer];
     
     self.readingInterfaceBOOLs.hideControlsActivated = YES;
     self.userInteractionTools.toggleNoteBookButton.userInteractionEnabled = YES;
@@ -1864,11 +1872,12 @@
 
 - (void)retractUserNotesField: (UIButton *)sender {
     [self revealSpeedometer];
+    [self beginTimer];
     [UIView animateWithDuration:1.0f animations:^{
         self.userInteractionTools.userNotesTextField.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, kZero, CGRectGetHeight(self.uiView.frame)-70.0f);
         self.nonInteractiveViews.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.uiView.frame), CGRectGetMidY(self.uiView.frame)+90.0f, 1.0f, 1.0f);
         self.userInteractionTools.accessTextViewButton.alpha = 1.0f;
-        self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kUINormaAlpha;
+        self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kGoldenRatioMinusOne;
         self.userInteractionTools.retractUserNotesTextFieldButton.frame = CGRectMake(kZero, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
         self.userInteractionTools.toggleNoteBookButton.frame = CGRectMake(-kAccessButtonWidth, CGRectGetMidY(self.uiView.frame)+3*kAccessButtonWidth, kAccessButtonWidth, kAccessButtonWidth);
         self.userInteractionTools.retractUserNotesTextFieldButton.alpha = kZero;
@@ -2135,7 +2144,7 @@
 //    return YES;
 //}
 
--(NSUInteger)supportedInterfaceOrientations
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskPortrait;
 }
