@@ -100,6 +100,8 @@
 @property (nonatomic, strong) UIView *connector;
 @property (nonatomic, strong) UIView *connector2;
 
+@property (nonatomic, assign) int swipeUpIndex;
+@property (nonatomic, assign) int swipeDownIndex;
 
 
 @end
@@ -410,8 +412,6 @@
     
     self.connector2 = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+35.0f, self.userInteractionTools.voiceButton.frame.origin.y + self.userInteractionTools.voiceButton.frame.size.height-19.5f, kZero, 4.0f)];
 
-
-    
     //Swipe
     self.userInteractionTools.swipeUpToPreviousWord = [[UISwipeGestureRecognizer alloc]init];
     [self.userInteractionTools.swipeUpToPreviousWord setDirection:UISwipeGestureRecognizerDirectionUp];
@@ -545,7 +545,7 @@
     self.userInteractionTools.toggleNoteBookButton.userInteractionEnabled = NO;
     self.userInteractionTools.toggleNoteBookButton.layer.contentsGravity = kCAGravityResizeAspect;
     self.userInteractionTools.toggleNoteBookButton.layer.opacity = kGoldenRatioMinusOne;
-    [self.userInteractionTools.toggleNoteBookButton addTarget:self action:@selector(toggleNoteBookView:) forControlEvents:UIControlEventTouchDown];
+    [self.userInteractionTools.toggleNoteBookButton addTarget:self action:@selector(revealNoteBookView:) forControlEvents:UIControlEventTouchDown];
     [self.uiView addSubview:self.userInteractionTools.toggleNoteBookButton];
     
     self.userInteractionTools.expandTextViewButton = [[UIButton alloc]init];
@@ -628,6 +628,9 @@
 #pragma mark Modify Toggle Buttons
 
 - (void)togglePause: (UIButton *)sender {
+    self.swipeUpIndex = 1;
+    self.swipeDownIndex = 1;
+
     self.readingInterfaceBOOLs.paused = !self.readingInterfaceBOOLs.paused;
     self.connector.backgroundColor = self.userColor.colorSix;
     self.connector.alpha = 1.0f;
@@ -638,6 +641,10 @@
     [self.uiView addSubview:self.connector];
     [self.uiView addSubview:self.connector2];
     if (self.readingInterfaceBOOLs.paused) {
+        self.userInteractionTools.swipeDownToNextWord.enabled = YES;
+        self.userInteractionTools.swipeUpToPreviousWord.enabled = YES;
+        
+        NSLog(@"userEnabled %d %d", self.userInteractionTools.swipeUpToPreviousWord.enabled ,self.userInteractionTools.swipeDownToNextWord.enabled);
         
         UIImage *paused = [UIImage imageNamed:@"pauseImage.png"];
         self.userInteractionTools.pauseButton.alpha = 0.2f;
@@ -660,6 +667,10 @@
         [self stopTimer];
     }
     if (!self.readingInterfaceBOOLs.paused) {
+        self.userInteractionTools.swipeDownToNextWord.enabled = NO;
+        self.userInteractionTools.swipeUpToPreviousWord.enabled = NO;
+        NSLog(@"userEnabled %d %d", self.userInteractionTools.swipeUpToPreviousWord.enabled ,self.userInteractionTools.swipeDownToNextWord.enabled);
+        
         UIImage *play = [UIImage imageNamed:@"playImage.png"];
         self.userInteractionTools.pauseButton.alpha = 0.2f;
         self.userInteractionTools.pauseButton.layer.contents = (__bridge id)play.CGImage;
@@ -688,10 +699,18 @@
 
 - (void)scrollToPreviousWord: (UIGestureRecognizer *)sender {
     NSLog(@"Swiped up");
-    self.userInteractionTools.swipeUpToPreviousWord.enabled = YES;
-    
     if (self.readingInterfaceBOOLs.paused) {
-        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3+1];
+        self.swipeDownIndex++;
+        
+        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3-self.swipeDownIndex];
+        self.nonInteractiveViews.previousWord3.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+7-self.swipeDownIndex];
+        self.nonInteractiveViews.previousWord2.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+6-self.swipeDownIndex];
+        self.nonInteractiveViews.previousWord.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+5-self.swipeDownIndex];
+        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+4-self.swipeDownIndex];
+        self.nonInteractiveViews.nextWord.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3-self.swipeDownIndex];
+        self.nonInteractiveViews.nextWord2.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+2-self.swipeDownIndex];
+        self.nonInteractiveViews.nextWord3.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+1-self.swipeDownIndex];
+        self.nonInteractiveViews.nextWord4.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex-self.swipeDownIndex];
     }
     else {
         return;
@@ -700,9 +719,16 @@
 
 - (void)scrollToNextWord: (UIGestureRecognizer *)sender {
     NSLog(@"Swiped down");
-    self.userInteractionTools.swipeDownToNextWord.enabled = YES;
     if (self.readingInterfaceBOOLs.paused) {
-        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3-1];
+        self.swipeUpIndex++;
+        self.nonInteractiveViews.previousWord3.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+7+self.swipeUpIndex)];
+        self.nonInteractiveViews.previousWord2.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+6+self.swipeUpIndex)];
+        self.nonInteractiveViews.previousWord.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+5+self.swipeUpIndex)];
+        self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+4+self.swipeUpIndex)];
+        self.nonInteractiveViews.nextWord.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+3+self.swipeUpIndex)];
+        self.nonInteractiveViews.nextWord2.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+2+self.swipeUpIndex)];
+        self.nonInteractiveViews.nextWord3.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+1+self.swipeUpIndex)];
+        self.nonInteractiveViews.nextWord4.text = [self.wordsArray objectAtIndex:(self.currentReadingPosition.wordIndex+self.swipeUpIndex)];
     }
     else {
         return;
@@ -1058,6 +1084,7 @@
     self.readingInterfaceBOOLs.accelerationBegan = NO;
     [self.accelerationtimer invalidate];
     self.accelerationtimer = nil;
+    [self.userInteractionTools.userNotesTextField resignFirstResponder];
     self.deccelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
     NSLog(@"Ended %d", self.readingInterfaceBOOLs.accelerationBegan);
     
@@ -1806,6 +1833,9 @@
 
 
 - (void)revealUserNotesView: (UIButton *)sender {
+    self.noteBook = [[ROADNoteBookView alloc]init];
+    self.noteBook.arrayOfNotes = [NSMutableArray array];
+    
     self.readingInterfaceBOOLs.hideControlsActivated = YES;
     self.userInteractionTools.toggleNoteBookButton.userInteractionEnabled = YES;
     [self hideSpeedometer];
@@ -2062,10 +2092,13 @@
     }
 }
 
-- (void)toggleNoteBookView: (UIButton *)sender {
-    self.noteBook = [[ROADNoteBookView alloc]init];
+- (void)revealNoteBookView: (UIButton *)sender {
+//    self.noteBook.arrayOfNotes = self.currentReadingPosition.userNotesArray;
+//        self.currentReadingPosition.userNotesArray = self.noteBook.arrayOfNotes;
+
     [self presentViewController:self.noteBook animated:YES completion:nil];
-    self.noteBook.arrayOfNotes = self.currentReadingPosition.userNotesArray;
+    
+
     [self stopTimer];
 }
 
@@ -2075,9 +2108,11 @@
     NSString *saveString = [[NSString alloc]init];
     [self.userInteractionTools.userSelectedTextTextField resignFirstResponder];
     [self.userInteractionTools.userNotesTextField resignFirstResponder];
-    self.userNotesString = self.userInteractionTools.userNotesTextField.text;
-    saveString = self.userNotesString;
-    [self.currentReadingPosition.userNotesArray addObject:saveString];
+    saveString = self.userInteractionTools.userNotesTextField.text;
+    
+
+    [self.noteBook.arrayOfNotes addObject:saveString];
+//    [self.currentReadingPosition.userNotesArray addObject:saveString];
     NSLog(@"%@,%@", self.userNotesString, self.currentReadingPosition.userNotesArray);
     
     return YES;
@@ -2087,10 +2122,10 @@
     [super didReceiveMemoryWarning];
 }
 
--(BOOL)shouldAutorotate
-{
-    return YES;
-}
+//-(BOOL)shouldAutorotate
+//{
+//    return YES;
+//}
 
 -(NSUInteger)supportedInterfaceOrientations
 {

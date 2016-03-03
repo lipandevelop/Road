@@ -70,7 +70,7 @@
     dot.layer.borderColor = self.userColor.colorZero.CGColor;
     dot.layer.cornerRadius = 5.0f;
     
-    [UIView animateWithDuration:4.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+    [UIView animateWithDuration:3.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
         dot.alpha = kZero;
     } completion:nil];
     

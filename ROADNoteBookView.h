@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ROADNoteBookView : UIViewController
-@property (nonatomic, assign) NSMutableArray *arrayOfNotes;
+@property (nonatomic, strong) NSMutableArray *arrayOfNotes;
 
 
 @end
