@@ -15,6 +15,7 @@
 
 @interface ROADTitleScreen () <UIScrollViewDelegate, AVAudioPlayerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) AVAudioPlayer *backgroundMusicPlayer;
 @property (nonatomic, strong) UIWebView *webViewBG;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *quoteLabel;
@@ -24,12 +25,11 @@
 
 @property (nonatomic, strong) UIButton *currentBookButton;
 @property (nonatomic, strong) UIButton *libraryButton;
+@property (nonatomic, strong) UIButton *toggleMusicButton;
 
 @property (nonatomic, strong) UIView *currentBookLabelContainer;
 
-
-
-
+@property (nonatomic, assign) BOOL musicActivated;
 
 @end
 
@@ -38,6 +38,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self loadContent];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    NSString *backGroundMusicPath = [[NSBundle mainBundle] pathForResource:@"Road" ofType:@"mp3"];
+    NSURL *backGroundMusicURL = [NSURL fileURLWithPath:backGroundMusicPath];
+    self.backgroundMusicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:backGroundMusicURL error:nil];
+    self.backgroundMusicPlayer.numberOfLoops = -1;
+    [self.backgroundMusicPlayer prepareToPlay];
 }
 
 - (void) loadContent {
@@ -104,6 +112,14 @@
     self.currentBookButton.alpha = kGoldenRatioMinusOne;
     [self.currentBookButton addTarget:self action:@selector(presentReadingInterface:) forControlEvents:UIControlEventTouchUpInside];
     
+    UIImage *musicIcon = [UIImage imageNamed:@"musicIcon"];
+    self.toggleMusicButton = [[UIButton alloc] initWithFrame:CGRectMake(-10, 435, 40, 40)];
+    self.toggleMusicButton.backgroundColor = [UIColor blackColor];
+    self.toggleMusicButton.layer.cornerRadius = 20;
+    self.toggleMusicButton.layer.contents = (__bridge id)musicIcon.CGImage;
+    self.toggleMusicButton.alpha = kGoldenRatioMinusOne;
+    [self.toggleMusicButton addTarget:self action:@selector(toggleMusic:) forControlEvents:UIControlEventTouchUpInside];
+    
     self.currentBookLabelContainer = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.frame)-100, 446, 100, 20)];
     self.currentBookLabelContainer.backgroundColor = self.userColor.colorZero;
     self.currentBookLabelContainer.alpha = kHiddenControlRevealedAlhpa;
@@ -141,6 +157,9 @@
     [self.currentBookLabelContainer addSubview:self.currentBookLabel];
     [self.view addSubview:self.libraryButton];
     [self.view bringSubviewToFront:self.currentBookButton];
+    [self.view addSubview:self.toggleMusicButton];
+    [self.view bringSubviewToFront:self.toggleMusicButton];
+
     [self.view addSubview:dot];
     
     self.scrollView.delegate = self;
@@ -154,16 +173,37 @@
         self.libraryButton.titleLabel.textColor = [UIColor blackColor];
         self.currentBookButton.backgroundColor = self.userColor.colorSix;
         self.libraryButton.backgroundColor = self.userColor.colorSix;
+        self.currentBookLabelContainer.alpha = kZero;
     }];
     [UIView animateWithDuration:2.5f animations:^{
         self.libraryButton.alpha = kZero;
         self.currentBookButton.alpha = kZero;
+        self.toggleMusicButton.alpha = kZero;
+        self.currentBookLabel.alpha = kZero;
         self.titleLabel.alpha = kZero;
         self.quoteLabel.alpha = kZero;
     }completion:^(BOOL finished) {
         [self presentViewController:readingInterface animated:YES completion:nil];
-        //    [self.backgroundMusicPlayer pause];
+        [self.backgroundMusicPlayer stop];
     }];
+}
+
+- (void)toggleMusic: (UIButton *)button {
+    NSLog(@"Music Presed");
+    self.musicActivated = !self.musicActivated;
+    if (self.musicActivated) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.toggleMusicButton.backgroundColor = self.userColor.colorZero;
+        }];
+        [self.backgroundMusicPlayer play];
+    }
+    if (!self.musicActivated) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.toggleMusicButton.backgroundColor = [UIColor blackColor];
+        }];
+        [self.backgroundMusicPlayer pause];
+    }
+    
 }
 
 
@@ -181,6 +221,8 @@
 {
     return UIInterfaceOrientationMaskPortrait;
 }
+
+
 
 /*
  #pragma mark - Navigation

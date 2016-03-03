@@ -37,15 +37,17 @@
 @property (nonatomic, strong) UIWebView *bookContentView;
 @property (nonatomic, assign) NSUInteger spineIndex;
 @property (nonatomic, strong) NSScanner *assistantTextRangeScanner;
-@property (nonatomic, strong) ROADCurrentReadingPosition *currentReadingPosition;
-@property (nonatomic, strong) ROADNoteBookView *noteBook;
+@property (nonatomic, strong) AVAudioPlayer *backgroundMusicPlayer;
 
+@property (nonatomic, strong) ROADCurrentReadingPosition *currentReadingPosition;
 @property (nonatomic, strong) ROADUIUserInteractionTools *userInteractionTools;
 @property (nonatomic, strong) ROADNoneInteractiveViews *nonInteractiveViews;
 @property (nonatomic, strong) ROADReadInterfaceBOOLs *readingInterfaceBOOLs;
 @property (nonatomic, strong) ROADDisplayReadingTextLabel *displayReadingTextLabe;
 @property (nonatomic, strong) ROADColors *userColor;
 @property (nonatomic, strong) ROADPalette *toggleFocusTextHighlightPaletteButton;
+@property (nonatomic, strong) ROADNoteBookView *noteBook;
+
 
 @property (nonatomic, strong) UIView *breakPedal;
 @property (nonatomic, assign) CGRect breakPedalFrame;
@@ -536,7 +538,7 @@
     [self.userInteractionTools.accessUserNotesTextFieldButton addTarget:self action:@selector(revealUserNotesView:) forControlEvents:UIControlEventTouchDown];
     [self.uiView addSubview:self.userInteractionTools.accessUserNotesTextFieldButton];
     
-    self.userInteractionTools.toggleNoteBookButton = [[UIButton alloc]initWithFrame:CGRectMake(-kAccessButtonWidth, CGRectGetMidY(self.uiView.frame)+3*kAccessButtonWidth, kAccessButtonWidth, kAccessButtonWidth)];
+    self.userInteractionTools.toggleNoteBookButton = [[UIButton alloc]initWithFrame:CGRectMake(-kAccessButtonWidth, CGRectGetMidY(self.uiView.frame), kAccessButtonWidth, kAccessButtonWidth)];
     self.userInteractionTools.toggleNoteBookButton.titleLabel.font = [UIFont fontWithName:(self.fontType) size:14];
     self.userInteractionTools.toggleNoteBookButton.titleLabel.textAlignment = NSTextAlignmentRight;
     self.userInteractionTools.toggleNoteBookButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
@@ -1202,8 +1204,8 @@
             self.currentReadingPosition.assistantTextRangeIndex = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+3])integerValue];
             self.currentReadingPosition.assistantTextRangeLength = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+4])integerValue];
             
-            NSInteger textViewRange = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+23])integerValue];
-            NSInteger textViewLength = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+24])integerValue];
+            NSInteger textViewRange = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+13])integerValue];
+            NSInteger textViewLength = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+14])integerValue];
             
             //            [self.userInteractionTools.assistantTextView scrollRangeToVisible:NSMakeRange(self.currentReadingPosition.assistantTextRangeIndex, self.currentReadingPosition.assistantTextRangeLength)];
             
@@ -1584,7 +1586,7 @@
     self.userInteractionTools.toggleVowels.alpha = kZero;
     self.userInteractionTools.toggleConsonates.alpha = kZero;
     self.userInteractionTools.toggleUserSelections.alpha = kZero;
-    self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
+//    self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
     self.chapterLabel.alpha = kZero;
     self.breakPedal.alpha = kZero;
     self.userInteractionTools.expandTextViewButton.alpha = kZero;
@@ -1747,6 +1749,10 @@
         self.userInteractionTools.lightsOffButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame) -kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         self.userInteractionTools.flipXAxisButton.frame = CGRectMake(CGRectGetMinX(self.uiView.frame)+25.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         
+        self.userInteractionTools.toggleFocusTextModification.alpha = kUINormaAlpha;
+        self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
+        self.userInteractionTools.togglePunctuationButton.alpha = kUINormaAlpha;
+        
     }completion:^(BOOL finished) {
         self.userInteractionTools.accessTextViewButton.backgroundColor = [UIColor colorWithWhite:kZero alpha:kZero];
         self.userInteractionTools.expandTextViewButton.frame = CGRectMake(kControlButtonXOrigin+kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
@@ -1832,6 +1838,9 @@
         self.userInteractionTools.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
         self.userInteractionTools.assistantTextView.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, CGRectGetMidX(self.uiView.frame)-4.0f, CGRectGetHeight(self.uiView.frame)-70.0f);
         self.userInteractionTools.accessTextViewButton.alpha = kZero;
+        self.userInteractionTools.toggleFocusTextModification.alpha = kZero;
+        self.userInteractionTools.pauseButton.alpha = kZero;
+        self.userInteractionTools.togglePunctuationButton.alpha = kZero;
         
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.75f animations:^{
@@ -1865,7 +1874,7 @@
         self.userInteractionTools.accessTextViewButton.alpha = kZero;
         self.userInteractionTools.accessUserNotesTextFieldButton.alpha =kZero;
         self.userInteractionTools.userNotesTextField.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, CGRectGetMidX(self.uiView.frame)-4.0f, CGRectGetHeight(self.uiView.frame)-70.0f);
-        self.userInteractionTools.toggleNoteBookButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)+3*kAccessButtonWidth, kAccessButtonWidth, kAccessButtonWidth);
+        self.userInteractionTools.toggleNoteBookButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame), kAccessButtonWidth, kAccessButtonWidth);
         self.userInteractionTools.retractUserNotesTextFieldButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
     }];
 }
@@ -1879,7 +1888,7 @@
         self.userInteractionTools.accessTextViewButton.alpha = 1.0f;
         self.userInteractionTools.accessUserNotesTextFieldButton.alpha = kGoldenRatioMinusOne;
         self.userInteractionTools.retractUserNotesTextFieldButton.frame = CGRectMake(kZero, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
-        self.userInteractionTools.toggleNoteBookButton.frame = CGRectMake(-kAccessButtonWidth, CGRectGetMidY(self.uiView.frame)+3*kAccessButtonWidth, kAccessButtonWidth, kAccessButtonWidth);
+        self.userInteractionTools.toggleNoteBookButton.frame = CGRectMake(-kAccessButtonWidth, CGRectGetMidY(self.uiView.frame), kAccessButtonWidth, kAccessButtonWidth);
         self.userInteractionTools.retractUserNotesTextFieldButton.alpha = kZero;
         
     }completion:^(BOOL finished) {
@@ -2069,7 +2078,6 @@
 }
 
 - (void)retractDictionary: (UIButton *)sender {
-    [self beginTimer];
     [UIView animateWithDuration:0.5f animations:^{
         self.userInteractionTools.presentDictionaryButton.alpha = kUINormaAlpha;
         self.userInteractionTools.retractDictionaryButton.frame = CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight);

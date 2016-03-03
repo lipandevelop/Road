@@ -217,7 +217,7 @@
 
 - (void)setDrawingTool {
     self.drawToolView = [[ROADDrawToolView alloc] initWithFrame:self.canvasView.bounds];
-    self.drawToolView.currentColor = self.userColors.colorZero;
+    self.drawToolView.currentColor = self.userColors.colorFive;
     self.drawToolView.backgroundColor = [UIColor colorWithRed:28.0/255.0 green:47.0/255.0 blue:64.0/255.0 alpha:0.01];
     self.drawToolView.userInteractionEnabled = YES;
     self.drawToolView.alpha = kZero;
@@ -234,9 +234,10 @@
         //        [self.imageView addSubview:notesLabel];
         
         indexCount ++;
-        self.notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 400.0f, 100.0f)];
+        self.notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 200.0f, 100.0f)];
         self.notesLabel.text = notesString;
         self.notesLabel.textColor = self.userColors.colorSix;
+        self.notesLabel.numberOfLines = kZero;
         self.notesLabel.textAlignment = NSTextAlignmentCenter;
         self.notesLabel.font = [UIFont fontWithName:@"American Typewriter" size:18.0f];
         [self.canvasView addSubview:self.notesLabel];

@@ -62,6 +62,8 @@
 		0AF995921C87FA8C00ACFB3B /* everNoteIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995911C87FA8C00ACFB3B /* everNoteIcon.png */; };
 		0AF995941C87FA9400ACFB3B /* instagramIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995931C87FA9400ACFB3B /* instagramIcon.png */; };
 		0AF995961C87FAAB00ACFB3B /* twitterIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995951C87FAAB00ACFB3B /* twitterIcon.png */; };
+		0AF995981C88BA8500ACFB3B /* Road.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995971C88BA8400ACFB3B /* Road.mp3 */; };
+		0AF9959A1C88BCAD00ACFB3B /* musicIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995991C88BCAD00ACFB3B /* musicIcon.png */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -154,6 +156,8 @@
 		0AF995911C87FA8C00ACFB3B /* everNoteIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = everNoteIcon.png; path = Images/everNoteIcon.png; sourceTree = "<group>"; };
 		0AF995931C87FA9400ACFB3B /* instagramIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instagramIcon.png; path = Images/instagramIcon.png; sourceTree = "<group>"; };
 		0AF995951C87FAAB00ACFB3B /* twitterIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = twitterIcon.png; path = Images/twitterIcon.png; sourceTree = "<group>"; };
+		0AF995971C88BA8400ACFB3B /* Road.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Road.mp3; path = Music/Road.mp3; sourceTree = "<group>"; };
+		0AF995991C88BCAD00ACFB3B /* musicIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = musicIcon.png; path = Images/musicIcon.png; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -334,6 +338,8 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AF995971C88BA8400ACFB3B /* Road.mp3 */,
+				0AF995991C88BCAD00ACFB3B /* musicIcon.png */,
 				0AF995931C87FA9400ACFB3B /* instagramIcon.png */,
 				0AF9958F1C87FA8300ACFB3B /* faceBookIcon.png */,
 				0AF995951C87FAAB00ACFB3B /* twitterIcon.png */,
@@ -547,6 +553,8 @@
 				0AF995901C87FA8300ACFB3B /* faceBookIcon.png in Resources */,
 				0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */,
 				0AF995961C87FAAB00ACFB3B /* twitterIcon.png in Resources */,
+				0AF995981C88BA8500ACFB3B /* Road.mp3 in Resources */,
+				0AF9959A1C88BCAD00ACFB3B /* musicIcon.png in Resources */,
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
 				0AF995861C879A6900ACFB3B /* speak.png in Resources */,
 				0AEA780D1C86285300D62BB6 /* noteBook.png in Resources */,
