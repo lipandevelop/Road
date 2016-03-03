@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import "AppDelegate.h"
-#include "ROADConstants.h"
+#import "ROADConstants.h"
 #import "ROADReadingInterface.h"
 #import "KFEpubController.h"
 #import "KFEpubContentModel.h"
@@ -95,6 +97,9 @@
 #pragma mark Images
 @property (nonatomic, strong) UIImage *bulbLight;
 @property (nonatomic, strong) UIImage *bulbDark;
+@property (nonatomic, strong) UIView *connector;
+@property (nonatomic, strong) UIView *connector2;
+
 
 
 @end
@@ -314,10 +319,6 @@
     self.userInteractionTools.modifyFocusTextFontSizeSlider.minimumValue = 22.0f;
     [self.userInteractionTools.modifyFocusTextFontSizeSlider addTarget:self action:@selector(adjustFontSize:) forControlEvents:UIControlEventValueChanged];
     
-    //Dictionary
-    self.userInteractionTools.presentDictionaryButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame)+kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight)];
-    [self.userInteractionTools.presentDictionaryButton addTarget:self action:@selector(presentDictionary:) forControlEvents:UIControlEventTouchUpInside];
-    
     //Punctuation
     self.userInteractionTools.togglePunctuationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight)];
     [self.userInteractionTools.togglePunctuationButton addTarget:self action:@selector(togglePunctuation:) forControlEvents:UIControlEventTouchUpInside];
@@ -379,10 +380,39 @@
     self.userInteractionTools.pauseButton.layer.borderWidth = kBoarderWidth;
     self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
     self.userInteractionTools.pauseButton.layer.cornerRadius = self.userInteractionTools.hideControlButton.frame.size.width/2;
-    [self.userInteractionTools.pauseButton addTarget:self action:@selector(pause:) forControlEvents:UIControlEventTouchUpInside];
+    [self.userInteractionTools.pauseButton addTarget:self action:@selector(togglePause:) forControlEvents:UIControlEventTouchUpInside];
     [self.uiView addSubview:self.userInteractionTools.pauseButton];
     
-    //Swipte
+    //Voice
+    UIImage *speakButtonImage = [UIImage imageNamed:@"speak.png"];
+    self.userInteractionTools.voiceButton =[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*0.67f-80.0f, CGRectGetMaxY(self.uiView.frame)*0.82f, 35.0f, 35.0f)];
+    self.userInteractionTools.voiceButton.layer.contents = (__bridge id)speakButtonImage.CGImage;
+    self.userInteractionTools.voiceButton.layer.borderWidth = kBoarderWidth;
+    self.userInteractionTools.voiceButton.layer.contentsGravity = kCAGravityResizeAspect;
+    self.userInteractionTools.voiceButton.alpha = kZero;
+    self.userInteractionTools.voiceButton.layer.cornerRadius = self.userInteractionTools.hideControlButton.frame.size.width/2;
+    [self.userInteractionTools.voiceButton addTarget:self action:@selector(voiceWord:) forControlEvents:UIControlEventTouchUpInside];
+    [self.uiView addSubview:self.userInteractionTools.voiceButton];
+    
+    self.connector = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.voiceButton.frame.origin.x+35.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-19.5f, kZero, 4.0f)];
+    
+    //Dictionary
+    UIImage *dictionaryButtonImage = [UIImage imageNamed:@"dictionary"];
+    self.userInteractionTools.presentDictionaryButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*0.67f-125.0f, CGRectGetMaxY(self.uiView.frame)*0.82f, 35.0f, 35.0f)];
+    self.userInteractionTools.presentDictionaryButton.layer.contents = (__bridge id)dictionaryButtonImage.CGImage;
+    self.userInteractionTools.presentDictionaryButton.layer.borderWidth = kBoarderWidth;
+    self.userInteractionTools.presentDictionaryButton.layer.contentsGravity = kCAGravityResizeAspect;
+    self.userInteractionTools.presentDictionaryButton.alpha = kZero;
+    self.userInteractionTools.presentDictionaryButton.layer.cornerRadius = self.userInteractionTools.hideControlButton.frame.size.width/2;
+    [self.uiView addSubview:self.userInteractionTools.presentDictionaryButton];
+    [self.userInteractionTools.presentDictionaryButton addTarget:self action:@selector(presentDictionary:) forControlEvents:UIControlEventTouchUpInside];
+    [self.uiView addSubview:self.userInteractionTools.presentDictionaryButton];
+    
+    self.connector2 = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+35.0f, self.userInteractionTools.voiceButton.frame.origin.y + self.userInteractionTools.voiceButton.frame.size.height-19.5f, kZero, 4.0f)];
+
+
+    
+    //Swipe
     self.userInteractionTools.swipeUpToPreviousWord = [[UISwipeGestureRecognizer alloc]init];
     [self.userInteractionTools.swipeUpToPreviousWord setDirection:UISwipeGestureRecognizerDirectionUp];
     [self.userInteractionTools.swipeUpToPreviousWord setEnabled:NO];
@@ -390,7 +420,7 @@
     [self.uiView addGestureRecognizer:self.userInteractionTools.swipeUpToPreviousWord];
     
     self.userInteractionTools.swipeDownToNextWord = [[UISwipeGestureRecognizer alloc]init];
-    [self.userInteractionTools.swipeDownToNextWord setDirection:UISwipeGestureRecognizerDirectionUp];
+    [self.userInteractionTools.swipeDownToNextWord setDirection:UISwipeGestureRecognizerDirectionDown];
     [self.userInteractionTools.swipeDownToNextWord addTarget:self action:@selector(scrollToNextWord:)];
     [self.userInteractionTools.swipeDownToNextWord setEnabled:NO];
     [self.uiView addGestureRecognizer:self.userInteractionTools.swipeDownToNextWord];
@@ -597,15 +627,36 @@
 
 #pragma mark Modify Toggle Buttons
 
-- (void)pause: (UIButton *)sender {
+- (void)togglePause: (UIButton *)sender {
     self.readingInterfaceBOOLs.paused = !self.readingInterfaceBOOLs.paused;
+    self.connector.backgroundColor = self.userColor.colorSix;
+    self.connector.alpha = 1.0f;
+    self.connector.layer.cornerRadius = 2.0f;
+    self.connector2.backgroundColor = self.userColor.colorSix;
+    self.connector2.alpha = 1.0f;
+    self.connector2.layer.cornerRadius = 2.0f;
+    [self.uiView addSubview:self.connector];
+    [self.uiView addSubview:self.connector2];
     if (self.readingInterfaceBOOLs.paused) {
+        
         UIImage *paused = [UIImage imageNamed:@"pauseImage.png"];
         self.userInteractionTools.pauseButton.alpha = 0.2f;
         self.userInteractionTools.pauseButton.layer.contents = (__bridge id)paused.CGImage;
-        [UIView animateWithDuration:1.0f animations:^{
-            self.userInteractionTools.pauseButton.alpha = kHiddenControlRevealedAlhpa;
+        self.connector.backgroundColor = self.userColor.colorSix;
+        self.connector2.backgroundColor = self.userColor.colorSix;
+
+        [UIView animateWithDuration:0.25f animations:^{
+            self.connector.frame = CGRectMake(self.userInteractionTools.voiceButton.frame.origin.x+34.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, 12.0f, 6.0f);
+            self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
+            self.userInteractionTools.voiceButton.alpha = kUINormaAlpha;
+
+        }completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.5f animations:^{
+                self.connector2.frame = CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+34.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, 12.0f, 6.0f);
+                self.userInteractionTools.presentDictionaryButton.alpha = kUINormaAlpha;
+            }];
         }];
+        
         [self stopTimer];
     }
     if (!self.readingInterfaceBOOLs.paused) {
@@ -613,16 +664,32 @@
         self.userInteractionTools.pauseButton.alpha = 0.2f;
         self.userInteractionTools.pauseButton.layer.contents = (__bridge id)play.CGImage;
         [UIView animateWithDuration:1.0f animations:^{
-            self.userInteractionTools.pauseButton.alpha = kHiddenControlRevealedAlhpa;
+            self.connector.frame = CGRectMake(self.userInteractionTools.voiceButton.frame.origin.x+35.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, kZero, 6.0f);
+            self.connector2.frame = CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+35.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, kZero, 6.0f);
+            self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
+            self.userInteractionTools.voiceButton.alpha = kZero;
+            self.userInteractionTools.presentDictionaryButton.alpha = kZero;
+
         }];
         [self beginTimer];
     }
 }
 
+- (void)voiceWord: (UIButton *)sender {
+    self.userInteractionTools.voiceButton.backgroundColor = self.userColor.colorSix;
+    [UIView animateWithDuration:1.0f animations:^{
+        self.userInteractionTools.voiceButton.backgroundColor = [UIColor colorWithWhite:kZero alpha:kZero];
+    }];
+    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:self.nonInteractiveViews.focusText.text];
+    AVSpeechSynthesizer *syn = [[AVSpeechSynthesizer alloc] init];
+    [syn speakUtterance:utterance];
+    
+}
+
 - (void)scrollToPreviousWord: (UIGestureRecognizer *)sender {
     NSLog(@"Swiped up");
     self.userInteractionTools.swipeUpToPreviousWord.enabled = YES;
-
+    
     if (self.readingInterfaceBOOLs.paused) {
         self.nonInteractiveViews.focusText.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+3+1];
     }
@@ -1820,12 +1887,10 @@
     }
     
     [self configureRoundButton:self.userInteractionTools.togglePunctuationButton dimension:kAccessButtonHeight];
-    [self configureRoundButton:self.userInteractionTools.presentDictionaryButton dimension:kAccessButtonHeight];
     [self configureRoundButton:self.userInteractionTools.toggleFocusTextModification dimension:kAccessButtonHeight];
     [self rotationTransformation:self.userInteractionTools.modifyFocusTextFontSizeSlider.layer degrees:k180Rotation];
     
     [ConfigureView configureTrapezoidButton:self.userInteractionTools.toggleFocusTextModification title:@"+A" font:self.fontType andColor:self.currentReadingPosition.highlightMovingTextColor];
-    [ConfigureView configureTrapezoidButton:self.userInteractionTools.presentDictionaryButton title:@"D" font:self.fontType andColor:self.currentReadingPosition.highlightMovingTextColor];
     [ConfigureView configureTrapezoidButton:self.userInteractionTools.togglePunctuationButton title:@"P" font:self.fontType andColor:self.currentReadingPosition.highlightMovingTextColor];
 }
 
@@ -1949,7 +2014,6 @@
     [UIView animateWithDuration:0.5f animations:^{
         self.userInteractionTools.retractDictionaryButton.frame = CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame)/2-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight);
         self.dictionaryViewController.view.frame = CGRectMake(kZero, CGRectGetHeight(self.uiView.frame)/2, CGRectGetWidth(self.uiView.frame), CGRectGetHeight(self.uiView.frame)/2);
-        [self rotationTransformation:self.userInteractionTools.presentDictionaryButton.layer degrees:-45.0f];
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.5f animations:^{
             self.userInteractionTools.presentDictionaryButton.alpha = kZero;
@@ -1960,11 +2024,9 @@
 - (void)retractDictionary: (UIButton *)sender {
     [self beginTimer];
     [UIView animateWithDuration:0.5f animations:^{
-        self.userInteractionTools.presentDictionaryButton.alpha = 1.0f;
+        self.userInteractionTools.presentDictionaryButton.alpha = kUINormaAlpha;
         self.userInteractionTools.retractDictionaryButton.frame = CGRectMake(CGRectGetWidth(self.uiView.frame)/2-kAccessButtonHeight/2, CGRectGetHeight(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight);
         self.dictionaryViewController.view.frame = CGRectMake(kZero, CGRectGetHeight(self.uiView.frame), CGRectGetWidth(self.uiView.frame), CGRectGetHeight(self.uiView.frame)/2);
-        [self rotationTransformation:self.userInteractionTools.presentDictionaryButton.layer degrees:45.0f];
-        self.userInteractionTools.presentDictionaryButton.alpha = kGoldenRatioMinusOne;
         
     }completion:^(BOOL finished) {
         [self.userInteractionTools.retractDictionaryButton removeFromSuperview];
@@ -2023,6 +2085,16 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 

@@ -49,6 +49,12 @@
 		0AF7418E1C778205000C3CC2 /* RoadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7418D1C778205000C3CC2 /* RoadTests.m */; };
 		0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */ = {isa = PBXBuildFile; fileRef = 0AF7419E1C77964D000C3CC2 /* thePrince.epub */; };
 		0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */ = {isa = PBXBuildFile; fileRef = 0AF741A01C7796F1000C3CC2 /* tolstoy-war-and-peace.epub */; };
+		0AF9957C1C8775E800ACFB3B /* ROADTitleScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9957B1C8775E800ACFB3B /* ROADTitleScreen.m */; };
+		0AF9957E1C87764900ACFB3B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF9957D1C87764900ACFB3B /* AVFoundation.framework */; };
+		0AF995801C87764E00ACFB3B /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF9957F1C87764E00ACFB3B /* AVKit.framework */; };
+		0AF995841C877B8300ACFB3B /* TitleScreenImage.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995831C877B8300ACFB3B /* TitleScreenImage.gif */; };
+		0AF995861C879A6900ACFB3B /* speak.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995851C879A6900ACFB3B /* speak.png */; };
+		0AF995881C87AD4700ACFB3B /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995871C87AD4700ACFB3B /* dictionary.png */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -127,6 +133,13 @@
 		0AF7418F1C778205000C3CC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AF7419E1C77964D000C3CC2 /* thePrince.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = thePrince.epub; path = Books/thePrince.epub; sourceTree = "<group>"; };
 		0AF741A01C7796F1000C3CC2 /* tolstoy-war-and-peace.epub */ = {isa = PBXFileReference; lastKnownFileType = file; name = "tolstoy-war-and-peace.epub"; path = "Books/tolstoy-war-and-peace.epub"; sourceTree = "<group>"; };
+		0AF9957A1C8775E800ACFB3B /* ROADTitleScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADTitleScreen.h; sourceTree = "<group>"; };
+		0AF9957B1C8775E800ACFB3B /* ROADTitleScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADTitleScreen.m; sourceTree = "<group>"; };
+		0AF9957D1C87764900ACFB3B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		0AF9957F1C87764E00ACFB3B /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		0AF995831C877B8300ACFB3B /* TitleScreenImage.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TitleScreenImage.gif; path = Images/TitleScreenImage.gif; sourceTree = "<group>"; };
+		0AF995851C879A6900ACFB3B /* speak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = speak.png; path = Images/speak.png; sourceTree = "<group>"; };
+		0AF995871C87AD4700ACFB3B /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Images/dictionary.png; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -137,6 +150,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AF995801C87764E00ACFB3B /* AVKit.framework in Frameworks */,
+				0AF9957E1C87764900ACFB3B /* AVFoundation.framework in Frameworks */,
 				0AE952441C8411F00022C40A /* QuartzCore.framework in Frameworks */,
 				0A35B29B1C8224D300EA6A43 /* UIKit.framework in Frameworks */,
 				469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */,
@@ -305,6 +320,9 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AF995851C879A6900ACFB3B /* speak.png */,
+				0AF995871C87AD4700ACFB3B /* dictionary.png */,
+				0AF995831C877B8300ACFB3B /* TitleScreenImage.gif */,
 				0AEA78331C86C57100D62BB6 /* pauseImage.png */,
 				0AEA78351C86CB2B00D62BB6 /* playImage.png */,
 				0AEA780F1C86708100D62BB6 /* pen.png */,
@@ -356,6 +374,8 @@
 				0AF741771C778205000C3CC2 /* AppDelegate.m */,
 				0AF741791C778205000C3CC2 /* ROADReadingInterface.h */,
 				0AF7417A1C778205000C3CC2 /* ROADReadingInterface.m */,
+				0AF9957A1C8775E800ACFB3B /* ROADTitleScreen.h */,
+				0AF9957B1C8775E800ACFB3B /* ROADTitleScreen.m */,
 				0AF7417C1C778205000C3CC2 /* Main.storyboard */,
 				0AF7417F1C778205000C3CC2 /* Assets.xcassets */,
 				0AF741811C778205000C3CC2 /* LaunchScreen.storyboard */,
@@ -394,6 +414,8 @@
 		B07C31BDF6E55BC74C11E449 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AF9957F1C87764E00ACFB3B /* AVKit.framework */,
+				0AF9957D1C87764900ACFB3B /* AVFoundation.framework */,
 				0AE952431C8411F00022C40A /* QuartzCore.framework */,
 				0A35B29A1C8224D300EA6A43 /* UIKit.framework */,
 				12C868AEC418B7542B3D89A3 /* libPods-Road.a */,
@@ -495,11 +517,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AF995841C877B8300ACFB3B /* TitleScreenImage.gif in Resources */,
 				0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */,
+				0AF995881C87AD4700ACFB3B /* dictionary.png in Resources */,
 				0AEA78361C86CB2B00D62BB6 /* playImage.png in Resources */,
 				0AEA780E1C86285600D62BB6 /* darkPaper.png in Resources */,
 				0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */,
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
+				0AF995861C879A6900ACFB3B /* speak.png in Resources */,
 				0AEA780D1C86285300D62BB6 /* noteBook.png in Resources */,
 				0AF741831C778205000C3CC2 /* LaunchScreen.storyboard in Resources */,
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,
@@ -596,6 +621,7 @@
 				0A044A2B1C8493AE007F9D75 /* ROADColors.m in Sources */,
 				0AF741751C778205000C3CC2 /* main.m in Sources */,
 				0A383B4C1C84B25D00A019D7 /* ROADConstants.m in Sources */,
+				0AF9957C1C8775E800ACFB3B /* ROADTitleScreen.m in Sources */,
 				0AEA78191C8675F600D62BB6 /* ROADNoteBookView.m in Sources */,
 				0A383B431C84AEDF00A019D7 /* UIColorSelection.m in Sources */,
 				0AE952541C8435D90022C40A /* ConfigureView.m in Sources */,

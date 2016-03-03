@@ -38,6 +38,7 @@
 
 @property (nonatomic, strong) UIButton *pauseButton;
 @property (nonatomic, strong) UIButton *playButton;
+@property (nonatomic, strong) UIButton *voiceButton;
 
 @property (nonatomic, strong) UITextView *assistantTextView;
 @property (nonatomic, strong) UITextField *userSelectedTextTextField;

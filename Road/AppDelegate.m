@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "ROADTitleScreen.h"
+#import "ROADReadingInterface.h"
 
 @interface AppDelegate ()
 
@@ -15,8 +17,20 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
+    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    
+    ROADTitleScreen *titleScreen = [[ROADTitleScreen alloc]init];
+    
+    self.window.rootViewController = titleScreen;
+    [self.window makeKeyAndVisible];
+    
+    
+//    ROADReadingInterface *readingInterface = [[ROADReadingInterface alloc]init];
+//    
+//    self.window.rootViewController = readingInterface;
+//    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
