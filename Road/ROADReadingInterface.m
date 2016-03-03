@@ -2177,13 +2177,13 @@
     self.readingInterfaceBOOLs.musicActivated = !self.readingInterfaceBOOLs.musicActivated;
     if (self.readingInterfaceBOOLs.musicActivated) {
         [UIView animateWithDuration:1.0f animations:^{
-            self.userInteractionTools.toggleMusicButton.backgroundColor = self.userColor.colorZero;
+            self.userInteractionTools.toggleMusicButton.alpha = 1.0f;
         }];
         [self.backgroundMusicPlayer play];
     }
     if (!self.readingInterfaceBOOLs.musicActivated) {
         [UIView animateWithDuration:1.0f animations:^{
-            self.userInteractionTools.toggleMusicButton.backgroundColor = self.userColor.colorSix;
+            self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
         }];
         [self.backgroundMusicPlayer pause];
     }
