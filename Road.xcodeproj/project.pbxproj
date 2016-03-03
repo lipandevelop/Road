@@ -55,6 +55,9 @@
 		0AF995841C877B8300ACFB3B /* TitleScreenImage.gif in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995831C877B8300ACFB3B /* TitleScreenImage.gif */; };
 		0AF995861C879A6900ACFB3B /* speak.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995851C879A6900ACFB3B /* speak.png */; };
 		0AF995881C87AD4700ACFB3B /* dictionary.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995871C87AD4700ACFB3B /* dictionary.png */; };
+		0AF9958A1C87E2E800ACFB3B /* imageIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995891C87E2E800ACFB3B /* imageIcon.png */; };
+		0AF9958C1C87E41A00ACFB3B /* florence.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9958B1C87E41900ACFB3B /* florence.jpg */; };
+		0AF9958E1C87F30900ACFB3B /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9958D1C87F30900ACFB3B /* share.png */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -140,6 +143,9 @@
 		0AF995831C877B8300ACFB3B /* TitleScreenImage.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = TitleScreenImage.gif; path = Images/TitleScreenImage.gif; sourceTree = "<group>"; };
 		0AF995851C879A6900ACFB3B /* speak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = speak.png; path = Images/speak.png; sourceTree = "<group>"; };
 		0AF995871C87AD4700ACFB3B /* dictionary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = dictionary.png; path = Images/dictionary.png; sourceTree = "<group>"; };
+		0AF995891C87E2E800ACFB3B /* imageIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = imageIcon.png; path = Images/imageIcon.png; sourceTree = "<group>"; };
+		0AF9958B1C87E41900ACFB3B /* florence.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = florence.jpg; path = Images/florence.jpg; sourceTree = "<group>"; };
+		0AF9958D1C87F30900ACFB3B /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share.png; path = Images/share.png; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -320,6 +326,9 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AF9958D1C87F30900ACFB3B /* share.png */,
+				0AF9958B1C87E41900ACFB3B /* florence.jpg */,
+				0AF995891C87E2E800ACFB3B /* imageIcon.png */,
 				0AF995851C879A6900ACFB3B /* speak.png */,
 				0AF995871C87AD4700ACFB3B /* dictionary.png */,
 				0AF995831C877B8300ACFB3B /* TitleScreenImage.gif */,
@@ -521,6 +530,7 @@
 				0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */,
 				0AF995881C87AD4700ACFB3B /* dictionary.png in Resources */,
 				0AEA78361C86CB2B00D62BB6 /* playImage.png in Resources */,
+				0AF9958A1C87E2E800ACFB3B /* imageIcon.png in Resources */,
 				0AEA780E1C86285600D62BB6 /* darkPaper.png in Resources */,
 				0AEA781C1C8681B300D62BB6 /* pencil.png in Resources */,
 				0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */,
@@ -533,6 +543,7 @@
 				0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */,
 				0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */,
 				0AF7417E1C778205000C3CC2 /* Main.storyboard in Resources */,
+				0AF9958C1C87E41A00ACFB3B /* florence.jpg in Resources */,
 				0AEA780B1C86284800D62BB6 /* bulbDark.png in Resources */,
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
 				0AEA78101C86708100D62BB6 /* pen.png in Resources */,
@@ -540,6 +551,7 @@
 				0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */,
 				0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */,
 				0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */,
+				0AF9958E1C87F30900ACFB3B /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

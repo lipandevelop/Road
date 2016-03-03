@@ -411,7 +411,7 @@
     [self.uiView addSubview:self.userInteractionTools.presentDictionaryButton];
     
     self.connector2 = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+35.0f, self.userInteractionTools.voiceButton.frame.origin.y + self.userInteractionTools.voiceButton.frame.size.height-19.5f, kZero, 4.0f)];
-
+    
     //Swipe
     self.userInteractionTools.swipeUpToPreviousWord = [[UISwipeGestureRecognizer alloc]init];
     [self.userInteractionTools.swipeUpToPreviousWord setDirection:UISwipeGestureRecognizerDirectionUp];
@@ -630,7 +630,7 @@
 - (void)togglePause: (UIButton *)sender {
     self.swipeUpIndex = 1;
     self.swipeDownIndex = 1;
-
+    
     self.readingInterfaceBOOLs.paused = !self.readingInterfaceBOOLs.paused;
     self.connector.backgroundColor = self.userColor.colorSix;
     self.connector.alpha = 1.0f;
@@ -651,12 +651,12 @@
         self.userInteractionTools.pauseButton.layer.contents = (__bridge id)paused.CGImage;
         self.connector.backgroundColor = self.userColor.colorSix;
         self.connector2.backgroundColor = self.userColor.colorSix;
-
+        
         [UIView animateWithDuration:0.25f animations:^{
             self.connector.frame = CGRectMake(self.userInteractionTools.voiceButton.frame.origin.x+34.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, 12.0f, 6.0f);
             self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
             self.userInteractionTools.voiceButton.alpha = kUINormaAlpha;
-
+            
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:0.5f animations:^{
                 self.connector2.frame = CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+34.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, 12.0f, 6.0f);
@@ -680,7 +680,7 @@
             self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
             self.userInteractionTools.voiceButton.alpha = kZero;
             self.userInteractionTools.presentDictionaryButton.alpha = kZero;
-
+            
         }];
         [self beginTimer];
     }
@@ -1007,7 +1007,10 @@
         [self emphasizePunctuation:@",.;:"];
     }
     if (self.readingInterfaceBOOLs.highlightAssistantTextActivated) {
-        [self highlightAssistantTextWithColor:self.currentReadingPosition.highlightMovingTextColor];
+        //        [self highlightAssistantTextWithColor:self.currentReadingPosition.highlightMovingTextColor];
+        [self highlightAssistantTextWithColor:self.userColor.colorZero];
+        
+        ;
         //        [self highlightAssistantTextWithColor:[UIColor blackColor]];
         
     }
@@ -1192,7 +1195,12 @@
             self.currentReadingPosition.assistantTextRangeIndex = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+3])integerValue];
             self.currentReadingPosition.assistantTextRangeLength = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+4])integerValue];
             
-            [self.userInteractionTools.assistantTextView scrollRangeToVisible:NSMakeRange(self.currentReadingPosition.assistantTextRangeIndex, self.currentReadingPosition.assistantTextRangeLength)];
+            NSInteger textViewRange = [([self.assistantTextRangeIndexArray objectAtIndex:self.currentReadingPosition.wordIndex+23])integerValue];
+            NSInteger textViewLength = [([self.assistantTextRangeLenghtArray objectAtIndex:self.currentReadingPosition.wordIndex+24])integerValue];
+            
+            //            [self.userInteractionTools.assistantTextView scrollRangeToVisible:NSMakeRange(self.currentReadingPosition.assistantTextRangeIndex, self.currentReadingPosition.assistantTextRangeLength)];
+            
+            [self.userInteractionTools.assistantTextView scrollRangeToVisible:NSMakeRange(textViewRange, textViewLength)];
             [attributedString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(self.currentReadingPosition.assistantTextRangeIndex, self.currentReadingPosition.assistantTextRangeLength+1)];
             //                        NSLog(@"%lu, %lu, %d, %@", range, length, isWord, self.focusText.text);
             [self.userInteractionTools.assistantTextView setAttributedText: attributedString];
@@ -2093,12 +2101,12 @@
 }
 
 - (void)revealNoteBookView: (UIButton *)sender {
-//    self.noteBook.arrayOfNotes = self.currentReadingPosition.userNotesArray;
-//        self.currentReadingPosition.userNotesArray = self.noteBook.arrayOfNotes;
-
+    //    self.noteBook.arrayOfNotes = self.currentReadingPosition.userNotesArray;
+    //        self.currentReadingPosition.userNotesArray = self.noteBook.arrayOfNotes;
+    
     [self presentViewController:self.noteBook animated:YES completion:nil];
     
-
+    
     [self stopTimer];
 }
 
@@ -2110,9 +2118,9 @@
     [self.userInteractionTools.userNotesTextField resignFirstResponder];
     saveString = self.userInteractionTools.userNotesTextField.text;
     
-
+    
     [self.noteBook.arrayOfNotes addObject:saveString];
-//    [self.currentReadingPosition.userNotesArray addObject:saveString];
+    //    [self.currentReadingPosition.userNotesArray addObject:saveString];
     NSLog(@"%@,%@", self.userNotesString, self.currentReadingPosition.userNotesArray);
     
     return YES;

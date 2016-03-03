@@ -14,12 +14,21 @@
 @interface ROADNoteBookView ()
 @property (nonatomic, strong) ROADDrawToolView *drawToolView;
 @property (nonatomic, strong) UIView *canvasView;
+@property (nonatomic, strong) UIView *imageView;
 @property (nonatomic, strong) UIButton *returnButton;
 @property (nonatomic, strong) UIButton *pencilButton;
 @property (nonatomic, strong) UIButton *pictureButton;
+@property (nonatomic, strong) UIButton *exportButton;
+
 
 @property (nonatomic, strong) ROADColors *userColors;
 @property (nonatomic, assign) BOOL drawingToolActivated;
+@property (nonatomic, assign) BOOL imageViewActivated;
+
+@property (nonatomic, strong) UILabel *notesLabel;
+
+@property (nonatomic, assign) CGPoint startPoint;
+
 
 @end
 
@@ -30,12 +39,17 @@
     
     NSLog(@"Notes %@", self.arrayOfNotes);
     
-    self.drawingToolActivated = YES;
+    self.drawingToolActivated = NO;
+    self.drawingToolActivated = NO;
+    
     self.userColors = [[ROADColors alloc]init];
     UIView *backgroundView = [[UIView alloc]initWithFrame:self.view.frame];
     UIImage *ivoryPaper = [UIImage imageNamed:@"ivoryPaper.png"];
     UIImage *pencilImage = [UIImage imageNamed:@"drawingPencil"];
-   backgroundView.layer.contents = (__bridge id)ivoryPaper.CGImage;
+    UIImage *imageImage = [UIImage imageNamed:@"imageIcon"];
+    UIImage *florenceImage = [UIImage imageNamed:@"florence.jpg"];
+    UIImage *shareImage = [UIImage imageNamed:@"share.png"];
+    backgroundView.layer.contents = (__bridge id)ivoryPaper.CGImage;
     [self.view addSubview:backgroundView];
     
     self.returnButton = [[UIButton alloc]initWithFrame:CGRectMake(10.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
@@ -59,31 +73,51 @@
     self.pencilButton.layer.opacity = kUINormaAlpha;
     [self.pencilButton addTarget:self action:@selector(toggleDrawingTool:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.pictureButton = [[UIButton alloc]initWithFrame:CGRectMake(65.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.pictureButton = [[UIButton alloc]initWithFrame:CGRectMake(120.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
     self.pictureButton.layer.borderWidth = kBoarderWidth;
-    self.pictureButton.layer.contents = (__bridge id)pencilImage.CGImage;
+    self.pictureButton.layer.contents = (__bridge id)imageImage.CGImage;
     self.pictureButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.pictureButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.pictureButton.layer.shadowOpacity = kShadowOpacity;
     self.pictureButton.alpha = kUINormaAlpha;
-    self.pictureButton.layer.opacity = 0.2f;
-    [self.pictureButton addTarget:self action:@selector(toggleDrawingTool:) forControlEvents:UIControlEventTouchUpInside];
+    [self.pictureButton addTarget:self action:@selector(toggleImageView:) forControlEvents:UIControlEventTouchUpInside];
     
+    self.exportButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.exportButton.layer.borderWidth = kBoarderWidth;
+    self.exportButton.layer.contents = (__bridge id)shareImage.CGImage;
+    self.exportButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.exportButton.layer.cornerRadius = kAccessButtonHeight/2;
+    self.exportButton.layer.shadowOpacity = kShadowOpacity;
+    self.exportButton.alpha = kUINormaAlpha;
     
     self.canvasView = [[UIView alloc]initWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-80)];
     self.canvasView.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.canvasView.layer.borderWidth = kBoarderWidth;
     self.canvasView.layer.shadowOpacity = kShadowOpacity;
+    self.canvasView.clipsToBounds = YES;
+    
+    self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.canvasView.frame.size.width, self.canvasView.frame.size.height)];
+    self.imageView.backgroundColor = [UIColor blackColor];
+    self.imageView.layer.contents = (__bridge id)florenceImage.CGImage;
+    self.imageView.layer.contentsGravity = kCAGravityResizeAspect;
+    self.imageView.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.imageView.layer.shadowOpacity = kShadowOpacity;
+    self.imageView.alpha = kZero;
     
     [self setDrawingTool];
-
+    
     [self.view addSubview:self.canvasView];
+    [self.canvasView addSubview:self.imageView];
     [self.canvasView addSubview:self.drawToolView];
     [self.view addSubview:self.returnButton];
     [self.view addSubview:self.pencilButton];
     [self.view addSubview:self.pictureButton];
-    [self.view bringSubviewToFront:self.returnButton];
-    [self.view bringSubviewToFront:self.pencilButton];
+    [self.view addSubview:self.exportButton];
+    [self.view bringSubviewToFront:self.notesLabel];
+    
+    //    [self.view bringSubviewToFront:self.returnButton];
+    //    [self.view bringSubviewToFront:self.pencilButton];
+    
     
     [self displayNotes];
 }
@@ -94,16 +128,8 @@
 
 - (void)toggleDrawingTool: (UIButton *)sender {
     self.drawingToolActivated = !self.drawingToolActivated;
-    if (!self.drawingToolActivated) {
-        self.drawToolView.layer.zPosition = -1.0f;
-        [UIView animateWithDuration:0.20f animations:^{
-            self.drawToolView.alpha = kZero;
-        }];
-        [UIView animateWithDuration:1.0f animations:^{
-            self.pencilButton.alpha = 0.2f;
-        }];
-    }
     if (self.drawingToolActivated) {
+        self.imageView.userInteractionEnabled = NO;
         self.drawToolView.layer.zPosition = 1.0f;
         [UIView animateWithDuration:0.20f animations:^{
             self.drawToolView.alpha = 1.0f;
@@ -112,12 +138,38 @@
             self.pencilButton.alpha = 1.0f;
         }];
     }
+    if (!self.drawingToolActivated) {
+        self.imageView.userInteractionEnabled = YES;
+        self.drawToolView.layer.zPosition = -1.0f;
+        [UIView animateWithDuration:0.20f animations:^{
+            self.drawToolView.alpha = kZero;
+        }];
+        [UIView animateWithDuration:1.0f animations:^{
+            self.pencilButton.alpha = 0.2f;
+        }];
+    }
     NSLog(@"%d", self.drawingToolActivated);
+}
+
+- (void)toggleImageView: (UIButton *)sender {
+    self.imageViewActivated = !self.imageViewActivated;
+    if (self.imageViewActivated) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.pictureButton.alpha = 1.0f;
+            self.imageView.alpha = 1.0f;
+        }];
+    }
+    if (!self.imageViewActivated) {
+        [UIView animateWithDuration:1.0f animations:^{
+            self.pictureButton.alpha = kHiddenControlRevealedAlhpa;
+            self.imageView.alpha = kZero;
+        }];
+    }
 }
 
 - (void)setDrawingTool {
     self.drawToolView = [[ROADDrawToolView alloc] initWithFrame:self.canvasView.bounds];
-    self.drawToolView.currentColor = self.userColors.colorSix;
+    self.drawToolView.currentColor = [UIColor blackColor];
     self.drawToolView.backgroundColor = [UIColor colorWithRed:28.0/255.0 green:47.0/255.0 blue:64.0/255.0 alpha:0.01];
     self.drawToolView.userInteractionEnabled = YES;
     self.drawToolView.alpha = kZero;
@@ -126,27 +178,36 @@
 - (void)displayNotes {
     int indexCount = 1;
     for (NSString *notesString in self.arrayOfNotes) {
+        //        indexCount++;
+        //        UILabel *notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 400.0f, 200.0f)];
+        //        notesLabel.text = notesString;
+        //        notesLabel.textColor = self.userColors.colorSix;
+        //        notesLabel.font = [UIFont fontWithName:@"American Typewriter" size:13.0f];
+        //        [self.imageView addSubview:notesLabel];
+        
         indexCount++;
-        UILabel *notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 400.0f, 200.0f)];
-        notesLabel.text = notesString;
-        notesLabel.textColor = self.userColors.colorSix;
-        notesLabel.font = [UIFont fontWithName:@"American Typewriter" size:13.0f];
-        [self.canvasView addSubview:notesLabel];
+        self.notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 400.0f, 100.0f)];
+        self.notesLabel.text = notesString;
+        self.notesLabel.textColor = self.userColors.colorSix;
+        self.notesLabel.textAlignment = NSTextAlignmentCenter;
+        self.notesLabel.font = [UIFont fontWithName:@"American Typewriter" size:18.0f];
+        [self.canvasView addSubview:self.notesLabel];
     }
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    CGPoint touchPoint = [[touches anyObject] locationInView:self.view];
+    CGPoint touchLabelPoint = [[touches anyObject] locationInView:self.canvasView];
+    self.notesLabel.center = touchLabelPoint;
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
