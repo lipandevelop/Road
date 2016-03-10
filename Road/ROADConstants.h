@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, ColorPaletteColorSelected) {
 
 extern const float kUpdateSpeed;
 extern const float kShadowOpacity;
-extern const float kBoarderWidth;
+extern const float kBorderWidth;
 extern const float kMoney;
 extern const float kGoldenRatio;
 extern const float kGoldenRatioMinusOne;
@@ -71,6 +71,9 @@ extern const float kLabelViewWidth;
 extern const float kLabelViewHeight;
 extern const float kLabelHeight;
 extern const float kLabelHeightOffset;
+
+extern const float kBrakePedalDimension;
+
 
 extern const float kAccessButtonWidth;
 extern const float kAccessButtonHeight;

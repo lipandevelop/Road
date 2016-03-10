@@ -35,7 +35,7 @@
     button.alpha = 0.1;
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitleColor:[UIColor colorWithRed:98.0f/255.0f green:91.0f/255.0f blue:77.0f/255.0f alpha:0.8f] forState:UIControlStateNormal];
-    button.layer.borderWidth = kBoarderWidth;
+    button.layer.borderWidth = kBorderWidth;
     button.layer.borderColor = [UIColor colorWithRed:98.0f/255.0f green:91.0f/255.0f blue:77.0f/255.0f alpha:0.8f].CGColor;
     button.layer.cornerRadius = 22.5f;
     button.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);

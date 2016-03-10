@@ -11,7 +11,8 @@
 @interface UIButton (Stylizer)
 
 - (void)stylizePageBottomToggleButtons;
-- (void)stylizePauseMenuButton;
-
+- (void)stylizePauseMenuButtons;
+- (void)stylizeAccessButtons;
+- (void)stylizePaletteButtonsWithYOrigin: (float)y backgroundColor: (UIColor *)color;
 
 @end

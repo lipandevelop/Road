@@ -12,7 +12,7 @@
 
 const float kUpdateSpeed = 0.1f;
 const float kShadowOpacity = 0.35f;
-const float kBoarderWidth = 1.5f;
+const float kBorderWidth = 1.5f;
 const float kMoney = 1000000000.00f;
 const float kGoldenRatio = 1.61803398875;
 const float kGoldenRatioMinusOne = 0.68903398875f;
@@ -41,6 +41,8 @@ const float kControlButtonMidYOffset = 40.0f;
 const float kControlButtonYOffset = 65.0f;
 const float kControlButtonDimension = 45.0f;
 const float kAssistantTextViewWidth = 120.0f;
+
+const float kBrakePedalDimension = 45.0f;
 
 const float k180Rotation = 180;
 

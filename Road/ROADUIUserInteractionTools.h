@@ -10,6 +10,9 @@
 #import <UIKit/UIKit.h>
 @interface ROADUIUserInteractionTools : NSObject
 
+@property (nonatomic, strong) UIView *gasPedalView;
+@property (nonatomic, strong) UIView *brakePedalView;
+
 @property (nonatomic, strong) UIButton *toggleFocusTextModification;
 @property (nonatomic, strong) UIButton *togglePunctuationButton;
 @property (nonatomic, strong) UIButton *hideControlButton;
@@ -52,9 +55,9 @@
 @property (nonatomic, strong) UISlider *modifyFocusTextFontSizeSlider;
 @property (nonatomic, strong) UISlider *speedAdjusterSlider;
 
-@property (nonatomic, strong) UIPanGestureRecognizer *panGestureDrawTool;
 @property (nonatomic, strong) UILongPressGestureRecognizer *openColorOptionsGesture;
-@property (nonatomic, strong) UILongPressGestureRecognizer *breakPedalGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *gasPedalGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *brakePedalGesture;
 
 
 @property (nonatomic, strong) UISegmentedControl *speedPropertySelector;

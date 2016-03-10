@@ -34,6 +34,7 @@
 		0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA781D1C8683D200D62BB6 /* drawingPencil.png */; };
 		0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78331C86C57100D62BB6 /* pauseImage.png */; };
 		0AEA78361C86CB2B00D62BB6 /* playImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78351C86CB2B00D62BB6 /* playImage.png */; };
+		0AEBECD21C9182DE004FDD55 /* brake.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEBECD11C9182DE004FDD55 /* brake.png */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
 		0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49991C7D3236009309F1 /* Speedometer.png */; };
@@ -123,6 +124,7 @@
 		0AEA781D1C8683D200D62BB6 /* drawingPencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = drawingPencil.png; path = Images/drawingPencil.png; sourceTree = "<group>"; };
 		0AEA78331C86C57100D62BB6 /* pauseImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pauseImage.png; path = Images/pauseImage.png; sourceTree = "<group>"; };
 		0AEA78351C86CB2B00D62BB6 /* playImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playImage.png; path = Images/playImage.png; sourceTree = "<group>"; };
+		0AEBECD11C9182DE004FDD55 /* brake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = brake.png; path = Images/brake.png; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
 		0AEF49991C7D3236009309F1 /* Speedometer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Speedometer.png; path = Images/Speedometer.png; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AEBECD11C9182DE004FDD55 /* brake.png */,
 				0AF995A21C90E9EC00ACFB3B /* Stopwatch.png */,
 				0AF995971C88BA8400ACFB3B /* Road.mp3 */,
 				0AF995991C88BCAD00ACFB3B /* musicIcon.png */,
@@ -606,6 +609,7 @@
 				0AEA780B1C86284800D62BB6 /* bulbDark.png in Resources */,
 				0AF741A11C7796F1000C3CC2 /* tolstoy-war-and-peace.epub in Resources */,
 				0AF9959C1C88D22700ACFB3B /* musicIconDark.png in Resources */,
+				0AEBECD21C9182DE004FDD55 /* brake.png in Resources */,
 				0AEA78101C86708100D62BB6 /* pen.png in Resources */,
 				0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */,
 				0AF995A31C90E9EE00ACFB3B /* Stopwatch.png in Resources */,

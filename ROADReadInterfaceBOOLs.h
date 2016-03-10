@@ -10,6 +10,7 @@
 
 @interface ROADReadInterfaceBOOLs : NSObject
 
+@property (nonatomic, assign) BOOL timerBegan;
 @property (nonatomic, assign) BOOL accelerationBegan;
 @property (nonatomic, assign) BOOL breakingBegan;
 @property (nonatomic, assign) BOOL highlightVowelsActivated;

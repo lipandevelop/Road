@@ -64,7 +64,7 @@
     [self.view addSubview:backgroundView];
     
     self.returnButton = [[UIButton alloc]initWithFrame:CGRectMake(10.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.returnButton.layer.borderWidth = kBoarderWidth;
+    self.returnButton.layer.borderWidth = kBorderWidth;
     [self.returnButton setTitle:@"<" forState:UIControlStateNormal];
     self.returnButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.returnButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -75,7 +75,7 @@
     [self.returnButton addTarget:self action:@selector(backtoBook:) forControlEvents:UIControlEventTouchUpInside];
     
     self.pencilButton = [[UIButton alloc]initWithFrame:CGRectMake(65.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.pencilButton.layer.borderWidth = kBoarderWidth;
+    self.pencilButton.layer.borderWidth = kBorderWidth;
     self.pencilButton.layer.contents = (__bridge id)pencilImage.CGImage;
     self.pencilButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.pencilButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -85,7 +85,7 @@
     [self.pencilButton addTarget:self action:@selector(toggleDrawingTool:) forControlEvents:UIControlEventTouchUpInside];
     
     self.pictureButton = [[UIButton alloc]initWithFrame:CGRectMake(120.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.pictureButton.layer.borderWidth = kBoarderWidth;
+    self.pictureButton.layer.borderWidth = kBorderWidth;
     self.pictureButton.layer.contents = (__bridge id)imageImage.CGImage;
     self.pictureButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.pictureButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -94,7 +94,7 @@
     [self.pictureButton addTarget:self action:@selector(toggleImageView:) forControlEvents:UIControlEventTouchUpInside];
     
     self.exportButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.exportButton.layer.borderWidth = kBoarderWidth;
+    self.exportButton.layer.borderWidth = kBorderWidth;
     self.exportButton.layer.contents = (__bridge id)shareImage.CGImage;
     self.exportButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.exportButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -104,13 +104,13 @@
     
     self.shareButtonsContainer = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 10.0f, kAccessButtonHeight, kZero)];
     self.shareButtonsContainer.backgroundColor = [UIColor whiteColor];
-    self.shareButtonsContainer.layer.borderWidth = kBoarderWidth;
+    self.shareButtonsContainer.layer.borderWidth = kBorderWidth;
     self.shareButtonsContainer.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.shareButtonsContainer.layer.cornerRadius = kAccessButtonHeight/2;
     self.shareButtonsContainer.layer.shadowOpacity = kShadowOpacity;
     
     self.shareInstagramButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.shareInstagramButton.layer.borderWidth = kBoarderWidth;
+    self.shareInstagramButton.layer.borderWidth = kBorderWidth;
     self.shareInstagramButton.layer.contents = (__bridge id)instagrameIconImage.CGImage;
     self.shareInstagramButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.shareInstagramButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -118,7 +118,7 @@
     self.shareInstagramButton.alpha = kUINormaAlpha;
     
     self.shareFacebookButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.shareFacebookButton.layer.borderWidth = kBoarderWidth;
+    self.shareFacebookButton.layer.borderWidth = kBorderWidth;
     self.shareFacebookButton.layer.contents = (__bridge id)facebookIconImage.CGImage;
     self.shareFacebookButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.shareFacebookButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -126,7 +126,7 @@
     self.shareFacebookButton.alpha = kUINormaAlpha;
     
     self.shareTwitterButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.shareTwitterButton.layer.borderWidth = kBoarderWidth;
+    self.shareTwitterButton.layer.borderWidth = kBorderWidth;
     self.shareTwitterButton.layer.contents = (__bridge id)twitterIconImage.CGImage;
     self.shareTwitterButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.shareTwitterButton.layer.cornerRadius = kAccessButtonHeight/2;
@@ -139,7 +139,7 @@
     
     self.canvasView = [[UIView alloc]initWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-80)];
     self.canvasView.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.canvasView.layer.borderWidth = kBoarderWidth;
+    self.canvasView.layer.borderWidth = kBorderWidth;
     self.canvasView.layer.shadowOpacity = kShadowOpacity;
     self.canvasView.clipsToBounds = YES;
     

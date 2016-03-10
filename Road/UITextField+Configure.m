@@ -11,7 +11,7 @@
 @implementation UITextField (Configure)
 
 - (void)configureUserSelectedTextField {
-    self.layer.borderWidth = kBoarderWidth/2;
+    self.layer.borderWidth = kBorderWidth/2;
     self.layer.borderColor = [UIColor colorWithWhite:kZero alpha:kUINormaAlpha].CGColor;
     self.layer.shadowOffset = CGSizeMake(-kOne, 6.0);
     self.layer.shadowOpacity = kShadowOpacity;
@@ -22,7 +22,15 @@
     self.keyboardType = UIKeyboardTypeAlphabet;
     self.keyboardAppearance = UIKeyboardAppearanceDark;
     self.font = [UIFont fontWithName:(kFontType) size:kSmallFontSize];
-    
+}
+
+- (void)configureUserNotesTextField {
+    self.layer.shadowOffset = CGSizeMake(-kOne, 6.0);
+    self.layer.shadowOpacity = kShadowOpacity;
+    self.placeholder = @"Notes";
+    self.textAlignment = NSTextAlignmentRight;
+    self.keyboardAppearance = UIKeyboardAppearanceDark;
+    self.font = [UIFont fontWithName:(kFontType) size:16];
 }
 
 @end

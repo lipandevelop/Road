@@ -13,6 +13,8 @@
 @interface UITextField (Configure)
 
 - (void)configureUserSelectedTextField;
+- (void)configureUserNotesTextField;
+
 
 
 @end
