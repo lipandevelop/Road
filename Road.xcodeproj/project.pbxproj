@@ -35,7 +35,6 @@
 		0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78331C86C57100D62BB6 /* pauseImage.png */; };
 		0AEA78361C86CB2B00D62BB6 /* playImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEA78351C86CB2B00D62BB6 /* playImage.png */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
-		0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497E1C7B9D9F009309F1 /* finger_noise.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
 		0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49991C7D3236009309F1 /* Speedometer.png */; };
 		0AEF499C1C7D3508009309F1 /* Pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF499B1C7D3508009309F1 /* Pin.png */; };
@@ -65,6 +64,8 @@
 		0AF995981C88BA8500ACFB3B /* Road.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995971C88BA8400ACFB3B /* Road.mp3 */; };
 		0AF9959A1C88BCAD00ACFB3B /* musicIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995991C88BCAD00ACFB3B /* musicIcon.png */; };
 		0AF9959C1C88D22700ACFB3B /* musicIconDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9959B1C88D22700ACFB3B /* musicIconDark.png */; };
+		0AF995A11C8B9ACA00ACFB3B /* UIButton+Stylizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */; };
+		0AF995A31C90E9EE00ACFB3B /* Stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995A21C90E9EC00ACFB3B /* Stopwatch.png */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -122,7 +123,6 @@
 		0AEA78331C86C57100D62BB6 /* pauseImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pauseImage.png; path = Images/pauseImage.png; sourceTree = "<group>"; };
 		0AEA78351C86CB2B00D62BB6 /* playImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playImage.png; path = Images/playImage.png; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
-		0AEF497E1C7B9D9F009309F1 /* finger_noise.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_noise.png; path = Images/finger_noise.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
 		0AEF49991C7D3236009309F1 /* Speedometer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Speedometer.png; path = Images/Speedometer.png; sourceTree = "<group>"; };
 		0AEF499B1C7D3508009309F1 /* Pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Pin.png; path = Images/Pin.png; sourceTree = "<group>"; };
@@ -160,6 +160,9 @@
 		0AF995971C88BA8400ACFB3B /* Road.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Road.mp3; path = Music/Road.mp3; sourceTree = "<group>"; };
 		0AF995991C88BCAD00ACFB3B /* musicIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = musicIcon.png; path = Images/musicIcon.png; sourceTree = "<group>"; };
 		0AF9959B1C88D22700ACFB3B /* musicIconDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = musicIconDark.png; path = Images/musicIconDark.png; sourceTree = "<group>"; };
+		0AF9959F1C8B9AC900ACFB3B /* UIButton+Stylizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Stylizer.h"; sourceTree = "<group>"; };
+		0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Stylizer.m"; sourceTree = "<group>"; };
+		0AF995A21C90E9EC00ACFB3B /* Stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stopwatch.png; path = Images/Stopwatch.png; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -340,6 +343,7 @@
 		0AEF49921C7CEE16009309F1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AF995A21C90E9EC00ACFB3B /* Stopwatch.png */,
 				0AF995971C88BA8400ACFB3B /* Road.mp3 */,
 				0AF995991C88BCAD00ACFB3B /* musicIcon.png */,
 				0AF9959B1C88D22700ACFB3B /* musicIconDark.png */,
@@ -366,7 +370,6 @@
 				0AEF49991C7D3236009309F1 /* Speedometer.png */,
 				0AEF499B1C7D3508009309F1 /* Pin.png */,
 				0AEF49801C7C2FBC009309F1 /* finger_clean.png */,
-				0AEF497E1C7B9D9F009309F1 /* finger_noise.png */,
 				0A034FCF1C814A4600DE94F8 /* leftHand.png */,
 			);
 			name = Images;
@@ -402,10 +405,11 @@
 			children = (
 				0AF9959E1C88DA5500ACFB3B /* StoryBoard */,
 				0AF9959D1C88DA4500ACFB3B /* Title */,
-				0AF741761C778205000C3CC2 /* AppDelegate.h */,
-				0AF741771C778205000C3CC2 /* AppDelegate.m */,
+				0AF995AA1C91127700ACFB3B /* UserInteraction Modifiers */,
 				0AF741791C778205000C3CC2 /* ROADReadingInterface.h */,
 				0AF7417A1C778205000C3CC2 /* ROADReadingInterface.m */,
+				0AF741761C778205000C3CC2 /* AppDelegate.h */,
+				0AF741771C778205000C3CC2 /* AppDelegate.m */,
 				0AF7417F1C778205000C3CC2 /* Assets.xcassets */,
 				0AF741811C778205000C3CC2 /* LaunchScreen.storyboard */,
 				0AF741841C778205000C3CC2 /* Info.plist */,
@@ -455,6 +459,15 @@
 				0AF7417C1C778205000C3CC2 /* Main.storyboard */,
 			);
 			name = StoryBoard;
+			sourceTree = "<group>";
+		};
+		0AF995AA1C91127700ACFB3B /* UserInteraction Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				0AF9959F1C8B9AC900ACFB3B /* UIButton+Stylizer.h */,
+				0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */,
+			);
+			name = "UserInteraction Modifiers";
 			sourceTree = "<group>";
 		};
 		B07C31BDF6E55BC74C11E449 /* Frameworks */ = {
@@ -582,7 +595,6 @@
 				0AF741801C778205000C3CC2 /* Assets.xcassets in Resources */,
 				0AEA780C1C86284F00D62BB6 /* bulbLight.png in Resources */,
 				0AEF499C1C7D3508009309F1 /* Pin.png in Resources */,
-				0AEF497F1C7B9D9F009309F1 /* finger_noise.png in Resources */,
 				0AF7419F1C77967C000C3CC2 /* thePrince.epub in Resources */,
 				0AF7417E1C778205000C3CC2 /* Main.storyboard in Resources */,
 				0AF9958C1C87E41A00ACFB3B /* florence.jpg in Resources */,
@@ -591,6 +603,7 @@
 				0AF9959C1C88D22700ACFB3B /* musicIconDark.png in Resources */,
 				0AEA78101C86708100D62BB6 /* pen.png in Resources */,
 				0AEA781E1C8683D200D62BB6 /* drawingPencil.png in Resources */,
+				0AF995A31C90E9EE00ACFB3B /* Stopwatch.png in Resources */,
 				0AEA78341C86C57100D62BB6 /* pauseImage.png in Resources */,
 				0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */,
 				0AF995941C87FA9400ACFB3B /* instagramIcon.png in Resources */,
@@ -662,6 +675,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A044A241C848459007F9D75 /* ROADDrawToolView.m in Sources */,
+				0AF995A11C8B9ACA00ACFB3B /* UIButton+Stylizer.m in Sources */,
 				0A35B29E1C822CC700EA6A43 /* ROADDictionary.m in Sources */,
 				0A044A2F1C849F16007F9D75 /* ROADPalette.m in Sources */,
 				0A044A281C848693007F9D75 /* ROADNoneInteractiveViews.m in Sources */,

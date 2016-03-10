@@ -35,7 +35,7 @@ NSString * const kAverageReadingSpeed = @"kAverageReadingSpeed";
 @implementation ROADCurrentReadingPosition
 
 - (void) encodeWithCoder: (NSCoder *) coder {
-    [coder encodeInteger:self.wordIndex forKey:kWordIndexKey];
+//    [coder encodeInteger:self.wordIndex forKey:kWordIndexKey];
     [coder encodeFloat:self.mainFontSize forKey:kMainFontSize];
     [coder encodeInteger:self.assistantTextRangeIndex forKey:kAssistantTextRangeIndex];
     [coder encodeInteger:self.assistantTextRangeLength forKey:kAssistantTextRangeLength];
@@ -62,7 +62,7 @@ NSString * const kAverageReadingSpeed = @"kAverageReadingSpeed";
 {
     self = [self init];
     
-    self.wordIndex = [coder decodeIntegerForKey:kWordIndexKey];
+//    self.wordIndex = [coder decodeIntegerForKey:kWordIndexKey];
     self.mainFontSize = [coder decodeFloatForKey:kMainFontSize];
     self.assistantTextRangeIndex = [coder decodeIntegerForKey:kAssistantTextRangeIndex];
     self.assistantTextRangeLength = [coder decodeIntegerForKey:kAssistantTextRangeLength];

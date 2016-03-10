@@ -45,7 +45,12 @@
     NSURL *backGroundMusicURL = [NSURL fileURLWithPath:backGroundMusicPath];
     self.backgroundMusicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:backGroundMusicURL error:nil];
     self.backgroundMusicPlayer.numberOfLoops = -1;
-    [self.backgroundMusicPlayer prepareToPlay];
+    //    [self.backgroundMusicPlayer prepareToPlay];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.webViewBG removeFromSuperview];
+    self.webViewBG = nil;
 }
 
 - (void) loadContent {
@@ -55,13 +60,19 @@
     self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     self.scrollView.frame = self.view.frame;
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.scrollView setContentOffset:CGPointMake(40, 130)];
+    [self.scrollView setContentOffset:CGPointMake(30, 60)];
+    self.scrollView.clipsToBounds = YES;
+    
+    //    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"darkPaper" ofType:@"png"];
+    //    NSData *gif = [NSData dataWithContentsOfFile:filePath];
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"TitleScreenImage" ofType:@"gif"];
     NSData *gif = [NSData dataWithContentsOfFile:filePath];
-    self.webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 466.0f, 825.0f)];
+    self.webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 435.0f, 770.0f)];
     NSURL *url;
     [self.webViewBG loadData:gif MIMEType:@"image/gif" textEncodingName:@"" baseURL:url];
+    //    [self.webViewBG loadData:gif MIMEType:@"image/png" textEncodingName:@"" baseURL:url];
+    
     self.webViewBG.userInteractionEnabled = NO;
     self.webViewBG.translatesAutoresizingMaskIntoConstraints = NO;
     self.webViewBG.alpha = kZero;
@@ -159,7 +170,7 @@
     [self.view bringSubviewToFront:self.currentBookButton];
     [self.view addSubview:self.toggleMusicButton];
     [self.view bringSubviewToFront:self.toggleMusicButton];
-
+    
     [self.view addSubview:dot];
     
     self.scrollView.delegate = self;
@@ -185,6 +196,16 @@
     }completion:^(BOOL finished) {
         [self presentViewController:readingInterface animated:YES completion:nil];
         [self.backgroundMusicPlayer stop];
+        //        [self.webViewBG removeFromSuperview];
+        //        self.webViewBG = nil;
+        
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"pencil" ofType:@"png"];
+        NSData *gif = [NSData dataWithContentsOfFile:filePath];
+        
+        self.webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 435.0f, 770.0f)];
+        NSURL *url;
+        [self.webViewBG loadData:gif MIMEType:@"image/png" textEncodingName:@"" baseURL:url];
+        //    [self.webViewBG loadData:gif MIMEType:@"image/png" textEncodingName:@"" baseURL:url];
     }];
 }
 

@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) UILabel *speedLabel;
 @property (nonatomic, strong) UILabel *speedometerReadLabel;
+@property (nonatomic, strong) UILabel *wordCountLabel;
+
 
 @property (nonatomic, strong) UILabel *progressLabel;
 @property (nonatomic, strong) UILabel *averageSpeedLabel;

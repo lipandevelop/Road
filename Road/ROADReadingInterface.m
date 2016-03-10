@@ -28,6 +28,9 @@
 #import "ROADPaletteButton.h"
 #import "ROADNoteBookView.h"
 
+#import "UIButton+Stylizer.h"
+
+
 #pragma mark Properties
 
 @interface ROADReadingInterface () <KFEpubControllerDelegate, UIGestureRecognizerDelegate, UIWebViewDelegate, UITextFieldDelegate>
@@ -115,17 +118,14 @@
     NSURL *backGroundMusicURL = [NSURL fileURLWithPath:backGroundMusicPath];
     self.backgroundMusicPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:backGroundMusicURL error:nil];
     self.backgroundMusicPlayer.numberOfLoops = -1;
-    [self.backgroundMusicPlayer prepareToPlay];
+    //    [self.backgroundMusicPlayer prepareToPlay];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self.timer invalidate];
-    self.timer = nil;
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeIntervalBetweenIndex target:self selector:@selector(update) userInfo:nil repeats:NO];
+    [self stopTimer];
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
     self.userColor = [[ROADColors alloc]init];
     [self loadData];
     [self loadValues];
@@ -247,29 +247,28 @@
     
     //AverageSpeed Label
     self.nonInteractiveViews.averageSpeedLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kZero, kProgressBarHeight*1.5)];
-    self.nonInteractiveViews.averageSpeedLabel.layer.borderWidth = kBoarderWidth;
     self.nonInteractiveViews.averageSpeedLabel.layer.borderWidth = kBoarderWidth/2;
+    self.nonInteractiveViews.averageSpeedLabel.layer.borderColor = self.userColor.colorSix.CGColor;
     self.nonInteractiveViews.averageSpeedLabel.layer.cornerRadius = kProgressBarHeight/1.50f;
     self.nonInteractiveViews.averageSpeedLabel.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.nonInteractiveViews.averageSpeedLabel.layer.shadowOpacity = kShadowOpacity;
     self.nonInteractiveViews.averageSpeedLabel.alpha = 1.0f;
-    self.nonInteractiveViews.averageSpeedLabel.font = [UIFont fontWithName:(self.fontType) size:8.0f];
+    self.nonInteractiveViews.averageSpeedLabel.font = [UIFont fontWithName:(self.fontType) size:10.0f];
     self.nonInteractiveViews.averageSpeedLabel.textAlignment = NSTextAlignmentLeft;
     
     //TimeElapsed Label
-    self.nonInteractiveViews.timerLabel = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2 + 65.0f, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kZero, kProgressBarHeight*1.5)];
+    self.nonInteractiveViews.timerLabel = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)-kProgressBarHeight-5.0f, kZero, kProgressBarHeight - kProgressOffSetFromProgressBar)];
     self.nonInteractiveViews.timerLabel.layer.cornerRadius = kProgressBarHeight/1.80f;
     self.nonInteractiveViews.timerLabel.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
     self.nonInteractiveViews.timerLabel.layer.shadowOpacity = kShadowOpacity+0.20f;
-    self.nonInteractiveViews.timerLabel.alpha = kHiddenControlRevealedAlhpa;
-    self.nonInteractiveViews.timerLabel.titleLabel.font = [UIFont fontWithName:(self.fontType) size:8.0f];
-    self.nonInteractiveViews.timerLabel.backgroundColor = self.userColor.colorTwo;
+    self.nonInteractiveViews.timerLabel.titleLabel.font = [UIFont fontWithName:(self.fontType) size:10.0f];
+    self.nonInteractiveViews.timerLabel.backgroundColor = self.userColor.colorFour;
     self.nonInteractiveViews.timerLabel.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.nonInteractiveViews.timerLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nonInteractiveViews.timerLabel.alpha = 0.65f;
-    self.nonInteractiveViews.timerLabel.layer.borderWidth = kBoarderWidth;
     self.nonInteractiveViews.timerLabel.layer.borderWidth = kBoarderWidth*1.7f;
     self.nonInteractiveViews.timerLabel.layer.borderColor = [UIColor colorWithWhite:1.0f alpha:0.40f].CGColor;
+    self.nonInteractiveViews.timerLabel.alpha = kHiddenControlRevealedAlhpa;
+    self.nonInteractiveViews.timerLabel.clipsToBounds = YES;
     
     //Progress Bar
     self.nonInteractiveViews.progressBar = [[UIView alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kZero, kProgressBarHeight - kProgressOffSetFromProgressBar)];
@@ -301,10 +300,19 @@
     self.nonInteractiveViews.speedometerReadLabel.alpha = kUINormaAlpha;
     self.nonInteractiveViews.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
     
+    //WordCount Label
+    self.nonInteractiveViews.wordCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-117.0f, 124.0f, 100.0f, 15.0f)];
+    self.nonInteractiveViews.wordCountLabel.font = [UIFont fontWithName:(self.fontType) size:kSmallFontSize];
+    self.nonInteractiveViews.wordCountLabel.alpha = kUINormaAlpha;
+    self.nonInteractiveViews.wordCountLabel.textAlignment = NSTextAlignmentCenter;
+    
     //Speedometer Details
-    self.userInteractionTools.openSpeedometerDetailButton = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kToggleButtonDimension, kToggleButtonDimension)];
+    UIImage *openDetailView = [UIImage imageNamed:@"Stopwatch.png"];
+    self.userInteractionTools.openSpeedometerDetailButton = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.origin.x + self.nonInteractiveViews.speedometerView.frame.size.width/1.45f, self.nonInteractiveViews.speedometerView.frame.origin.y + self.nonInteractiveViews.speedometerView.frame.size.height/kGoldenRatio, kToggleButtonDimension, kToggleButtonDimension)];
+    self.userInteractionTools.openSpeedometerDetailButton.layer.contents = (__bridge id)openDetailView.CGImage;
     [self.userInteractionTools.openSpeedometerDetailButton addTarget:self action:@selector(toggleSpeedometerDetails:) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.userInteractionTools.openSpeedometerDetailButton buttonLayer:self.userInteractionTools.openSpeedometerDetailButton.layer color: self.currentReadingPosition.defaultButtonColor string:@"s"];
+    [self modifyToggleButtonWithButton:self.userInteractionTools.openSpeedometerDetailButton buttonLayer:self.userInteractionTools.openSpeedometerDetailButton.layer color: self.currentReadingPosition.defaultButtonColor string:@""];
+    
     self.userInteractionTools.openSpeedometerDetailButton.backgroundColor = [UIColor colorWithRed:138.0f/255.0f green:131.0f/255.0f blue:117.0f/255.0f alpha:0.7f];
     self.userInteractionTools.openSpeedometerDetailButton.alpha = 1.0f;
     
@@ -404,7 +412,7 @@
     [self.userInteractionTools.voiceButton addTarget:self action:@selector(voiceWord:) forControlEvents:UIControlEventTouchUpInside];
     [self.uiView addSubview:self.userInteractionTools.voiceButton];
     
-    self.connector = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.voiceButton.frame.origin.x+35.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-19.5f, kZero, 4.0f)];
+    self.connector = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.pauseButton.frame.origin.x, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-19.5f, kZero, 4.0f)];
     
     //Dictionary
     UIImage *dictionaryButtonImage = [UIImage imageNamed:@"dictionary"];
@@ -457,36 +465,24 @@
     //Flip XAxis
     self.userInteractionTools.flipXAxisButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(self.uiView.frame)+25.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight-10.0f, kAccessButtonHeight, kAccessButtonHeight)];
     [self.userInteractionTools.flipXAxisButton addTarget:self action:@selector(flipXAxis:) forControlEvents:UIControlEventTouchUpInside];
-    self.userInteractionTools.flipXAxisButton.layer.borderWidth = kBoarderWidth;
-    self.userInteractionTools.flipXAxisButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.userInteractionTools.flipXAxisButton.layer.shadowOpacity = kShadowOpacity;
-    self.userInteractionTools.flipXAxisButton.layer.cornerRadius = kAccessButtonHeight/2;
-    self.userInteractionTools.flipXAxisButton.layer.contents = (__bridge id)leftHandImage.CGImage;
-    self.userInteractionTools.flipXAxisButton.layer.contentsGravity = kCAGravityResizeAspect;
-    self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
     self.userInteractionTools.flipXAxisButton.layer.transform = CATransform3DRotate(self.userInteractionTools.flipXAxisButton.layer.transform, M_PI, 0.0f, 1.0f, 0.0f);
+    self.userInteractionTools.flipXAxisButton.layer.contents = (__bridge id)leftHandImage.CGImage;
+    [self.userInteractionTools.flipXAxisButton stylizePageBottomToggleButtons];
+    
     
     //Flip Lights
     self.userInteractionTools.lightsOffButton = [[UIButton alloc]initWithFrame: CGRectMake(CGRectGetMinX(self.uiView.frame)+85.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight-10.0f, kAccessButtonHeight, kAccessButtonHeight)];
     [self.userInteractionTools.lightsOffButton addTarget:self action:@selector(toggleLight:) forControlEvents:UIControlEventTouchUpInside];
-    self.userInteractionTools.lightsOffButton.layer.borderWidth = kBoarderWidth;
-    self.userInteractionTools.lightsOffButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.userInteractionTools.lightsOffButton.layer.shadowOpacity = kShadowOpacity;
-    self.userInteractionTools.lightsOffButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.userInteractionTools.lightsOffButton.layer.contents = (__bridge id)self.bulbDark.CGImage;
-    self.userInteractionTools.lightsOffButton.alpha = kUINormaAlpha;
-    self.userInteractionTools.lightsOffButton.layer.contentsGravity = kCAGravityResizeAspect;
+    [self.userInteractionTools.lightsOffButton stylizePageBottomToggleButtons];
+
     
     //Switch On Music
     self.userInteractionTools.toggleMusicButton = [[UIButton alloc]initWithFrame: CGRectMake(CGRectGetMinX(self.uiView.frame)+145.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight+10.0f, 25.0f, 25.0f)];
     [self.userInteractionTools.toggleMusicButton addTarget:self action:@selector(toggleMusic:) forControlEvents:UIControlEventTouchUpInside];
-    self.userInteractionTools.toggleMusicButton.layer.borderWidth = kBoarderWidth;
-    self.userInteractionTools.toggleMusicButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.userInteractionTools.toggleMusicButton.layer.shadowOpacity = kShadowOpacity;
-    self.userInteractionTools.toggleMusicButton.layer.cornerRadius = 25.0f/2;
     self.userInteractionTools.toggleMusicButton.layer.contents = (__bridge id)musicPlayerImage.CGImage;
-    self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
-    self.userInteractionTools.toggleMusicButton.layer.contentsGravity = kCAGravityResizeAspect;
+    [self.userInteractionTools.toggleMusicButton stylizePageBottomToggleButtons];
+
     
     //Speed Adjuster Slider
     self.userInteractionTools.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 100, 30)];
@@ -634,6 +630,7 @@
     [self.uiView addSubview:self.userInteractionTools.hideControlButton];
     [self.uiView addSubview:self.nonInteractiveViews.pinView];
     [self.uiView addSubview:self.nonInteractiveViews.speedometerReadLabel];
+    [self.uiView addSubview:self.nonInteractiveViews.wordCountLabel];
     [self.uiView addSubview:self.userInteractionTools.accessTextViewButton];
     [self.uiView addSubview:self.nonInteractiveViews.speedometerView];
     [self.uiView addSubview:self.userInteractionTools.toggleFocusTextModification];
@@ -641,9 +638,7 @@
     [self.uiView  addSubview:self.userInteractionTools.flipXAxisButton];
     [self.uiView addSubview:self.userInteractionTools.lightsOffButton];
     [self.uiView addSubview:self.userInteractionTools.toggleMusicButton];
-
-    
-    [self.uiView setNeedsDisplay];
+    //    [self.uiView setNeedsDisplay];
 }
 
 #pragma mark Modify Toggle Buttons
@@ -696,7 +691,7 @@
         self.userInteractionTools.pauseButton.alpha = 0.2f;
         self.userInteractionTools.pauseButton.layer.contents = (__bridge id)play.CGImage;
         [UIView animateWithDuration:1.0f animations:^{
-            self.connector.frame = CGRectMake(self.userInteractionTools.voiceButton.frame.origin.x+35.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, kZero, 6.0f);
+            self.connector.frame = CGRectMake(self.userInteractionTools.pauseButton.frame.origin.x, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, kZero, 6.0f);
             self.connector2.frame = CGRectMake(self.userInteractionTools.presentDictionaryButton.frame.origin.x+35.0f, self.userInteractionTools.pauseButton.frame.origin.y + self.userInteractionTools.pauseButton.frame.size.height-20.5f, kZero, 6.0f);
             self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
             self.userInteractionTools.voiceButton.alpha = kZero;
@@ -855,11 +850,10 @@
     NSNumber *rangeLength;
     NSInteger counterValue = 0;
     
-    //    self.bookTextRawString = @"Speech is the vocalized form of human communication. It is based upon the syntactic combination of lexicals and names that are drawn from very large (usually about 1,000 different words) vocabularies. Each spoken word is created out of the phonetic combination of a limited set of vowel and consonant speech sound units. These vocabularies, the syntax which structures them, and their set of speech sound units differ, creating the existence of many thousands of different types of mutually unintelligible human languages. Most human speakers are able to communicate in two or more of them,[1] hence being polyglots. The vocal abilities that enable humans to produce speech also provide humans with the ability to sing. A gestural form of human communication exists for the deaf in the form of sign language. Speech in some cultures has become the basis of a written language, often one that differs in its vocabulary, syntax and phonetics from its associated spoken one, a situation called diglossia.";
+    //        self.bookTextRawString = @"Speech is the vocalized form of human communication. It is based upon the syntactic combination of lexicals and names that are drawn from very large (usually about 1,000 different words) vocabularies. Each spoken word is created out of the phonetic combination of a limited set of vowel and consonant speech sound units. These vocabularies, the syntax which structures them, and their set of speech sound units differ, creating the existence of many thousands of different types of mutually unintelligible human languages. Most human speakers are able to communicate in two or more of them,[1] hence being polyglots. The vocal abilities that enable humans to produce speech also provide humans with the ability to sing. A gestural form of human communication exists for the deaf in the form of sign language. Speech in some cultures has become the basis of a written language, often one that differs in its vocabulary, syntax and phonetics from its associated spoken one, a situation called diglossia.";
     
     self.bookTextRawString = [self.bookContentView stringByEvaluatingJavaScriptFromString:@"document.body.textContent"];
     self.bookTextString = [[self.bookTextRawString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@" "];
-    //    NSLog(@"%@", self.bookTextString);
     
     self.assistantTextRangeScanner = [[NSScanner alloc]initWithString:self.bookTextRawString];
     self.assistantTextRangeScanner.scanLocation = kZero;
@@ -868,7 +862,6 @@
     NSScanner *chapterScanner = [[NSScanner alloc]initWithString:self.bookTextRawString];
     chapterScanner.scanLocation = kZero;
     chapterScanner.caseSensitive = YES;
-    
     
     NSString *chapterString = [[NSString alloc]init];
     self.chaptersArray = [NSMutableArray array];
@@ -894,7 +887,7 @@
         [self.assistantTextRangeIndexArray addObject:rangeIndex];
         [self.assistantTextRangeLenghtArray addObject:rangeLength];
         [self.wordsArray addObject:textString];
-        //                 NSLog(@"%@, %@, %@, %lu", textString, rangeLength, rangeIndex, counterValue);
+//        NSLog(@"%@, %@, %@, %lu", textString, rangeLength, rangeIndex, counterValue);
     }
     //    NSLog(@"%lu", (unsigned long)self.assistantTextRangeIndexArray.count);
     //    NSLog(@"%lu", (unsigned long)self.assistantTextRangeLenghtArray.count);
@@ -973,10 +966,16 @@
 #pragma mark Modify Time Methods
 
 - (void)displayLinkLoop {
-
+    
 }
 
 - (void)update {
+    if (self.currentReadingPosition.wordIndex >= self.wordsArray.count - 9) {
+        [self stopTimer];
+    } else {
+        [self beginTimer];
+    }
+    
     //    NSLog(@"%f", self.timeIntervalBetweenIndex);
     self.nonInteractiveViews.dot.alpha = 0.8f;
     self.nonInteractiveViews.layer.borderColor = self.userColor.colorZero.CGColor;
@@ -992,6 +991,8 @@
     //    NSLog(@"%f", angle);
     
     self.nonInteractiveViews.speedometerReadLabel.text = [NSString stringWithFormat:@"%0.1fwpm",1/self.timeIntervalBetweenIndex*60];
+    self.nonInteractiveViews.wordCountLabel.text = [NSString stringWithFormat:@"%ld words",self.currentReadingPosition.wordIndex + 4];
+    
     self.nonInteractiveViews.pinView.layer.affineTransform = CGAffineTransformMakeRotation(angle);
     if (self.timeIntervalBetweenIndex == self.currentReadingPosition.normalSpeed) {
         [self.deccelerationtimer invalidate];
@@ -1014,14 +1015,6 @@
     self.nonInteractiveViews.nextWord3.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex+1];
     self.nonInteractiveViews.nextWord4.text = [self.wordsArray objectAtIndex:self.currentReadingPosition.wordIndex];
     
-    if (self.currentReadingPosition.wordIndex >= self.wordsArray.count - 3) {
-        [self stopTimer];
-    }
-    
-    else {
-        [self beginTimer];
-    }
-    
     if (self.readingInterfaceBOOLs.highlightVowelsActivated) {
         [ConfigureView modifyTextWithString:kVowels color:self.currentReadingPosition.highlightVowelColor toLabel:self.nonInteractiveViews.focusText];
     }
@@ -1037,20 +1030,22 @@
         [self emphasizePunctuation:@",.;:"];
     }
     if (self.readingInterfaceBOOLs.highlightAssistantTextActivated) {
-        //        [self highlightAssistantTextWithColor:self.currentReadingPosition.highlightMovingTextColor];
-        [self highlightAssistantTextWithColor:self.userColor.colorZero];
-        
-        ;
-        //        [self highlightAssistantTextWithColor:[UIColor blackColor]];
-        
+        [self highlightAssistantTextWithColor:self.currentReadingPosition.highlightMovingTextColor];
+        //        [self highlightAssistantTextWithColor:self.userColor.colorZero];
     }
     [ConfigureView highlighPunctuationWithColor:self.userColor.colorZero toLabel:self.nonInteractiveViews.focusText];
     
+    float progressIncrement = self.nonInteractiveViews.progressBar.frame.size.width/self.wordsArray.count;
+    if (self.readingInterfaceBOOLs.speedometerDetailOpened) {
+        self.nonInteractiveViews.progress.frame = CGRectMake(2.0f, 1.50f, progressIncrement * self.currentReadingPosition.wordIndex, kProgressBarHeight/2 + 0.5);
+    }
+    
     [self progressCalculation];
-    self.nonInteractiveViews.progressLabel.text = [NSString stringWithFormat:@"%0.2f%%", self.currentReadingPosition.progress];
+    self.nonInteractiveViews.progressLabel.text = [NSString stringWithFormat:@"%0.2f%%", self.currentReadingPosition.progress*100];
     self.nonInteractiveViews.averageSpeedLabel.text = [NSString stringWithFormat:@"   avg spd:%0.1f", self.currentReadingPosition.averageReadingSpeed];
     [self.nonInteractiveViews.timerLabel setTitle:[NSString stringWithFormat:@"%0.0fs",self.timeElapsed] forState:UIControlStateNormal];
     self.timeCount++;
+    //    self.currentReadingPosition.wordIndex = MAX(self.currentReadingPosition.wordIndex, self.wordsArray.count - 4);
 }
 
 - (void)progressCalculation {
@@ -1098,13 +1093,16 @@
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self stopTimer];
+    [self beginTimer];
     [self.userInteractionTools.userSelectedTextTextField resignFirstResponder];
     [self.nextResponder touchesBegan:touches withEvent:event];
-    if (self.timeIntervalBetweenIndex < 6.575) {
+    if (self.timeIntervalBetweenIndex < 6.575f) {
         self.nonInteractiveViews.pinView.layer.affineTransform = CGAffineTransformMakeRotation(self.timeIntervalBetweenIndex);
     }
     self.readingInterfaceBOOLs.accelerationBegan = YES;
     self.accelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
+    
     NSLog(@"Began %d", self.readingInterfaceBOOLs.accelerationBegan);
 }
 
@@ -1122,7 +1120,7 @@
         self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
         self.userInteractionTools.lightsOffButton.alpha = kUINormaAlpha;
         self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
-
+        
     }];
     
     [self retractColorPalette];
@@ -1616,10 +1614,10 @@
 - (void)revealSpeedometer {
     [UIView animateWithDuration:1.50f animations:^{
         self.userInteractionTools.openSpeedometerDetailButton.alpha = 1.0f;
-        self.nonInteractiveViews.progressLabel.alpha = 1.0f;
         self.nonInteractiveViews.pinView.alpha = 1.0f;
         self.nonInteractiveViews.speedometerView.alpha = 0.15;
         self.nonInteractiveViews.speedometerReadLabel.alpha = kUINormaAlpha;
+        self.nonInteractiveViews.wordCountLabel.alpha = kUINormaAlpha;
         self.nonInteractiveViews.progress.alpha = 1.0f;
         self.nonInteractiveViews.averageSpeedLabel.alpha = 1.0f;
         self.nonInteractiveViews.progressBar.alpha = kUINormaAlpha;
@@ -1634,6 +1632,7 @@
         self.nonInteractiveViews.pinView.alpha = kZero;
         self.nonInteractiveViews.speedometerView.alpha = kZero;
         self.nonInteractiveViews.speedometerReadLabel.alpha = kZero;
+        self.nonInteractiveViews.wordCountLabel.alpha = kZero;
         self.nonInteractiveViews.progress.alpha = kZero;
         self.nonInteractiveViews.averageSpeedLabel.alpha = kZero;
         self.nonInteractiveViews.progressBar.alpha = kZero;
@@ -1847,7 +1846,6 @@
         self.userInteractionTools.accessTextViewButton.frame = CGRectMake(CGRectGetMidX(self.uiView.frame)-kAccessButtonWidth/2, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
         self.userInteractionTools.expandTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.userInteractionTools.expandTextViewButton.layer.affineTransform, M_PI/k180Rotation * k180Rotation);
         //        self.userInteractionTools.accessTextViewButton.layer.affineTransform = CGAffineTransformRotate(self.userInteractionTools.expandTextViewButton.layer.affineTransform, M_PI/k180Rotation * k180Rotation);
-        
     }];
 }
 
@@ -2126,7 +2124,7 @@
         [UIView animateWithDuration:0.75f animations:^{
             self.userInteractionTools.openSpeedometerDetailButton.backgroundColor = [UIColor colorWithRed:138.0f/255.0f green:131.0f/255.0f blue:117.0f/255.0f alpha:0.7f];
             self.nonInteractiveViews.averageSpeedLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kZero, kProgressBarHeight*1.5);
-            self.nonInteractiveViews.timerLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2+65.0f, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kZero, 14.0f*1.5);
+            self.nonInteractiveViews.timerLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)-kProgressBarHeight-5.0f, kZero, 14.0f - kProgressOffSetFromProgressBar);
             self.nonInteractiveViews.progressBar.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kZero, 14.0f - kProgressOffSetFromProgressBar);
             self.nonInteractiveViews.progressLabel.alpha = kZero;
             self.nonInteractiveViews.progress.frame = CGRectMake(2.0f, 1.50f, kZero, kProgressBarHeight/2 + 0.5);
@@ -2137,10 +2135,7 @@
             self.nonInteractiveViews.progressLabel.alpha = 1.0f;
             self.userInteractionTools.openSpeedometerDetailButton.backgroundColor = self.userColor.colorFour;
             self.nonInteractiveViews.progressBar.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kProgressBarWidth, kProgressBarHeight - kProgressOffSetFromProgressBar);
-            self.nonInteractiveViews.timerLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2+65.0f, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, 25.0f, 14.0f*1.5);
-            
-            self.nonInteractiveViews.progress.frame = CGRectMake(2.0f, 1.50f, kProgressBarHeight, kProgressBarHeight/2 + 0.5);
-            
+            self.nonInteractiveViews.timerLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)-kProgressBarHeight-5.0f, kProgressBarWidth/kGoldenRatio, kProgressBarHeight - kProgressOffSetFromProgressBar);
             self.nonInteractiveViews.averageSpeedLabel.frame = CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kProgressBarWidth, 14.0f*1.5);
         }];
     }
