@@ -319,7 +319,7 @@
 #pragma mark RightSide Controls
     
     //+A
-    self.userInteractionTools.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame)-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight)];
+    self.userInteractionTools.toggleFocusTextModification = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame)-3*kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight)];
     [self.userInteractionTools.toggleFocusTextModification addTarget:self action:@selector(revealModifyFocusTextView:) forControlEvents:UIControlEventTouchUpInside];
     
     //+A Label
@@ -338,7 +338,7 @@
     [self.userInteractionTools.modifyFocusTextFontSizeSlider addTarget:self action:@selector(adjustFontSize:) forControlEvents:UIControlEventValueChanged];
     
     //Punctuation
-    self.userInteractionTools.togglePunctuationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame), kAccessButtonHeight, kAccessButtonHeight)];
+    self.userInteractionTools.togglePunctuationButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)-kAccessButtonHeight, CGRectGetMidY(self.uiView.frame)-kAccessButtonHeight, kAccessButtonHeight, kAccessButtonHeight)];
     [self.userInteractionTools.togglePunctuationButton addTarget:self action:@selector(togglePunctuation:) forControlEvents:UIControlEventTouchUpInside];
     [self refreshLightsoffUI];
     
@@ -357,7 +357,7 @@
     self.userInteractionTools.brakePedalGesture.minimumPressDuration = 0.001f;
     
     //Gas Pedal
-    self.userInteractionTools.gasPedalView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kGoldenRatioMinusOne-60.0f, CGRectGetHeight(self.uiView.frame)/kGoldenRatio+30.0f, 130.0f, 130.0f)];
+    self.userInteractionTools.gasPedalView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kGoldenRatioMinusOne-50.0f, CGRectGetHeight(self.uiView.frame)/kGoldenRatio+30.0f, 130.0f, 130.0f)];
     self.userInteractionTools.gasPedalView.layer.contents = (__bridge id)gasPedal.CGImage;
     self.userInteractionTools.gasPedalView.layer.opacity = kUINormaAlpha;
     [self.userInteractionTools.gasPedalView addGestureRecognizer:self.userInteractionTools.gasPedalGesture];
@@ -366,15 +366,14 @@
     UIImage *brakePedal = [UIImage imageNamed:@"brake.png"];
     self.userInteractionTools.brakePedalView = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.gasPedalView.frame.origin.x+20.0f, self.userInteractionTools.gasPedalView.frame.origin.y + 110.0f, kBrakePedalDimension, kBrakePedalDimension)];
     self.userInteractionTools.brakePedalView.layer.contents = (__bridge id)brakePedal.CGImage;
-    self.userInteractionTools.brakePedalView.backgroundColor = self.userColor.colorSix;
     self.userInteractionTools.brakePedalView.layer.opacity = kUINormaAlpha;
     self.userInteractionTools.brakePedalView.layer.zPosition = kOne;
-    self.userInteractionTools.brakePedalView.layer.cornerRadius = kBrakePedalDimension/1.3f;
-    self.userInteractionTools.brakePedalView.layer.borderWidth = 4.0f;
+    self.userInteractionTools.brakePedalView.layer.cornerRadius = kBrakePedalDimension;
+    self.userInteractionTools.brakePedalView.layer.borderWidth = kBorderWidth;
     self.userInteractionTools.brakePedalView.layer.borderColor = [UIColor colorWithWhite:kZero alpha:kOne].CGColor;
     self.userInteractionTools.brakePedalView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.userInteractionTools.brakePedalView.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
-    self.userInteractionTools.brakePedalView.layer.shadowOpacity = 0.5f;
+    self.userInteractionTools.brakePedalView.layer.shadowOpacity = kOneMinusGoldenRatioMinusOne;
 
     [self.userInteractionTools.brakePedalView addGestureRecognizer:self.userInteractionTools.brakePedalGesture];
     
@@ -385,7 +384,7 @@
     
     //Pause
     UIImage *pauseButtonImage = [UIImage imageNamed:@"pauseImage.png"];
-    self.userInteractionTools.pauseButton =[[UIButton alloc]initWithFrame:CGRectMake(self.userInteractionTools.gasPedalView.frame.origin.x + 120.0f, self.userInteractionTools.gasPedalView.frame.origin.y + 120.0f, kToggleButtonDimension, kToggleButtonDimension)];
+    self.userInteractionTools.pauseButton =[[UIButton alloc]initWithFrame:CGRectMake(self.userInteractionTools.gasPedalView.frame.origin.x + 90.0f, self.userInteractionTools.gasPedalView.frame.origin.y, kToggleButtonDimension, kToggleButtonDimension)];
     self.userInteractionTools.pauseButton.layer.contents = (__bridge id)pauseButtonImage.CGImage;
     [self.userInteractionTools.pauseButton addTarget:self action:@selector(togglePause:) forControlEvents:UIControlEventTouchUpInside];
     [self.userInteractionTools.pauseButton stylizePauseMenuButtons];
@@ -411,7 +410,7 @@
     self.connector2 = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.pauseButton.frame.origin.x+kToggleButtonDimension/2-2.0f, self.userInteractionTools.voiceButton.frame.origin.y-1.0f, 4.0f, kZero)];
     
     //Show/Hide Highlight Focus Text Controls
-    self.userInteractionTools.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(self.userInteractionTools.pauseButton.frame.origin.x - kToggleButtonDimension, self.userInteractionTools.pauseButton.frame.origin.y + kToggleButtonDimension, kToggleButtonDimension, kToggleButtonDimension)];
+    self.userInteractionTools.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(kZero, CGRectGetMidY(self.uiView.frame)+3*kAccessButtonWidth, kToggleButtonDimension, kToggleButtonDimension)];
     self.userInteractionTools.hideControlButton.layer.borderWidth = kBorderWidth;
     self.userInteractionTools.hideControlButton.layer.borderColor = [UIColor blackColor].CGColor;
     [self.userInteractionTools.hideControlButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -480,7 +479,7 @@
     self.userInteractionTools.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 100, 30)];
     [self.userInteractionTools.speedAdjusterSlider addTarget:self action:@selector(adjustSpeedUsingSlider:) forControlEvents:UIControlEventValueChanged];
     [self rotationTransformation:self.userInteractionTools.speedAdjusterSlider.layer degrees:-40.0f];
-    self.userInteractionTools.speedAdjusterSlider.layer.affineTransform = CGAffineTransformTranslate(self.userInteractionTools.speedAdjusterSlider.layer.affineTransform, 30.0f, 45.0f);
+    self.userInteractionTools.speedAdjusterSlider.layer.affineTransform = CGAffineTransformTranslate(self.userInteractionTools.speedAdjusterSlider.layer.affineTransform, 10.0f, 40.0f);
     self.userInteractionTools.speedAdjusterSlider.tintColor = self.userColor.colorSix;
     self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
     self.userInteractionTools.speedAdjusterSlider.maximumValue = 1/self.currentReadingPosition.maxSpeed;
