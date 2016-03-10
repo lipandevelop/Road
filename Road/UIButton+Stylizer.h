@@ -14,5 +14,11 @@
 - (void)stylizePauseMenuButtons;
 - (void)stylizeAccessButtons;
 - (void)stylizePaletteButtonsWithYOrigin: (float)y backgroundColor: (UIColor *)color;
+- (void)stylizeHideControlsButton;
+- (void)stylizeOpenSpeedometerDetailButton;
+- (void)stylizeTimeElapsedLabelWithColor: (UIColor *)color;
+
+
+
 
 @end

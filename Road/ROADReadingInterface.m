@@ -30,6 +30,10 @@
 
 #import "UIButton+Stylizer.h"
 #import "UITextField+Configure.h"
+#import "UITextView+Configure.h"
+#import "UISlider+Configure.h"
+#import "UIView+Stylizer.h"
+#import "UILabel+Configure.h"
 
 
 #pragma mark Properties
@@ -51,7 +55,6 @@
 @property (nonatomic, strong) ROADColors *userColor;
 @property (nonatomic, strong) ROADPalette *toggleFocusTextHighlightPaletteButton;
 @property (nonatomic, strong) ROADNoteBookView *noteBook;
-
 
 @property (nonatomic, strong) UIView *brakePedal;
 @property (nonatomic, assign) CGRect gasPedalFrame;
@@ -219,9 +222,6 @@
     self.nonInteractiveViews = [[ROADNoneInteractiveViews alloc]init];
     
     UIImage *paper = [UIImage imageNamed:@"ivoryPaper.png"];
-    UIImage *gasPedal = [UIImage imageNamed:@"finger_clean.png"];
-    UIImage *speedometerImage = [UIImage imageNamed:@"Speedometer.png"];
-    UIImage *pinImage= [UIImage imageNamed:@"Pin.png"];
     UIImage *leftHandImage = [UIImage imageNamed:@"leftHand"];
     UIImage *penImage = [UIImage imageNamed:@"pen.png"];
     UIImage *notebookImage = [UIImage imageNamed:@"noteBook.png"];
@@ -231,90 +231,48 @@
     
     //SpeedometerView
     self.uiView.layer.contents = (__bridge id)paper.CGImage;
-    self.nonInteractiveViews.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-kSpeedometerDimension, kToggleButtonDimension, kSpeedometerDimension, kSpeedometerDimension)];
-    self.nonInteractiveViews.speedometerView.layer.contents = (__bridge id)speedometerImage.CGImage;
-    self.nonInteractiveViews.speedometerView.layer.contentsGravity = kCAGravityResizeAspect;
-    self.nonInteractiveViews.speedometerView.alpha = 0.20f;
-    self.nonInteractiveViews.speedometerView.userInteractionEnabled = NO;
+    self.nonInteractiveViews.speedometerView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-kSpeedometerDimension, kToggleButtonDimension, kSpeedometerDimension, kSpeedometerDimension)];    
+    [self.nonInteractiveViews.speedometerView stylizeSpeedometerView];
     
     //Progress View
     self.nonInteractiveViews.progress = [[UIView alloc]initWithFrame:CGRectMake(2.0f, 1.50f, kZero, kProgressBarHeight/2 + 0.5)];
-//    self.nonInteractiveViews.progress.layer.borderWidth = kBoarderWidth/2;
-    self.nonInteractiveViews.progress.layer.cornerRadius = 3.0f;
-    self.nonInteractiveViews.progress.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
-    self.nonInteractiveViews.progress.layer.shadowOpacity = kShadowOpacity;
-    self.nonInteractiveViews.progress.alpha = kOne;
-    self.nonInteractiveViews.progress.backgroundColor = self.userColor.colorFour;
+    [self.nonInteractiveViews.progress stylizeProgressViewWithColor:self.userColor.colorFour];
     
     //AverageSpeed Label
     self.nonInteractiveViews.averageSpeedLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)+20.0f, kZero, kProgressBarHeight*1.5)];
-    self.nonInteractiveViews.averageSpeedLabel.layer.borderWidth = kBorderWidth/2;
-    self.nonInteractiveViews.averageSpeedLabel.layer.borderColor = self.userColor.colorSix.CGColor;
-    self.nonInteractiveViews.averageSpeedLabel.layer.cornerRadius = kProgressBarHeight/1.50f;
-    self.nonInteractiveViews.averageSpeedLabel.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
-    self.nonInteractiveViews.averageSpeedLabel.layer.shadowOpacity = kShadowOpacity;
-    self.nonInteractiveViews.averageSpeedLabel.alpha = kOne;
-    self.nonInteractiveViews.averageSpeedLabel.font = [UIFont fontWithName:(kFontType) size:10.0f];
-    self.nonInteractiveViews.averageSpeedLabel.textAlignment = NSTextAlignmentLeft;
+    [self.nonInteractiveViews.averageSpeedLabel configureAverageSpeedLabelWithBorderColor:self.userColor.colorSix];
     
     //TimeElapsed Label
     self.nonInteractiveViews.timerLabel = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame)-kProgressBarHeight-5.0f, kZero, kProgressBarHeight - kProgressOffSetFromProgressBar)];
-    self.nonInteractiveViews.timerLabel.layer.cornerRadius = kProgressBarHeight/1.80f;
-    self.nonInteractiveViews.timerLabel.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
-    self.nonInteractiveViews.timerLabel.layer.shadowOpacity = kShadowOpacity+0.20f;
-    self.nonInteractiveViews.timerLabel.titleLabel.font = [UIFont fontWithName:(kFontType) size:10.0f];
-    self.nonInteractiveViews.timerLabel.backgroundColor = self.userColor.colorFour;
-    self.nonInteractiveViews.timerLabel.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.nonInteractiveViews.timerLabel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nonInteractiveViews.timerLabel.layer.borderWidth = kBorderWidth*1.7f;
-    self.nonInteractiveViews.timerLabel.layer.borderColor = [UIColor colorWithWhite:kOne alpha:0.40f].CGColor;
-    self.nonInteractiveViews.timerLabel.alpha = kHiddenControlRevealedAlhpa;
-    self.nonInteractiveViews.timerLabel.clipsToBounds = YES;
+    [self.nonInteractiveViews.timerLabel stylizeTimeElapsedLabelWithColor:self.userColor.colorFour];
     
     //Progress Bar
     self.nonInteractiveViews.progressBar = [[UIView alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/2, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kZero, kProgressBarHeight - kProgressOffSetFromProgressBar)];
-    self.nonInteractiveViews.progressBar.layer.borderWidth = kBorderWidth/2;
-    self.nonInteractiveViews.progressBar.layer.cornerRadius = 5.0f;
-    self.nonInteractiveViews.progressBar.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
-    self.nonInteractiveViews.progressBar.layer.shadowOpacity = kShadowOpacity;
-    self.nonInteractiveViews.progressBar.alpha = kUINormaAlpha;
+    [self.nonInteractiveViews.progressBar stylizeProgressBarView];
     
     //Progress Label
     self.nonInteractiveViews.progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.size.width + kSpeedometerDimension/1.25, CGRectGetMidY(self.nonInteractiveViews.speedometerView.frame), kAccessButtonWidth, kProgressBarHeight - kProgressOffSetFromProgressBar)];
-    self.nonInteractiveViews.progressLabel.textColor = self.currentReadingPosition.defaultButtonColor;
-    self.nonInteractiveViews.progressLabel.font = [UIFont fontWithName:(kFontType) size:kSmallFontSize];
-    [self.uiView addSubview:self.nonInteractiveViews.progressLabel];
-    self.nonInteractiveViews.progressLabel.alpha = kZero;
+    [self.nonInteractiveViews.progressLabel configureProgressLabelWithColor:self.currentReadingPosition.defaultButtonColor];
     
     //Pin Image View
-    UIImageView *pinImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 15.0f, 70.0f)];
-    pinImageView.image = [UIImage imageNamed:@"Pin.png"];
+    
     self.nonInteractiveViews.pinView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.view.frame)-75.1f, 65.0f, 15.0f, 70.0f)];
-    self.nonInteractiveViews.pinView.layer.contents = (__bridge id)pinImage.CGImage;
-    self.nonInteractiveViews.pinView.layer.contentsGravity = kCAGravityResizeAspect;
-    self.nonInteractiveViews.pinView.layer.shadowOffset = CGSizeMake(-1.0, 4.0);
-    self.nonInteractiveViews.pinView.layer.shadowOpacity = kShadowOpacity;
+    [self.nonInteractiveViews.pinView stylizePinView];
     
     //Current Speed Label
     self.nonInteractiveViews.speedometerReadLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-97.0f, 114.0f, 60.0f, 15.0f)];
-    self.nonInteractiveViews.speedometerReadLabel.font = [UIFont fontWithName:(kFontType) size:kSmallFontSize];
-    self.nonInteractiveViews.speedometerReadLabel.alpha = kUINormaAlpha;
-    self.nonInteractiveViews.speedometerReadLabel.textAlignment = NSTextAlignmentCenter;
+    [self.nonInteractiveViews.speedometerReadLabel configureSpeedometerReadLabels];
     
     //WordCount Label
     self.nonInteractiveViews.wordCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetMidX(self.uiView.frame)-117.0f, 124.0f, 100.0f, 15.0f)];
-    self.nonInteractiveViews.wordCountLabel.font = [UIFont fontWithName:(kFontType) size:kSmallFontSize];
-    self.nonInteractiveViews.wordCountLabel.alpha = kUINormaAlpha;
-    self.nonInteractiveViews.wordCountLabel.textAlignment = NSTextAlignmentCenter;
+    [self.nonInteractiveViews.wordCountLabel configureSpeedometerReadLabels];
     
     //Speedometer Details
-    UIImage *openDetailView = [UIImage imageNamed:@"Stopwatch.png"];
     self.userInteractionTools.openSpeedometerDetailButton = [[UIButton alloc]initWithFrame:CGRectMake(self.nonInteractiveViews.speedometerView.frame.origin.x + self.nonInteractiveViews.speedometerView.frame.size.width/1.45f, self.nonInteractiveViews.speedometerView.frame.origin.y + self.nonInteractiveViews.speedometerView.frame.size.height/kGoldenRatio, kToggleButtonDimension, kToggleButtonDimension)];
-    self.userInteractionTools.openSpeedometerDetailButton.layer.contents = (__bridge id)openDetailView.CGImage;
-    [self.userInteractionTools.openSpeedometerDetailButton addTarget:self action:@selector(toggleSpeedometerDetails:) forControlEvents:UIControlEventTouchUpInside];
     [self modifyToggleButtonWithButton:self.userInteractionTools.openSpeedometerDetailButton buttonLayer:self.userInteractionTools.openSpeedometerDetailButton.layer color: self.currentReadingPosition.defaultButtonColor string:@""];
-    self.userInteractionTools.openSpeedometerDetailButton.backgroundColor = [UIColor colorWithWhite:kZero alpha:kZero];
-    self.userInteractionTools.openSpeedometerDetailButton.alpha = kUINormaAlpha;
+    [self.userInteractionTools.openSpeedometerDetailButton stylizeOpenSpeedometerDetailButton];
+    [self.userInteractionTools.openSpeedometerDetailButton addTarget:self action:@selector(toggleSpeedometerDetails:) forControlEvents:UIControlEventTouchUpInside];
+
     
 #pragma mark RightSide Controls
     
@@ -329,12 +287,7 @@
     
     //+A Slider
     self.userInteractionTools.modifyFocusTextFontSizeSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.uiView.frame)+120, 60.0f + 30.0f, 120.0f, 30.0f)];
-    self.userInteractionTools.modifyFocusTextFontSizeSlider.tintColor = self.userColor.colorFive;
-    self.userInteractionTools.modifyFocusTextFontSizeSlider.layer.shadowOffset = CGSizeMake(-kOne, 6.0);
-    self.userInteractionTools.modifyFocusTextFontSizeSlider.layer.shadowOpacity = 0.10f;
-    self.userInteractionTools.modifyFocusTextFontSizeSlider.value = self.currentReadingPosition.mainFontSize;
-    self.userInteractionTools.modifyFocusTextFontSizeSlider.maximumValue = 32.0f;
-    self.userInteractionTools.modifyFocusTextFontSizeSlider.minimumValue = 22.0f;
+    [self.userInteractionTools.modifyFocusTextFontSizeSlider configureFontSizeSliderWithTintColor:self.userColor.colorFive value:self.currentReadingPosition.mainFontSize];
     [self.userInteractionTools.modifyFocusTextFontSizeSlider addTarget:self action:@selector(adjustFontSize:) forControlEvents:UIControlEventValueChanged];
     
     //Punctuation
@@ -358,34 +311,22 @@
     
     //Gas Pedal
     self.userInteractionTools.gasPedalView = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kGoldenRatioMinusOne-50.0f, CGRectGetHeight(self.uiView.frame)/kGoldenRatio+30.0f, 130.0f, 130.0f)];
-    self.userInteractionTools.gasPedalView.layer.contents = (__bridge id)gasPedal.CGImage;
-    self.userInteractionTools.gasPedalView.layer.opacity = kUINormaAlpha;
+    [self.userInteractionTools.gasPedalView stylizeGasPedalView];
     [self.userInteractionTools.gasPedalView addGestureRecognizer:self.userInteractionTools.gasPedalGesture];
     
     //Break Pedal
-    UIImage *brakePedal = [UIImage imageNamed:@"brake.png"];
     self.userInteractionTools.brakePedalView = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.gasPedalView.frame.origin.x+20.0f, self.userInteractionTools.gasPedalView.frame.origin.y + 110.0f, kBrakePedalDimension, kBrakePedalDimension)];
-    self.userInteractionTools.brakePedalView.layer.contents = (__bridge id)brakePedal.CGImage;
-    self.userInteractionTools.brakePedalView.layer.opacity = kUINormaAlpha;
-    self.userInteractionTools.brakePedalView.layer.zPosition = kOne;
-    self.userInteractionTools.brakePedalView.layer.cornerRadius = kBrakePedalDimension;
-    self.userInteractionTools.brakePedalView.layer.borderWidth = kBorderWidth;
-    self.userInteractionTools.brakePedalView.layer.borderColor = [UIColor colorWithWhite:kZero alpha:kOne].CGColor;
-    self.userInteractionTools.brakePedalView.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.userInteractionTools.brakePedalView.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
-    self.userInteractionTools.brakePedalView.layer.shadowOpacity = kOneMinusGoldenRatioMinusOne;
-
+    [self.userInteractionTools.brakePedalView stylizeBrakePedalView];
     [self.userInteractionTools.brakePedalView addGestureRecognizer:self.userInteractionTools.brakePedalGesture];
-    
     
     //Gesture Open Palette
     self.userInteractionTools.openColorOptionsGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(openColorPalette:)];
     self.userInteractionTools.openColorOptionsGesture.minimumPressDuration = 0.20f;
     
     //Pause
-    UIImage *pauseButtonImage = [UIImage imageNamed:@"pauseImage.png"];
+    UIImage *playImage = [UIImage imageNamed:@"playImage.png"];
     self.userInteractionTools.pauseButton =[[UIButton alloc]initWithFrame:CGRectMake(self.userInteractionTools.gasPedalView.frame.origin.x + 90.0f, self.userInteractionTools.gasPedalView.frame.origin.y, kToggleButtonDimension, kToggleButtonDimension)];
-    self.userInteractionTools.pauseButton.layer.contents = (__bridge id)pauseButtonImage.CGImage;
+    self.userInteractionTools.pauseButton.layer.contents = (__bridge id)playImage.CGImage;
     [self.userInteractionTools.pauseButton addTarget:self action:@selector(togglePause:) forControlEvents:UIControlEventTouchUpInside];
     [self.userInteractionTools.pauseButton stylizePauseMenuButtons];
     self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
@@ -409,18 +350,6 @@
     
     self.connector2 = [[UIView alloc]initWithFrame:CGRectMake(self.userInteractionTools.pauseButton.frame.origin.x+kToggleButtonDimension/2-2.0f, self.userInteractionTools.voiceButton.frame.origin.y-1.0f, 4.0f, kZero)];
     
-    //Show/Hide Highlight Focus Text Controls
-    self.userInteractionTools.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(kZero, CGRectGetMidY(self.uiView.frame)+3*kAccessButtonWidth, kToggleButtonDimension, kToggleButtonDimension)];
-    self.userInteractionTools.hideControlButton.layer.borderWidth = kBorderWidth;
-    self.userInteractionTools.hideControlButton.layer.borderColor = [UIColor blackColor].CGColor;
-    [self.userInteractionTools.hideControlButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.userInteractionTools.hideControlButton setTitle:@"show" forState:UIControlStateNormal];
-    self.userInteractionTools.hideControlButton.titleLabel.font = [UIFont fontWithName:(kFontType) size:kSmallFontSize];
-    self.userInteractionTools.hideControlButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.userInteractionTools.hideControlButton.alpha = kUINormaAlpha;
-    self.userInteractionTools.hideControlButton.layer.cornerRadius = self.userInteractionTools.hideControlButton.frame.size.width/2;
-    [self.userInteractionTools.hideControlButton addTarget:self action:@selector(toggleHideControls:) forControlEvents:UIControlEventTouchUpInside];
-    
     //Swipe
     self.userInteractionTools.swipeUpToPreviousWord = [[UISwipeGestureRecognizer alloc]init];
     [self.userInteractionTools.swipeUpToPreviousWord setDirection:UISwipeGestureRecognizerDirectionUp];
@@ -433,27 +362,6 @@
     [self.userInteractionTools.swipeDownToNextWord addTarget:self action:@selector(scrollToNextWord:)];
     [self.userInteractionTools.swipeDownToNextWord setEnabled:NO];
     [self.uiView addGestureRecognizer:self.userInteractionTools.swipeDownToNextWord];
-    
-#pragma Bottom Left Controls
-    
-    //Vowel Highlight
-    self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.uiView.frame) - 95, kToggleButtonDimension, kToggleButtonDimension);
-    self.userInteractionTools.toggleVowels = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
-    [self.userInteractionTools.toggleVowels addTarget:self action:@selector(toggleVowelsSelected) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.userInteractionTools.toggleVowels buttonLayer:self.userInteractionTools.toggleVowels.layer color: self.userColor.colorSix string:@"æ"];
-    self.userInteractionTools.toggleUserSelections.layer.affineTransform = CGAffineTransformMakeTranslation(-65, -100);
-    
-    //User Highlight
-    self.userInteractionTools.toggleVowels.layer.affineTransform = CGAffineTransformMakeTranslation(-45, -40);
-    self.userInteractionTools.toggleUserSelections = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
-    [self.userInteractionTools.toggleUserSelections addTarget:self action:@selector(toggleUserSelected) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.userInteractionTools.toggleUserSelections buttonLayer:self.userInteractionTools.toggleUserSelections.layer color:self.userColor.colorSix string:@"u"];
-    self.userInteractionTools.toggleUserSelections.layer.affineTransform = CGAffineTransformMakeTranslation(-65, -100);
-    
-    //Consonant Highlight
-    self.userInteractionTools.toggleConsonates = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
-    [self.userInteractionTools.toggleConsonates addTarget:self action:@selector(toggleConsonantsSelected) forControlEvents:UIControlEventTouchUpInside];
-    [self modifyToggleButtonWithButton:self.userInteractionTools.toggleConsonates buttonLayer:self.userInteractionTools.toggleConsonates.layer color:self.userColor.colorSix string:@"ɳ"];
     
     //Flip XAxis
     self.userInteractionTools.flipXAxisButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMinX(self.uiView.frame)+25.0f, CGRectGetHeight(self.uiView.frame)-kAccessButtonHeight-10.0f, kAccessButtonHeight, kAccessButtonHeight)];
@@ -474,17 +382,36 @@
     self.userInteractionTools.toggleMusicButton.layer.contents = (__bridge id)musicPlayerImage.CGImage;
     [self.userInteractionTools.toggleMusicButton stylizePageBottomToggleButtons];
     
+    //Show/Hide Highlight Focus Text Controls
+    self.userInteractionTools.hideControlButton =[[UIButton alloc]initWithFrame:CGRectMake(kZero, self.userInteractionTools.flipXAxisButton.frame.origin.y-kToggleButtonDimension, kToggleButtonDimension, kToggleButtonDimension)];
+    [self.userInteractionTools.hideControlButton stylizeHideControlsButton];
+    [self.userInteractionTools.hideControlButton addTarget:self action:@selector(toggleHideControls:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //Vowel Highlight
+    self.highlightButtonLocationFrames = CGRectMake(100, CGRectGetHeight(self.uiView.frame) - 95, kToggleButtonDimension, kToggleButtonDimension);
+    self.userInteractionTools.toggleVowels = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
+    [self.userInteractionTools.toggleVowels addTarget:self action:@selector(toggleVowelsSelected) forControlEvents:UIControlEventTouchUpInside];
+    [self modifyToggleButtonWithButton:self.userInteractionTools.toggleVowels buttonLayer:self.userInteractionTools.toggleVowels.layer color: self.userColor.colorSix string:@"æ"];
+    self.userInteractionTools.toggleUserSelections.layer.affineTransform = CGAffineTransformMakeTranslation(-65, -100);
+    
+    //User Highlight
+    self.userInteractionTools.toggleVowels.layer.affineTransform = CGAffineTransformMakeTranslation(-45, -40);
+    self.userInteractionTools.toggleUserSelections = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
+    [self.userInteractionTools.toggleUserSelections addTarget:self action:@selector(toggleUserSelected) forControlEvents:UIControlEventTouchUpInside];
+    [self modifyToggleButtonWithButton:self.userInteractionTools.toggleUserSelections buttonLayer:self.userInteractionTools.toggleUserSelections.layer color:self.userColor.colorSix string:@"u"];
+    self.userInteractionTools.toggleUserSelections.layer.affineTransform = CGAffineTransformMakeTranslation(-65, -100);
+    
+    //Consonant Highlight
+    self.userInteractionTools.toggleConsonates = [[UIButton alloc]initWithFrame:self.highlightButtonLocationFrames];
+    [self.userInteractionTools.toggleConsonates addTarget:self action:@selector(toggleConsonantsSelected) forControlEvents:UIControlEventTouchUpInside];
+    [self modifyToggleButtonWithButton:self.userInteractionTools.toggleConsonates buttonLayer:self.userInteractionTools.toggleConsonates.layer color:self.userColor.colorSix string:@"ɳ"];
+    
     
     //Speed Adjuster Slider
     self.userInteractionTools.speedAdjusterSlider = [[UISlider alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 100, 30)];
     [self.userInteractionTools.speedAdjusterSlider addTarget:self action:@selector(adjustSpeedUsingSlider:) forControlEvents:UIControlEventValueChanged];
     [self rotationTransformation:self.userInteractionTools.speedAdjusterSlider.layer degrees:-40.0f];
-    self.userInteractionTools.speedAdjusterSlider.layer.affineTransform = CGAffineTransformTranslate(self.userInteractionTools.speedAdjusterSlider.layer.affineTransform, 10.0f, 40.0f);
-    self.userInteractionTools.speedAdjusterSlider.tintColor = self.userColor.colorSix;
-    self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
-    self.userInteractionTools.speedAdjusterSlider.maximumValue = 1/self.currentReadingPosition.maxSpeed;
-    self.userInteractionTools.speedAdjusterSlider.minimumValue = 1/self.currentReadingPosition.minSpeed;
-    self.userInteractionTools.speedAdjusterSlider.value = 1/self.currentReadingPosition.normalSpeed;
+    [self.userInteractionTools.speedAdjusterSlider configureSpeedSliderWithTintColor:self.userColor.colorSix maximum:1/self.currentReadingPosition.maxSpeed minimum:1/self.currentReadingPosition.minSpeed value:1/self.currentReadingPosition.normalSpeed];
     
     //Speed Label
     self.nonInteractiveViews.speedLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.uiView.frame)*kOneMinusGoldenRatioMinusOne, CGRectGetMaxY(self.uiView.frame)/kGoldenRatio, 220, 60)];
@@ -554,12 +481,7 @@
     [self.userInteractionTools.retractUserNotesTextFieldButton addTarget:self action:@selector(retractUserNotesField:) forControlEvents:UIControlEventTouchDown];
     
     self.userInteractionTools.assistantTextView = [[UITextView alloc]initWithFrame:CGRectMake(-120.0f, CGRectGetMidY(self.uiView.frame)-40, 120.0f, 120.0f)];
-    self.userInteractionTools.assistantTextView.layer.zPosition = 0.9;
-    self.userInteractionTools.assistantTextView.text = self.bookTextRawString;
-    self.userInteractionTools.assistantTextView.textColor = self.userColor.colorSix;
-    self.userInteractionTools.assistantTextView.backgroundColor = [UIColor colorWithWhite:kOne alpha:0.0];
-    self.userInteractionTools.assistantTextView.alpha = kOne;
-    self.userInteractionTools.assistantTextView.editable = NO;
+    [self.userInteractionTools.assistantTextView configureAssistantTextViewWithTextColor:self.userColor.colorSix displayString:self.bookTextRawString];
     
     self.nonInteractiveViews.dividerLabel = [[UILabel alloc]init];
     self.nonInteractiveViews.dividerLabel.backgroundColor = self.userColor.colorSix;
@@ -584,6 +506,7 @@
     [self.uiView addSubview:self.userInteractionTools.brakePedalView];
     
     [self.uiView addSubview:self.nonInteractiveViews.progressBar];
+    [self.uiView addSubview:self.nonInteractiveViews.progressLabel];
     [self.uiView addSubview:self.nonInteractiveViews.averageSpeedLabel];
     [self.nonInteractiveViews.progressBar addSubview:self.nonInteractiveViews.progress];
     [self.uiView addSubview:self.userInteractionTools.openSpeedometerDetailButton];
@@ -629,9 +552,9 @@
         
         NSLog(@"userEnabled %d %d", self.userInteractionTools.swipeUpToPreviousWord.enabled ,self.userInteractionTools.swipeDownToNextWord.enabled);
         
-        UIImage *paused = [UIImage imageNamed:@"pauseImage.png"];
+        UIImage *play = [UIImage imageNamed:@"playImage.png"];
         self.userInteractionTools.pauseButton.alpha = 0.2f;
-        self.userInteractionTools.pauseButton.layer.contents = (__bridge id)paused.CGImage;
+        self.userInteractionTools.pauseButton.layer.contents = (__bridge id)play.CGImage;
         self.connector.backgroundColor = self.userColor.colorSix;
         self.connector2.backgroundColor = self.userColor.colorSix;
         
@@ -653,10 +576,9 @@
         self.userInteractionTools.swipeDownToNextWord.enabled = NO;
         self.userInteractionTools.swipeUpToPreviousWord.enabled = NO;
         NSLog(@"userEnabled %d %d", self.userInteractionTools.swipeUpToPreviousWord.enabled ,self.userInteractionTools.swipeDownToNextWord.enabled);
-        
-        UIImage *play = [UIImage imageNamed:@"playImage.png"];
+        UIImage *paused = [UIImage imageNamed:@"pauseImage.png"];
         self.userInteractionTools.pauseButton.alpha = 0.2f;
-        self.userInteractionTools.pauseButton.layer.contents = (__bridge id)play.CGImage;
+        self.userInteractionTools.pauseButton.layer.contents = (__bridge id)paused.CGImage;
         [UIView animateWithDuration:kOne animations:^{
             self.connector.frame = CGRectMake(self.userInteractionTools.pauseButton.frame.origin.x+kToggleButtonDimension/2-2.0f, self.userInteractionTools.voiceButton.frame.origin.y+kToggleButtonDimension-1.0f, 4.0f, kZero);
 
@@ -1071,9 +993,11 @@
         }
         self.readingInterfaceBOOLs.accelerationBegan = YES;
         self.accelerationtimer = [NSTimer scheduledTimerWithTimeInterval: kUpdateSpeed target:self selector:@selector(modifySpeed) userInfo:nil repeats:YES];
+        [UIView animateWithDuration:0.2f animations:^{
+            self.userInteractionTools.gasPedalView.alpha = kHiddenControlRevealedAlhpa;
+        }];
         
         [UIView animateWithDuration:3.0f animations:^{
-            self.userInteractionTools.gasPedalView.alpha = kHiddenControlRevealedAlhpa;
             self.userInteractionTools.gasPedalView.layer.affineTransform = CGAffineTransformTranslate(self.userInteractionTools.gasPedalView.layer.affineTransform, 2.0f, 4.0f);
         }];
         NSLog(@"Accelerate %d", self.readingInterfaceBOOLs.accelerationBegan);
@@ -1145,12 +1069,7 @@
     [UIView animateWithDuration:1.5 animations:^{
         self.userInteractionTools.speedPropertySelector.frame = CGRectMake(0, CGRectGetHeight(self.view.frame), CGRectGetWidth(self.view.frame), 30);
         self.nonInteractiveViews.speedLabel.alpha = kZero;
-        self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
-        self.userInteractionTools.lightsOffButton.alpha = kUINormaAlpha;
-        self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
-        
     }];
-    
     [self retractColorPalette];
     [self retractUserInputTextField];
     
@@ -1752,6 +1671,7 @@
         self.userInteractionTools.expandTextViewButton.alpha = kOne;
         self.userInteractionTools.retractTextViewButton.alpha = kOne;
         self.userInteractionTools.fullScreenTextViewButton.alpha =kOne;
+        self.userInteractionTools.hideControlButton.alpha = kUINormaAlpha;
         self.userInteractionTools.expandTextViewButton.frame = CGRectMake(kControlButtonXOrigin+kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
         self.userInteractionTools.retractTextViewButton.frame = CGRectMake(kControlButtonXOrigin, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
         self.userInteractionTools.fullScreenTextViewButton.frame = CGRectMake(kControlButtonXOrigin+2*kControlButtonXOffset, self.userInteractionTools.assistantTextView.frame.origin.y-kControlButtonYOffset, kControlButtonDimension, kControlButtonDimension);
@@ -1762,6 +1682,10 @@
         self.userInteractionTools.toggleFocusTextModification.alpha = kUINormaAlpha;
         self.userInteractionTools.pauseButton.alpha = kUINormaAlpha;
         self.userInteractionTools.togglePunctuationButton.alpha = kUINormaAlpha;
+        
+        self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
+        self.userInteractionTools.lightsOffButton.alpha = kUINormaAlpha;
+        self.userInteractionTools.toggleMusicButton.alpha = kUINormaAlpha;
         
     }completion:^(BOOL finished) {
         self.userInteractionTools.accessTextViewButton.backgroundColor = [UIColor colorWithWhite:kZero alpha:kZero];
@@ -1826,6 +1750,7 @@
         self.userInteractionTools.flipXAxisButton.alpha = kZero;
         self.userInteractionTools.expandTextViewButton.alpha = kZero;
         self.userInteractionTools.retractTextViewButton.alpha = kZero;
+        self.userInteractionTools.hideControlButton.alpha =kZero;
         self.userInteractionTools.expandTextViewButton.frame = CGRectMake(87.5f, self.uiView.frame.origin.y-65, 45, 45);
         self.userInteractionTools.retractTextViewButton.frame = CGRectMake(37.5f, self.uiView.frame.origin.y-65, 45, 45);
         self.userInteractionTools.assistantTextView.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, CGRectGetMidX(self.uiView.frame)-4.0f, CGRectGetHeight(self.uiView.frame)-70.0f);
@@ -2180,13 +2105,7 @@
     [super didReceiveMemoryWarning];
 }
 
-//-(BOOL)shouldAutorotate
-//{
-//    return YES;
-//}
-
--(UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
