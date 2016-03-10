@@ -40,9 +40,13 @@ extern const float kGoldenRatio;
 extern const float kGoldenRatioMinusOne;
 extern const float kOneMinusGoldenRatioMinusOne;
 extern const float kSmallFontSize;
+
 extern const float kHiddenControlRevealedAlhpa;
-extern const float kZero;
 extern const float kUINormaAlpha;
+
+extern const float kZero;
+extern const float kOne;
+
 extern const float kAccessButtonHeight;
 
 //PaletteConstants
@@ -86,5 +90,7 @@ extern const float kProgressBarHeight;
 
 extern NSString *const kVowels;
 extern NSString *const kConsonants;
+extern NSString *const kFontType;
+
 
 @end

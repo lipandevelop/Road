@@ -66,6 +66,7 @@
 		0AF9959C1C88D22700ACFB3B /* musicIconDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF9959B1C88D22700ACFB3B /* musicIconDark.png */; };
 		0AF995A11C8B9ACA00ACFB3B /* UIButton+Stylizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */; };
 		0AF995A31C90E9EE00ACFB3B /* Stopwatch.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AF995A21C90E9EC00ACFB3B /* Stopwatch.png */; };
+		0AF995AD1C91277500ACFB3B /* UITextField+Configure.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AF995AC1C91277500ACFB3B /* UITextField+Configure.m */; };
 		469A50DE22A30B620C387B14 /* libPods-Road.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12C868AEC418B7542B3D89A3 /* libPods-Road.a */; };
 /* End PBXBuildFile section */
 
@@ -163,6 +164,8 @@
 		0AF9959F1C8B9AC900ACFB3B /* UIButton+Stylizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Stylizer.h"; sourceTree = "<group>"; };
 		0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Stylizer.m"; sourceTree = "<group>"; };
 		0AF995A21C90E9EC00ACFB3B /* Stopwatch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stopwatch.png; path = Images/Stopwatch.png; sourceTree = "<group>"; };
+		0AF995AB1C91277500ACFB3B /* UITextField+Configure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Configure.h"; sourceTree = "<group>"; };
+		0AF995AC1C91277500ACFB3B /* UITextField+Configure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Configure.m"; sourceTree = "<group>"; };
 		12C868AEC418B7542B3D89A3 /* libPods-Road.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Road.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BAC91A636CCB9282EDF261D /* Pods-Road.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.debug.xcconfig"; sourceTree = "<group>"; };
 		9F623E8D43E87DB00BB55660 /* Pods-Road.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Road.release.xcconfig"; path = "Pods/Target Support Files/Pods-Road/Pods-Road.release.xcconfig"; sourceTree = "<group>"; };
@@ -466,6 +469,8 @@
 			children = (
 				0AF9959F1C8B9AC900ACFB3B /* UIButton+Stylizer.h */,
 				0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */,
+				0AF995AB1C91277500ACFB3B /* UITextField+Configure.h */,
+				0AF995AC1C91277500ACFB3B /* UITextField+Configure.m */,
 			);
 			name = "UserInteraction Modifiers";
 			sourceTree = "<group>";
@@ -694,6 +699,7 @@
 				0AF9957C1C8775E800ACFB3B /* ROADTitleScreen.m in Sources */,
 				0AEA78191C8675F600D62BB6 /* ROADNoteBookView.m in Sources */,
 				0A383B431C84AEDF00A019D7 /* UIColorSelection.m in Sources */,
+				0AF995AD1C91277500ACFB3B /* UITextField+Configure.m in Sources */,
 				0AE952541C8435D90022C40A /* ConfigureView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

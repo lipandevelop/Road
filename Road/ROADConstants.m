@@ -20,6 +20,7 @@ const float kOneMinusGoldenRatioMinusOne = 0.38196601125;
 const float kSmallFontSize = 10.0f;
 const float kHiddenControlRevealedAlhpa = 0.7f;
 const float kZero = 0.0f;
+const float kOne = 1.0f;
 const float kUINormaAlpha = 0.45f;
 
 const float kAccessButtonWidth = 50.0f;
@@ -61,5 +62,7 @@ const float kProgressBarHeight = 18.0f;
 const float kDefaultMainFontSize = 24.0f;
 NSString *const kVowels = @"aeiouAEIOU";
 NSString *const kConsonants = @"bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
+NSString *const kFontType = @"AmericanTypewriter";
+
 
 @end
