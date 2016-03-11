@@ -484,16 +484,16 @@
 			children = (
 				0AF9959F1C8B9AC900ACFB3B /* UIButton+Stylizer.h */,
 				0AF995A01C8B9ACA00ACFB3B /* UIButton+Stylizer.m */,
-				0AF995AB1C91277500ACFB3B /* UITextField+Configure.h */,
-				0AF995AC1C91277500ACFB3B /* UITextField+Configure.m */,
-				0AEBECD31C92024B004FDD55 /* UITextView+Configure.h */,
-				0AEBECD41C92024B004FDD55 /* UITextView+Configure.m */,
-				0AEBECD61C9205DA004FDD55 /* UISlider+Configure.h */,
-				0AEBECD71C9205DA004FDD55 /* UISlider+Configure.m */,
 				0AEBECD91C92095C004FDD55 /* UIView+Stylizer.h */,
 				0AEBECDA1C92095C004FDD55 /* UIView+Stylizer.m */,
 				0AEBECDC1C920E6B004FDD55 /* UILabel+Configure.h */,
 				0AEBECDD1C920E6B004FDD55 /* UILabel+Configure.m */,
+				0AEBECD61C9205DA004FDD55 /* UISlider+Configure.h */,
+				0AEBECD71C9205DA004FDD55 /* UISlider+Configure.m */,
+				0AF995AB1C91277500ACFB3B /* UITextField+Configure.h */,
+				0AF995AC1C91277500ACFB3B /* UITextField+Configure.m */,
+				0AEBECD31C92024B004FDD55 /* UITextView+Configure.h */,
+				0AEBECD41C92024B004FDD55 /* UITextView+Configure.m */,
 			);
 			name = "UserInteraction Modifiers";
 			sourceTree = "<group>";

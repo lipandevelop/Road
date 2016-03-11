@@ -80,6 +80,7 @@
 
 @property (nonatomic, strong) UIView *labelView;
 @property (nonatomic, strong) UIView *uiView;
+@property (nonatomic, strong) UIView *chapterLabelContainerView;
 @property (nonatomic, strong) UILabel *chapterLabel;
 
 #pragma mark Runtime Properties
@@ -504,7 +505,6 @@
     
     [self.uiView addSubview:self.userInteractionTools.gasPedalView];
     [self.uiView addSubview:self.userInteractionTools.brakePedalView];
-    
     [self.uiView addSubview:self.nonInteractiveViews.progressBar];
     [self.uiView addSubview:self.nonInteractiveViews.progressLabel];
     [self.uiView addSubview:self.nonInteractiveViews.averageSpeedLabel];
@@ -786,9 +786,20 @@
 }
 
 - (void)loadText {
-    
-    self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(15.0f, CGRectGetMidY(self.uiView.frame)-85.0f, 150.0f, 130.0f)];
-    [self.uiView addSubview:self.chapterLabel];
+    //Chapter Label
+    self.chapterLabelContainerView = [[UILabel alloc]initWithFrame:CGRectMake(kZero, CGRectGetMidY(self.uiView.frame)-35.0f, self.uiView.frame.size.width/2, 15.0f)];
+    self.chapterLabelContainerView.backgroundColor = self.userColor.colorSix;
+    self.chapterLabelContainerView.alpha = kUINormaAlpha;
+    self.chapterLabelContainerView.layer.zPosition = -kOne;
+    self.chapterLabelContainerView.clipsToBounds = YES;
+    [self.uiView addSubview:self.chapterLabelContainerView];
+    self.chapterLabel = [[UILabel alloc]initWithFrame:CGRectMake(kZero, kZero, 1000, 15.0f)];
+    self.chapterLabel.text = self.currentChapter;
+    self.chapterLabel.alpha = kOne;
+    [self.chapterLabelContainerView addSubview:self.chapterLabel];
+    [UIView animateKeyframesWithDuration:30.0f delay:kZero options:UIViewKeyframeAnimationOptionRepeat animations:^{
+        self.chapterLabel.frame = CGRectMake(-1000.0f, kZero, 1000, 15.0f);
+    } completion:nil];
     
     self.nonInteractiveViews.dot = [[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.labelView.bounds)/2-4.0f, CGRectGetHeight(self.labelView.bounds)/2+kLabelHeightOffset, 8.0f, 8.0f)];
     [self.labelView addSubview:self.nonInteractiveViews.dot];
@@ -842,7 +853,7 @@
 
 - (void)updateFontSize {
     self.nonInteractiveViews.focusText.font = [UIFont fontWithName:(kFontType) size:self.currentReadingPosition.mainFontSize];
-    self.chapterLabel.font = [UIFont fontWithName:(kFontType) size:self.currentReadingPosition.mainFontSize-11];
+    self.chapterLabel.font = [UIFont fontWithName:(kFontType) size:self.currentReadingPosition.mainFontSize-10];
     self.userInteractionTools.assistantTextView.font = [UIFont fontWithName:(kFontType) size:self.currentReadingPosition.mainFontSize-10];
     self.nonInteractiveViews.previousWord3.font = [UIFont fontWithName:(kFontType) size:self.currentReadingPosition.mainFontSize-11];
     self.nonInteractiveViews.previousWord2.font = [UIFont fontWithName:(kFontType) size:self.currentReadingPosition.mainFontSize-11];
@@ -1453,7 +1464,6 @@
 - (void)hideControls {
     if (!self.readingInterfaceBOOLs.hideControlsActivated) {
         [UIView animateWithDuration:kOne animations:^{
-            self.chapterLabel.alpha = kGoldenRatioMinusOne;
             [self.userInteractionTools.hideControlButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [self.userInteractionTools.hideControlButton setTitle:@"hide" forState:UIControlStateNormal];
             self.userInteractionTools.hideControlButton.backgroundColor = [UIColor blackColor];
@@ -1464,7 +1474,6 @@
             //            self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:5.0f animations:^{
-                self.chapterLabel.alpha = 0.25;
                 self.chapterLabel.layer.shadowOpacity = kZero;
             }];
         }];
@@ -1478,8 +1487,6 @@
             self.userInteractionTools.toggleVowels.alpha = kZero;
             self.userInteractionTools.toggleConsonates.alpha = kZero;
             self.userInteractionTools.toggleUserSelections.alpha = kZero;
-            //            self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
-            self.chapterLabel.alpha = kZero;
         }];
     }
 }
@@ -1499,7 +1506,6 @@
         self.userInteractionTools.brakePedalView.alpha = kUINormaAlpha;
         self.userInteractionTools.gasPedalView.alpha = kUINormaAlpha;
     }];
-    
 }
 
 - (void)hideUI {
@@ -1511,7 +1517,6 @@
     self.userInteractionTools.toggleConsonates.alpha = kZero;
     self.userInteractionTools.toggleUserSelections.alpha = kZero;
     self.userInteractionTools.speedAdjusterSlider.alpha = kZero;
-    self.chapterLabel.alpha = kZero;
     self.userInteractionTools.brakePedalView.alpha = kZero;
     self.userInteractionTools.gasPedalView.alpha = kZero;
     self.userInteractionTools.expandTextViewButton.alpha = kZero;
@@ -1522,6 +1527,8 @@
 
 - (void)revealSpeedometer {
     [UIView animateWithDuration:1.50f animations:^{
+        self.nonInteractiveViews.timerLabel.alpha = kHiddenControlRevealedAlhpa;
+        self.nonInteractiveViews.progressLabel.alpha = kOne;
         self.userInteractionTools.openSpeedometerDetailButton.alpha = kUINormaAlpha;
         self.nonInteractiveViews.pinView.alpha = kOne;
         self.nonInteractiveViews.speedometerView.alpha = 0.15;
@@ -1531,11 +1538,12 @@
         self.nonInteractiveViews.averageSpeedLabel.alpha = kOne;
         self.nonInteractiveViews.progressBar.alpha = kUINormaAlpha;
     }];
-    
 }
 
 - (void)hideSpeedometer {
     [UIView animateWithDuration:0.50f animations:^{
+        self.nonInteractiveViews.timerLabel.alpha = kZero;
+        self.nonInteractiveViews.progressLabel.alpha = kZero;
         self.userInteractionTools.openSpeedometerDetailButton.alpha = kZero;
         self.nonInteractiveViews.progressLabel.alpha = kZero;
         self.nonInteractiveViews.pinView.alpha = kZero;
@@ -1546,7 +1554,6 @@
         self.nonInteractiveViews.averageSpeedLabel.alpha = kZero;
         self.nonInteractiveViews.progressBar.alpha = kZero;
     }];
-    
 }
 
 - (void)updatePaletteOrigin {
@@ -1610,8 +1617,8 @@
             self.toggleFocusTextHighlightPaletteButton.color5.frame = CGRectMake(self.colorPaletteXOrigin + (kColorPaletteWidth *4), self.colorPaletteYOrigin, kColorPaletteWidth, kColorPaletteHeight);
         }];
     }];
-    
 }
+
 - (void)retractColorPalette {
     [UIView animateWithDuration:0.25 animations:^{
         self.toggleFocusTextHighlightPaletteButton.color1.alpha = kZero;
@@ -1662,6 +1669,7 @@
     self.userInteractionTools.toggleMusicButton.layer.cornerRadius = 25.0f/2.0f;
     
     [UIView animateWithDuration:kOne animations:^{
+        self.chapterLabelContainerView.alpha = kZero;
         self.userInteractionTools.speedAdjusterSlider.alpha = kUINormaAlpha;
         self.userInteractionTools.flipXAxisButton.alpha = kUINormaAlpha;
         [self rotationTransformation:self.userInteractionTools.expandTextViewButton.layer degrees:k180Rotation];
@@ -1700,6 +1708,7 @@
 }
 
 - (void)retractAssistantText: (UIButton *)sender {
+    self.chapterLabelContainerView.alpha = kUINormaAlpha;
     self.readingInterfaceBOOLs.highlightAssistantTextActivated = NO;
     self.readingInterfaceBOOLs.textFieldRevealed = NO;
     [self.userInteractionTools.accessTextViewButton setTitle:@"t" forState:UIControlStateNormal];
@@ -1813,6 +1822,7 @@
     self.userInteractionTools.retractUserNotesTextFieldButton.alpha = kOne;
     self.userInteractionTools.retractUserNotesTextFieldButton.frame = CGRectMake(-kAccessButtonWidth/3, CGRectGetMidY(self.uiView.frame)+90.0f, kAccessButtonHeight, kAccessButtonHeight);
     [UIView animateWithDuration:kOne animations:^{
+        self.chapterLabelContainerView.alpha = kZero;
         self.nonInteractiveViews.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.uiView.frame), kZero, kOne, CGRectGetHeight(self.uiView.frame));
         self.userInteractionTools.accessTextViewButton.alpha = kZero;
         self.userInteractionTools.accessUserNotesTextFieldButton.alpha =kZero;
@@ -1826,6 +1836,7 @@
     [self revealSpeedometer];
     [self beginTimer];
     [UIView animateWithDuration:kOne animations:^{
+        self.chapterLabelContainerView.alpha = kUINormaAlpha;
         self.userInteractionTools.userNotesTextField.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, kZero, CGRectGetHeight(self.uiView.frame)-70.0f);
         self.nonInteractiveViews.dividerLabel.frame = CGRectMake(CGRectGetMidX(self.uiView.frame), CGRectGetMidY(self.uiView.frame)+90.0f, kOne, kOne);
         self.userInteractionTools.accessTextViewButton.alpha = kOne;
