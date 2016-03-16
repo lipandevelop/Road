@@ -6,9 +6,9 @@
 //  Copyright © 2016 Li Pan. All rights reserved.
 //
 
-#import "ROADDrawToolView.h"
+#import "ROADNoteBookDrawTool.h"
 
-@implementation ROADDrawToolView
+@implementation ROADNoteBookDrawTool
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {

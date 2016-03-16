@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ROADDrawToolView : UIView
+@interface ROADNoteBookDrawTool : UIView
 @property (nonatomic, strong) UIColor *currentColor;
 @property (nonatomic, assign) CGPoint gesturePoints;
 @property (nonatomic, assign) CGPoint gestureDrags;

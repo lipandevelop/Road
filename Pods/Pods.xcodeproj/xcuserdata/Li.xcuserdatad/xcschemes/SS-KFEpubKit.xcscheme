@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '45901896B990009886B02091'
+               BlueprintIdentifier = 'C2047F9D3841466941F0B071'
                BlueprintName = 'SS-KFEpubKit'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libSS-KFEpubKit.a'>

@@ -57,6 +57,22 @@ install_resource()
       ;;
   esac
 }
+if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_resource "ImageFilters/ImageFilters/Images/crossprocess.png"
+  install_resource "ImageFilters/ImageFilters/Images/crossprocess@2x.png"
+  install_resource "ImageFilters/ImageFilters/Images/magichour.png"
+  install_resource "ImageFilters/ImageFilters/Images/magichour@2x.png"
+  install_resource "ImageFilters/ImageFilters/Images/toycamera.png"
+  install_resource "ImageFilters/ImageFilters/Images/toycamera@2x.png"
+fi
+if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "ImageFilters/ImageFilters/Images/crossprocess.png"
+  install_resource "ImageFilters/ImageFilters/Images/crossprocess@2x.png"
+  install_resource "ImageFilters/ImageFilters/Images/magichour.png"
+  install_resource "ImageFilters/ImageFilters/Images/magichour@2x.png"
+  install_resource "ImageFilters/ImageFilters/Images/toycamera.png"
+  install_resource "ImageFilters/ImageFilters/Images/toycamera@2x.png"
+fi
 
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

@@ -1813,6 +1813,7 @@
     self.noteBook.arrayOfNotes = [NSMutableArray array];
     [self stopTimer];
     
+    
     self.readingInterfaceBOOLs.hideControlsActivated = YES;
     self.userInteractionTools.toggleNoteBookButton.userInteractionEnabled = YES;
     [self hideSpeedometer];
@@ -1834,7 +1835,6 @@
 
 - (void)retractUserNotesField: (UIButton *)sender {
     [self revealSpeedometer];
-    [self beginTimer];
     [UIView animateWithDuration:kOne animations:^{
         self.chapterLabelContainerView.alpha = kUINormaAlpha;
         self.userInteractionTools.userNotesTextField.frame = CGRectMake(kZero, CGRectGetMinY(self.uiView.frame)+30.0f, kZero, CGRectGetHeight(self.uiView.frame)-70.0f);

@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "ROADTitleScreen.h"
 #import "ROADReadingInterface.h"
+#import <ImageFilters/ImageFilter.h>
+
 
 @interface AppDelegate ()
 
@@ -32,6 +34,10 @@
 //    [self.window makeKeyAndVisible];
     
     return YES;
+}
+
++ (void)initialize {
+    [ImageFilter initialize];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

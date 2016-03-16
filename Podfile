@@ -6,6 +6,8 @@
 target 'Road' do
 
 pod 'SS-KFEpubKit', '~> 0.0'
+pod 'ImageFilters', '~> 0.3'
+
 
 end
 

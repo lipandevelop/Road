@@ -17,7 +17,6 @@ typedef NS_ENUM(NSInteger, ModifyColorForTextActivated) {
 typedef NS_ENUM(NSInteger, SpeedAdjustmentSegmentSelected) {
     NormalSpeed,
     MaximumSpeed,
-    MinimumSpeed,
     AccelerationSpeed,
     Default,
 };

@@ -8,12 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0A034FD01C814A4600DE94F8 /* leftHand.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A034FCF1C814A4600DE94F8 /* leftHand.png */; };
-		0A044A241C848459007F9D75 /* ROADDrawToolView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A231C848459007F9D75 /* ROADDrawToolView.m */; };
+		0A044A241C848459007F9D75 /* ROADNoteBookDrawTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A231C848459007F9D75 /* ROADNoteBookDrawTool.m */; };
 		0A044A281C848693007F9D75 /* ROADNoneInteractiveViews.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A271C848693007F9D75 /* ROADNoneInteractiveViews.m */; };
 		0A044A2B1C8493AE007F9D75 /* ROADColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A2A1C8493AE007F9D75 /* ROADColors.m */; };
 		0A044A2F1C849F16007F9D75 /* ROADPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A044A2E1C849F16007F9D75 /* ROADPalette.m */; };
 		0A35B29B1C8224D300EA6A43 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A35B29A1C8224D300EA6A43 /* UIKit.framework */; };
-		0A35B29E1C822CC700EA6A43 /* ROADDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */; };
 		0A383B3E1C84A57000A019D7 /* ROADPaletteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A383B3D1C84A57000A019D7 /* ROADPaletteButton.m */; };
 		0A383B431C84AEDF00A019D7 /* UIColorSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A383B421C84AEDF00A019D7 /* UIColorSelection.m */; };
 		0A383B4C1C84B25D00A019D7 /* ROADConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A383B4B1C84B25D00A019D7 /* ROADConstants.m */; };
@@ -39,6 +38,9 @@
 		0AEBECD81C9205DA004FDD55 /* UISlider+Configure.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBECD71C9205DA004FDD55 /* UISlider+Configure.m */; };
 		0AEBECDB1C92095C004FDD55 /* UIView+Stylizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBECDA1C92095C004FDD55 /* UIView+Stylizer.m */; };
 		0AEBECDE1C920E6B004FDD55 /* UILabel+Configure.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBECDD1C920E6B004FDD55 /* UILabel+Configure.m */; };
+		0AEBECE21C96643D004FDD55 /* ROADNoteBookViewFilterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBECE11C96643D004FDD55 /* ROADNoteBookViewFilterButton.m */; };
+		0AEBECE51C966BC7004FDD55 /* ROADNoteBookImageEditingTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBECE41C966BC7004FDD55 /* ROADNoteBookImageEditingTool.m */; };
+		0AEBECE81C991BB8004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEBECE71C991BB8004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.m */; };
 		0AEF497D1C78010F009309F1 /* ivoryPaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF497C1C78010F009309F1 /* ivoryPaper.png */; };
 		0AEF49811C7C2FBD009309F1 /* finger_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49801C7C2FBC009309F1 /* finger_clean.png */; };
 		0AEF499A1C7D3236009309F1 /* Speedometer.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AEF49991C7D3236009309F1 /* Speedometer.png */; };
@@ -87,8 +89,8 @@
 
 /* Begin PBXFileReference section */
 		0A034FCF1C814A4600DE94F8 /* leftHand.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = leftHand.png; path = Images/leftHand.png; sourceTree = "<group>"; };
-		0A044A221C848459007F9D75 /* ROADDrawToolView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADDrawToolView.h; sourceTree = "<group>"; };
-		0A044A231C848459007F9D75 /* ROADDrawToolView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADDrawToolView.m; sourceTree = "<group>"; };
+		0A044A221C848459007F9D75 /* ROADNoteBookDrawTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoteBookDrawTool.h; sourceTree = "<group>"; };
+		0A044A231C848459007F9D75 /* ROADNoteBookDrawTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoteBookDrawTool.m; sourceTree = "<group>"; };
 		0A044A261C848693007F9D75 /* ROADNoneInteractiveViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoneInteractiveViews.h; sourceTree = "<group>"; };
 		0A044A271C848693007F9D75 /* ROADNoneInteractiveViews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoneInteractiveViews.m; sourceTree = "<group>"; };
 		0A044A291C8493AE007F9D75 /* ROADColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ROADColors.h; path = Road/ROADColors.h; sourceTree = "<group>"; };
@@ -96,8 +98,6 @@
 		0A044A2D1C849F16007F9D75 /* ROADPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADPalette.h; sourceTree = "<group>"; };
 		0A044A2E1C849F16007F9D75 /* ROADPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADPalette.m; sourceTree = "<group>"; };
 		0A35B29A1C8224D300EA6A43 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		0A35B29C1C822CC700EA6A43 /* ROADDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ROADDictionary.h; path = Road/ROADDictionary.h; sourceTree = "<group>"; };
-		0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ROADDictionary.m; path = Road/ROADDictionary.m; sourceTree = "<group>"; };
 		0A383B3C1C84A57000A019D7 /* ROADPaletteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADPaletteButton.h; sourceTree = "<group>"; };
 		0A383B3D1C84A57000A019D7 /* ROADPaletteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADPaletteButton.m; sourceTree = "<group>"; };
 		0A383B411C84AEDF00A019D7 /* UIColorSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIColorSelection.h; sourceTree = "<group>"; };
@@ -137,6 +137,12 @@
 		0AEBECDA1C92095C004FDD55 /* UIView+Stylizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Stylizer.m"; sourceTree = "<group>"; };
 		0AEBECDC1C920E6B004FDD55 /* UILabel+Configure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Configure.h"; sourceTree = "<group>"; };
 		0AEBECDD1C920E6B004FDD55 /* UILabel+Configure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Configure.m"; sourceTree = "<group>"; };
+		0AEBECE01C96643D004FDD55 /* ROADNoteBookViewFilterButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoteBookViewFilterButton.h; sourceTree = "<group>"; };
+		0AEBECE11C96643D004FDD55 /* ROADNoteBookViewFilterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoteBookViewFilterButton.m; sourceTree = "<group>"; };
+		0AEBECE31C966BC7004FDD55 /* ROADNoteBookImageEditingTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoteBookImageEditingTool.h; sourceTree = "<group>"; };
+		0AEBECE41C966BC7004FDD55 /* ROADNoteBookImageEditingTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoteBookImageEditingTool.m; sourceTree = "<group>"; };
+		0AEBECE61C991BB7004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ROADNoteBookFeatureButtonShapeLayer.h; sourceTree = "<group>"; };
+		0AEBECE71C991BB8004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ROADNoteBookFeatureButtonShapeLayer.m; sourceTree = "<group>"; };
 		0AEF497C1C78010F009309F1 /* ivoryPaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ivoryPaper.png; path = Images/ivoryPaper.png; sourceTree = "<group>"; };
 		0AEF49801C7C2FBC009309F1 /* finger_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = finger_clean.png; path = Images/finger_clean.png; sourceTree = "<group>"; };
 		0AEF49991C7D3236009309F1 /* Speedometer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Speedometer.png; path = Images/Speedometer.png; sourceTree = "<group>"; };
@@ -231,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				0A383B441C84AF4D00A019D7 /* ROADMainView */,
+				0AEBECDF1C9661F5004FDD55 /* ROADNoteBookView */,
 			);
 			name = VIews;
 			sourceTree = "<group>";
@@ -266,7 +273,6 @@
 		0A383B441C84AF4D00A019D7 /* ROADMainView */ = {
 			isa = PBXGroup;
 			children = (
-				0A383B471C84AF9000A019D7 /* FeatureTools */,
 				0A383B461C84AF7F00A019D7 /* UIObjectsContainer */,
 				0A383B451C84AF6F00A019D7 /* FocusLabel */,
 			);
@@ -297,12 +303,11 @@
 			isa = PBXGroup;
 			children = (
 				0AEA781A1C8677A100D62BB6 /* NoteBookView */,
-				0A35B29C1C822CC700EA6A43 /* ROADDictionary.h */,
-				0A35B29D1C822CC700EA6A43 /* ROADDictionary.m */,
 				0AEA78171C8675F600D62BB6 /* ROADNoteBookView.h */,
 				0AEA78181C8675F600D62BB6 /* ROADNoteBookView.m */,
 			);
 			name = FeatureTools;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		0A383B481C84AFED00A019D7 /* ViewConfiguration */ = {
@@ -351,10 +356,23 @@
 		0AEA781A1C8677A100D62BB6 /* NoteBookView */ = {
 			isa = PBXGroup;
 			children = (
-				0A044A221C848459007F9D75 /* ROADDrawToolView.h */,
-				0A044A231C848459007F9D75 /* ROADDrawToolView.m */,
+				0AEBECE31C966BC7004FDD55 /* ROADNoteBookImageEditingTool.h */,
+				0AEBECE41C966BC7004FDD55 /* ROADNoteBookImageEditingTool.m */,
+				0A044A221C848459007F9D75 /* ROADNoteBookDrawTool.h */,
+				0A044A231C848459007F9D75 /* ROADNoteBookDrawTool.m */,
 			);
 			name = NoteBookView;
+			sourceTree = "<group>";
+		};
+		0AEBECDF1C9661F5004FDD55 /* ROADNoteBookView */ = {
+			isa = PBXGroup;
+			children = (
+				0AEBECE01C96643D004FDD55 /* ROADNoteBookViewFilterButton.h */,
+				0AEBECE11C96643D004FDD55 /* ROADNoteBookViewFilterButton.m */,
+				0AEBECE61C991BB7004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.h */,
+				0AEBECE71C991BB8004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.m */,
+			);
+			name = ROADNoteBookView;
 			sourceTree = "<group>";
 		};
 		0AEF49921C7CEE16009309F1 /* Images */ = {
@@ -421,8 +439,8 @@
 		0AF741721C778205000C3CC2 /* Road */ = {
 			isa = PBXGroup;
 			children = (
-				0AF9959E1C88DA5500ACFB3B /* StoryBoard */,
 				0AF9959D1C88DA4500ACFB3B /* Title */,
+				0A383B471C84AF9000A019D7 /* FeatureTools */,
 				0AF995AA1C91127700ACFB3B /* UserInteraction Modifiers */,
 				0AF741791C778205000C3CC2 /* ROADReadingInterface.h */,
 				0AF7417A1C778205000C3CC2 /* ROADReadingInterface.m */,
@@ -432,6 +450,7 @@
 				0AF741811C778205000C3CC2 /* LaunchScreen.storyboard */,
 				0AF741841C778205000C3CC2 /* Info.plist */,
 				0AF741731C778205000C3CC2 /* Supporting Files */,
+				0AF9959E1C88DA5500ACFB3B /* StoryBoard */,
 			);
 			path = Road;
 			sourceTree = "<group>";
@@ -703,15 +722,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A044A241C848459007F9D75 /* ROADDrawToolView.m in Sources */,
+				0A044A241C848459007F9D75 /* ROADNoteBookDrawTool.m in Sources */,
 				0AF995A11C8B9ACA00ACFB3B /* UIButton+Stylizer.m in Sources */,
-				0A35B29E1C822CC700EA6A43 /* ROADDictionary.m in Sources */,
 				0AEBECDB1C92095C004FDD55 /* UIView+Stylizer.m in Sources */,
 				0A044A2F1C849F16007F9D75 /* ROADPalette.m in Sources */,
 				0A044A281C848693007F9D75 /* ROADNoneInteractiveViews.m in Sources */,
 				0AE952421C83F7980022C40A /* Utilities.m in Sources */,
 				0AEBECDE1C920E6B004FDD55 /* UILabel+Configure.m in Sources */,
 				0AE9523F1C83F72D0022C40A /* ROADCurrentReadingPosition.m in Sources */,
+				0AEBECE51C966BC7004FDD55 /* ROADNoteBookImageEditingTool.m in Sources */,
 				0AF7417B1C778205000C3CC2 /* ROADReadingInterface.m in Sources */,
 				0AE952471C8418A60022C40A /* ROADUIUserInteractionTools.m in Sources */,
 				0AE952511C842FC50022C40A /* ROADDisplayReadingTextLabel.m in Sources */,
@@ -725,8 +744,10 @@
 				0AEBECD51C92024B004FDD55 /* UITextView+Configure.m in Sources */,
 				0AF9957C1C8775E800ACFB3B /* ROADTitleScreen.m in Sources */,
 				0AEA78191C8675F600D62BB6 /* ROADNoteBookView.m in Sources */,
+				0AEBECE21C96643D004FDD55 /* ROADNoteBookViewFilterButton.m in Sources */,
 				0A383B431C84AEDF00A019D7 /* UIColorSelection.m in Sources */,
 				0AEBECD81C9205DA004FDD55 /* UISlider+Configure.m in Sources */,
+				0AEBECE81C991BB8004FDD55 /* ROADNoteBookFeatureButtonShapeLayer.m in Sources */,
 				0AF995AD1C91277500ACFB3B /* UITextField+Configure.m in Sources */,
 				0AE952541C8435D90022C40A /* ConfigureView.m in Sources */,
 			);
