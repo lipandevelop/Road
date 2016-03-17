@@ -121,7 +121,7 @@ typedef NS_ENUM(NSInteger, FilterSelected) {
 - (void)setupFilterGallery {
     self.filterGallery = [[UIScrollView alloc]initWithFrame:CGRectMake(5.0f, CGRectGetMidY(self.frame), kZero, kZero)];
     self.filterGallery.alpha = kHiddenControlRevealedAlhpa;
-//    self.filterGallery.layer.borderWidth = kBorderWidth;
+    self.filterGallery.layer.borderWidth = kBorderWidth;
     self.filterGallery.layer.zPosition = kOne;
     self.filterGallery.contentSize = CGSizeMake(70.0f * 9, 51.0f);
     self.filterGallery.clipsToBounds = YES;
@@ -180,7 +180,7 @@ typedef NS_ENUM(NSInteger, FilterSelected) {
 - (void)setupAdjustmentsGallery {
     self.adjustmentsGallery = [[UIScrollView alloc]init];
     self.adjustmentsGallery.alpha = kHiddenControlRevealedAlhpa;
-//    self.adjustmentsGallery.layer.borderWidth = kBorderWidth;
+    self.adjustmentsGallery.layer.borderWidth = kBorderWidth;
     self.adjustmentsGallery.layer.zPosition = kOne;
     self.adjustmentsGallery.contentSize = CGSizeMake(70.0f * 10, 51.0f);
     self.adjustmentsGallery.clipsToBounds = YES;

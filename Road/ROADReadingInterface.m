@@ -2085,8 +2085,7 @@
     [self.userInteractionTools.userSelectedTextTextField resignFirstResponder];
     [self.userInteractionTools.userNotesTextField resignFirstResponder];
     saveString = self.userInteractionTools.userNotesTextField.text;
-    
-    
+
     [self.noteBook.arrayOfNotes addObject:saveString];
     //    [self.currentReadingPosition.userNotesArray addObject:saveString];
     NSLog(@"%@,%@", self.userNotesString, self.currentReadingPosition.userNotesArray);

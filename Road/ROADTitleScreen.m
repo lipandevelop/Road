@@ -60,7 +60,7 @@
     self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     self.scrollView.frame = self.view.frame;
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.scrollView setContentOffset:CGPointMake(30, 60)];
+    [self.scrollView setContentOffset:CGPointMake(15, 110.0f)];
     self.scrollView.clipsToBounds = YES;
     
     //    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"darkPaper" ofType:@"png"];
@@ -68,7 +68,7 @@
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"TitleScreenImage" ofType:@"gif"];
     NSData *gif = [NSData dataWithContentsOfFile:filePath];
-    self.webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 435.0f, 770.0f)];
+    self.webViewBG = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 422, 702)];
     NSURL *url;
     [self.webViewBG loadData:gif MIMEType:@"image/gif" textEncodingName:@"" baseURL:url];
     //    [self.webViewBG loadData:gif MIMEType:@"image/png" textEncodingName:@"" baseURL:url];

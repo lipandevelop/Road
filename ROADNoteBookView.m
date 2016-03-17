@@ -32,7 +32,6 @@
 @property (nonatomic, strong) UIView *shareButtonsContainer;
 
 @property (nonatomic, strong) ROADColors *userColors;
-@property (nonatomic, strong) ROADNoteBookFeatureButtonShapeLayer *buttonContour;
 @property (nonatomic, assign) BOOL drawingToolActivated;
 @property (nonatomic, assign) BOOL imageViewActivated;
 @property (nonatomic, assign) BOOL shareViewActivated;
@@ -47,6 +46,18 @@
 
 @implementation ROADNoteBookView
 
+static const float kFilterAdjustmentBarBottomOffset = 90.0f;
+static const float kFilterAdjustmentSliderBottomOffset = 30.0f;
+static const float kAdjustmentSliderWidth = 200.0f;
+static const float kAdjustmentSliderWidthWithOffset = 205.0f;
+static const float kAdjustmentSliderHeight = 20.0f;
+static const float kadjustmentsGalleryHeight = 51.0f;
+
+static const float kButtonXOriginOffset = 20.0f;
+static const float kButtonMaxYOffset = 10.0f;
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -59,7 +70,6 @@
     self.imageAdjustmentActivated = NO;
     
     self.userColors = [[ROADColors alloc]init];
-    self.buttonContour = [[ROADNoteBookFeatureButtonShapeLayer alloc]init];
     UIView *backgroundView = [[UIView alloc]initWithFrame:self.view.frame];
     UIImage *ivoryPaper = [UIImage imageNamed:@"ivoryPaper.png"];
     UIImage *pencilImage = [UIImage imageNamed:@"drawingPencil"];
@@ -72,73 +82,63 @@
     backgroundView.layer.contents = (__bridge id)ivoryPaper.CGImage;
     [self.view addSubview:backgroundView];
     
-    self.returnButton = [[UIButton alloc]initWithFrame:CGRectMake(10.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    [self.returnButton.layer addSublayer:self.buttonContour];
-//    self.returnButton.layer.borderWidth = kBorderWidth;
+    self.returnButton = [[UIButton alloc]initWithFrame:CGRectMake(10.0f, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
+    //    [self.returnButton.layer addSublayer:[[ROADNoteBookFeatureButtonShapeLayer alloc]init]];
+    //    self.returnButton.backgroundColor = self.userColors.colorFive;
     [self.returnButton setTitle:@"<" forState:UIControlStateNormal];
-//    self.returnButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-//    self.returnButton.layer.cornerRadius = kAccessButtonHeight/2;
-//    self.returnButton.layer.shadowOpacity = kShadowOpacity;
-    self.returnButton.layer.opacity = kUINormaAlpha;
-    self.returnButton.alpha = kUINormaAlpha;
     [self.returnButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.returnButton addTarget:self action:@selector(backtoBook:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.pencilButton = [[UIButton alloc]initWithFrame:CGRectMake(65.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.pencilButton.layer.borderWidth = kBorderWidth;
-    self.pencilButton.layer.contents = (__bridge id)pencilImage.CGImage;
-    self.pencilButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.pencilButton.layer.cornerRadius = kAccessButtonHeight/2;
-    self.pencilButton.layer.shadowOpacity = kShadowOpacity;
+    self.pencilButton = [[UIButton alloc]initWithFrame:CGRectMake(65.0f, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
+    //    self.pencilButton.backgroundColor = self.userColors.colorFive;
+    //    [self.pencilButton.layer addSublayer:[[ROADNoteBookFeatureButtonShapeLayer alloc]init]];
     self.pencilButton.alpha = kUINormaAlpha;
-    self.pencilButton.layer.opacity = kUINormaAlpha;
+    self.pencilButton.layer.contents = (__bridge id)pencilImage.CGImage;
     [self.pencilButton addTarget:self action:@selector(toggleDrawingTool:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.pictureButton = [[UIButton alloc]initWithFrame:CGRectMake(120.0f, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
-    self.pictureButton.layer.borderWidth = kBorderWidth;
-    self.pictureButton.layer.contents = (__bridge id)imageImage.CGImage;
-    self.pictureButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-    self.pictureButton.layer.cornerRadius = kAccessButtonHeight/2;
-    self.pictureButton.layer.shadowOpacity = kShadowOpacity;
+    self.pictureButton = [[UIButton alloc]initWithFrame:CGRectMake(120.0f, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
     self.pictureButton.alpha = kUINormaAlpha;
+    //    self.pictureButton.backgroundColor = self.userColors.colorFive;
+    //    [self.pictureButton.layer addSublayer:[[ROADNoteBookFeatureButtonShapeLayer alloc]init]];
+    self.pictureButton.layer.contents = (__bridge id)imageImage.CGImage;
     [self.pictureButton addTarget:self action:@selector(toggleImageView:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.exportButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.exportButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
     self.exportButton.layer.borderWidth = kBorderWidth;
     self.exportButton.layer.contents = (__bridge id)shareImage.CGImage;
-    self.exportButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.exportButton.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
     self.exportButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.exportButton.layer.shadowOpacity = kShadowOpacity;
     self.exportButton.alpha = kUINormaAlpha;
     [self.exportButton addTarget:self action:@selector(toggleShareView:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.shareButtonsContainer = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 10.0f, kAccessButtonHeight, kZero)];
+    self.shareButtonsContainer = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kButtonMaxYOffset, kAccessButtonHeight, kZero)];
     self.shareButtonsContainer.backgroundColor = [UIColor whiteColor];
     self.shareButtonsContainer.layer.borderWidth = kBorderWidth;
-    self.shareButtonsContainer.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareButtonsContainer.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
     self.shareButtonsContainer.layer.cornerRadius = kAccessButtonHeight/2;
     self.shareButtonsContainer.layer.shadowOpacity = kShadowOpacity;
     
-    self.shareInstagramButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.shareInstagramButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
     self.shareInstagramButton.layer.borderWidth = kBorderWidth;
     self.shareInstagramButton.layer.contents = (__bridge id)instagrameIconImage.CGImage;
-    self.shareInstagramButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareInstagramButton.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
     self.shareInstagramButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.shareInstagramButton.layer.shadowOpacity = kShadowOpacity;
     self.shareInstagramButton.alpha = kUINormaAlpha;
     
-    self.shareFacebookButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.shareFacebookButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
     self.shareFacebookButton.layer.borderWidth = kBorderWidth;
     self.shareFacebookButton.layer.contents = (__bridge id)facebookIconImage.CGImage;
-    self.shareFacebookButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareFacebookButton.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
     self.shareFacebookButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.shareFacebookButton.layer.shadowOpacity = kShadowOpacity;
     self.shareFacebookButton.alpha = kUINormaAlpha;
     
-    self.shareTwitterButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight)];
+    self.shareTwitterButton = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight)];
     self.shareTwitterButton.layer.borderWidth = kBorderWidth;
     self.shareTwitterButton.layer.contents = (__bridge id)twitterIconImage.CGImage;
-    self.shareTwitterButton.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.shareTwitterButton.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
     self.shareTwitterButton.layer.cornerRadius = kAccessButtonHeight/2;
     self.shareTwitterButton.layer.shadowOpacity = kShadowOpacity;
     self.shareTwitterButton.alpha = kUINormaAlpha;
@@ -147,9 +147,10 @@
     self.shareFacebookButton.alpha = kZero;
     self.shareTwitterButton.alpha = kZero;
     
-    self.canvasView = [[UIView alloc]initWithFrame:CGRectMake(20, 20, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-80)];
-    self.canvasView.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
+    self.canvasView = [[UIView alloc]initWithFrame:CGRectMake(kButtonXOriginOffset, kButtonXOriginOffset, CGRectGetWidth(self.view.frame)-40, CGRectGetHeight(self.view.frame)-80)];
+    self.canvasView.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
     self.canvasView.layer.borderWidth = kBorderWidth;
+    self.canvasView.layer.borderColor = self.userColors.colorSix.CGColor;
     self.canvasView.layer.shadowOpacity = kShadowOpacity;
     self.canvasView.clipsToBounds = YES;
     
@@ -167,7 +168,6 @@
     [self.view addSubview:self.exportButton];
     [self.view bringSubviewToFront:self.notesLabel];
     
-    
     [self displayNotes];
 }
 
@@ -179,22 +179,22 @@
     self.drawingToolActivated = !self.drawingToolActivated;
     if (self.drawingToolActivated) {
         self.imageEditingToolView.userInteractionEnabled = NO;
-        self.drawToolView.layer.zPosition = 1.0f;
+        self.drawToolView.layer.zPosition = kOne;
         [UIView animateWithDuration:0.20f animations:^{
-            self.drawToolView.alpha = 1.0f;
+            self.drawToolView.alpha = kOne;
         }];
-        [UIView animateWithDuration:1.0f animations:^{
-            self.pencilButton.alpha = 1.0f;
+        [UIView animateWithDuration:kOne animations:^{
+            self.pencilButton.alpha = kOne;
         }];
     }
     if (!self.drawingToolActivated) {
         self.imageEditingToolView.userInteractionEnabled = YES;
-        self.drawToolView.layer.zPosition = -1.0f;
+        self.drawToolView.layer.zPosition = -kOne;
         [UIView animateWithDuration:0.20f animations:^{
             self.drawToolView.alpha = kZero;
         }];
-        [UIView animateWithDuration:1.0f animations:^{
-            self.pencilButton.alpha = 0.2f;
+        [UIView animateWithDuration:kOne animations:^{
+            self.pencilButton.layer.opacity = kUINormaAlpha;
         }];
     }
     NSLog(@"%d", self.drawingToolActivated);
@@ -206,23 +206,27 @@
     self.imageEditingToolView.imageAdjustmentSlider.tintColor = self.userColors.colorOne;
     if (self.imageViewActivated) {
         self.imageEditingToolView.userInteractionEnabled = YES;
-        self.toggleImageFilterOptions = [[UIButton alloc]initWithFrame:CGRectMake(-kAccessButtonWidth/2, CGRectGetMidX(self.canvasView.frame), kAccessButtonWidth, kAccessButtonWidth)];
-        self.toggleImageFilterOptions.layer.borderWidth = kBorderWidth;
-        self.toggleImageFilterOptions.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-//        self.toggleImageFilterOptions.layer.cornerRadius = kAccessButtonHeight/2;
+        self.toggleImageFilterOptions = [[UIButton alloc]initWithFrame:CGRectMake(170.0f, self.view.frame.size.height - kToggleButtonDimension - 10.0f, kToggleButtonDimension, kToggleButtonDimension)];
+        [self.toggleImageFilterOptions setTitle:@"Ftr" forState:UIControlStateNormal];
+        self.toggleImageFilterOptions.titleLabel.font = [UIFont fontWithName:kFontType size:12.0f];
+        self.toggleImageFilterOptions.backgroundColor = self.userColors.colorSix;
+        self.toggleImageFilterOptions.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
         self.toggleImageFilterOptions.layer.shadowOpacity = kShadowOpacity;
+        self.toggleImageFilterOptions.layer.cornerRadius = kToggleButtonDimension/2;
         self.toggleImageFilterOptions.alpha = kZero;
         [self.toggleImageFilterOptions addTarget:self action:@selector(toggleImageFilterBar:) forControlEvents:UIControlEventTouchUpInside];
-        [self.canvasView addSubview:self.toggleImageFilterOptions];
+        [self.view addSubview:self.toggleImageFilterOptions];
         
-        self.toggleImageAdjustmentOptions = [[UIButton alloc]initWithFrame:CGRectMake(-kAccessButtonWidth/2, CGRectGetMidX(self.canvasView.frame)-kAccessButtonWidth, kAccessButtonWidth, kAccessButtonWidth)];
-        self.toggleImageAdjustmentOptions.layer.borderWidth = kBorderWidth;
-        self.toggleImageAdjustmentOptions.layer.shadowOffset = CGSizeMake(-1.0f, 6.0f);
-//        self.toggleImageAdjustmentOptions.layer.cornerRadius = kAccessButtonHeight/2;
+        self.toggleImageAdjustmentOptions = [[UIButton alloc]initWithFrame:CGRectMake(210.0f, self.view.frame.size.height - kToggleButtonDimension - 10.0f, kToggleButtonDimension, kToggleButtonDimension)];
+        [self.toggleImageAdjustmentOptions setTitle:@"Adj" forState:UIControlStateNormal];
+        self.toggleImageAdjustmentOptions.backgroundColor = self.userColors.colorSix;
+        self.toggleImageAdjustmentOptions.titleLabel.font = [UIFont fontWithName:kFontType size:12.0f];
+        self.toggleImageAdjustmentOptions.layer.shadowOffset = CGSizeMake(-kOne, 6.0f);
         self.toggleImageAdjustmentOptions.layer.shadowOpacity = kShadowOpacity;
+        self.toggleImageAdjustmentOptions.layer.cornerRadius = kToggleButtonDimension/2;
         self.toggleImageAdjustmentOptions.alpha = kZero;
         [self.toggleImageAdjustmentOptions addTarget:self action:@selector(toggleImageAdjustmentBar:) forControlEvents:UIControlEventTouchUpInside];
-        [self.canvasView addSubview:self.toggleImageAdjustmentOptions];
+        [self.view addSubview:self.toggleImageAdjustmentOptions];
         
         [UIView animateWithDuration:1.0f animations:^{
             self.pictureButton.alpha = kOne;
@@ -234,7 +238,7 @@
     if (!self.imageViewActivated) {
         self.imageEditingToolView.userInteractionEnabled = NO;
         [UIView animateWithDuration:1.0f animations:^{
-            self.pictureButton.alpha = kHiddenControlRevealedAlhpa;
+            self.pictureButton.alpha = kUINormaAlpha;
             self.imageEditingToolView.alpha = kZero;
             self.toggleImageFilterOptions.alpha = kZero;
             self.toggleImageAdjustmentOptions.alpha = kZero;
@@ -266,7 +270,6 @@
         //        notesLabel.textColor = self.userColors.colorSix;
         //        notesLabel.font = [UIFont fontWithName:@"American Typewriter" size:13.0f];
         //        [self.imageView addSubview:notesLabel];
-        
         indexCount ++;
         self.notesLabel = [[UILabel alloc]initWithFrame:CGRectMake(30.0f, 40.0f + indexCount*40.0f, 200.0f, 100.0f)];
         self.notesLabel.text = notesString;
@@ -286,19 +289,19 @@
         [self.view addSubview:self.shareTwitterButton];
         
         [UIView animateWithDuration:0.75f animations:^{
-            self.exportButton.alpha = 1.0f;
+            self.exportButton.alpha = kOne;
             
-            self.shareInstagramButton.alpha = 1.0f;
-            self.shareFacebookButton.alpha = 1.0f;
-            self.shareTwitterButton.alpha = 1.0f;
+            self.shareInstagramButton.alpha = kOne;
+            self.shareFacebookButton.alpha = kOne;
+            self.shareTwitterButton.alpha = kOne;
             
-            self.shareButtonsContainer.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 4*kAccessButtonHeight-10, kAccessButtonHeight, 4*kAccessButtonHeight-5);
+            self.shareButtonsContainer.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - 4*kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, 4*kAccessButtonHeight-5);
             
-            self.shareFacebookButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 3* kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            self.shareFacebookButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - 3* kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight);
             
-            self.shareTwitterButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 4* kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            self.shareTwitterButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - 4* kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight);
             
-            self.shareInstagramButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 2* kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            self.shareInstagramButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - 2* kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight);
         }];
     }
     if (!self.shareViewActivated) {
@@ -308,13 +311,13 @@
             self.shareFacebookButton.alpha = kZero;
             self.shareTwitterButton.alpha = kZero;
             
-            self.shareButtonsContainer.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - 10.0f, kAccessButtonHeight, kZero);
+            self.shareButtonsContainer.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kButtonMaxYOffset, kAccessButtonHeight, kZero);
             
-            self.shareFacebookButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            self.shareFacebookButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight);
             
-            self.shareTwitterButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            self.shareTwitterButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight);
             
-            self.shareInstagramButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - 20 - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - 10.0f, kAccessButtonHeight, kAccessButtonHeight);
+            self.shareInstagramButton.frame = CGRectMake(CGRectGetMaxX(self.view.frame) - kButtonXOriginOffset - kAccessButtonHeight, self.view.frame.size.height - kAccessButtonHeight - kButtonMaxYOffset, kAccessButtonHeight, kAccessButtonHeight);
         }completion:^(BOOL finished) {
             [self.shareInstagramButton removeFromSuperview];
             [self.shareFacebookButton removeFromSuperview];
@@ -336,22 +339,27 @@
 - (void)toggleImageFilterBar: (UIButton *)sender {
     self.imageFilterActivated = !self.imageFilterActivated;
     if (self.imageFilterActivated) {
-        self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 75.5f, kZero, 2.0f);
+        self.toggleImageAdjustmentOptions.enabled = NO;
+        self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, kZero, 2.0f);
         [UIView animateWithDuration:0.5f animations:^{
-            self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 75.5f, self.imageEditingToolView.frame.size.width, 2.0f);
+            self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, 2.0f);
+            self.toggleImageFilterOptions.alpha = kOne;
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:0.5f animations:^{
-                self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 75.5f, self.imageEditingToolView.frame.size.width, 51.0f);
+                self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, kadjustmentsGalleryHeight);
             }];
         }];
     }
     if (!self.imageFilterActivated) {
-        self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 75.5f, self.imageEditingToolView.frame.size.width, 51.0f);
+        self.toggleImageAdjustmentOptions.enabled = YES;
+        self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame)- kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, kadjustmentsGalleryHeight);
         [UIView animateWithDuration:0.5f animations:^{
-            self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 75.5f, self.imageEditingToolView.frame.size.width, 2.0f);
+            self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, 2.0f);
+            self.toggleImageFilterOptions.alpha = kUINormaAlpha;
+            
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:0.5f animations:^{
-                self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 75.5f, kZero, 2.0f);
+                self.imageEditingToolView.filterGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame)- kFilterAdjustmentBarBottomOffset, kZero, 2.0f);
             }];
         }];
     }
@@ -360,33 +368,35 @@
 - (void)toggleImageAdjustmentBar: (UIButton *)sender {
     self.imageAdjustmentActivated = !self.imageAdjustmentActivated;
     if (self.imageAdjustmentActivated) {
-        self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 25.5f, kZero, 2.0f);
-        self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - 205.0f, CGRectGetMidY(self.imageEditingToolView.frame) + 50.0f, kZero, 20.0f);
+        self.toggleImageFilterOptions.enabled = NO;
+        self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, kZero, 2.0f);
+        self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - kAdjustmentSliderWidthWithOffset, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentSliderBottomOffset, kZero, kAdjustmentSliderHeight);
         self.imageEditingToolView.imageAdjustmentSlider.alpha = kZero;
         
         [UIView animateWithDuration:0.5f animations:^{
-            self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 25.5f, self.imageEditingToolView.frame.size.width, 2.0f);
+            self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame)- kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, 2.0f);
             self.imageEditingToolView.imageAdjustmentSlider.alpha = kOne;
+            self.toggleImageAdjustmentOptions.alpha = kOne;
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:0.5f animations:^{
-                self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 25.5f, self.imageEditingToolView.frame.size.width, 51.0f);
-                self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - 205.0f, CGRectGetMidY(self.imageEditingToolView.frame) + 50.0f, 200.0f, 20.0f);
+                self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, kadjustmentsGalleryHeight);
+                self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - kAdjustmentSliderWidthWithOffset, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentSliderBottomOffset, kAdjustmentSliderWidth, kAdjustmentSliderHeight);
             }];
         }];
     }
     if (!self.imageAdjustmentActivated) {
-        self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 25.5f, self.imageEditingToolView.frame.size.width, 51.0f);
-        self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - 205.0f, CGRectGetMidY(self.imageEditingToolView.frame) + 50.0f, 200.0f, 20.0f);
+        self.toggleImageFilterOptions.enabled = YES;
+        self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame)- kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, kadjustmentsGalleryHeight);
+        self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - kAdjustmentSliderWidthWithOffset, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentSliderBottomOffset, kAdjustmentSliderWidth, kAdjustmentSliderHeight);
         self.imageEditingToolView.imageAdjustmentSlider.alpha = kOne;
         [UIView animateWithDuration:0.5f animations:^{
-            self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 25.5f, self.imageEditingToolView.frame.size.width, 2.0f);
-            self.imageEditingToolView.imageAdjustmentSlider.alpha = kOne;
+            self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, self.imageEditingToolView.frame.size.width, 2.0f);
+            self.toggleImageAdjustmentOptions.alpha = kUINormaAlpha;
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:0.5f animations:^{
-                self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMidY(self.imageEditingToolView.frame)- 25.5f, kZero, 2.0f);
-                self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - 205.0f, CGRectGetMidY(self.imageEditingToolView.frame) + 50.0f, kZero, 20.0f);
+                self.imageEditingToolView.adjustmentsGallery.frame = CGRectMake(kZero, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentBarBottomOffset, kZero, 2.0f);
+                self.imageEditingToolView.imageAdjustmentSlider.frame = CGRectMake(self.imageEditingToolView.frame.size.width - kAdjustmentSliderWidthWithOffset, CGRectGetMaxY(self.imageEditingToolView.frame) - kFilterAdjustmentSliderBottomOffset, kZero, kAdjustmentSliderHeight);
                 self.imageEditingToolView.imageAdjustmentSlider.alpha = kZero;
-                
             }];
         }];
     }

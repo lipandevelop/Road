@@ -18,13 +18,14 @@
         UIBezierPath *path = [[UIBezierPath alloc]init];
         [path moveToPoint:CGPointMake(kZero, kZero)];
         [path addLineToPoint:CGPointMake(55.0f, kZero)];
-        [path addLineToPoint:CGPointMake(45.0, 25.0f)];
-        [path addLineToPoint:CGPointMake(kZero, 25.0f)];
+        [path addLineToPoint:CGPointMake(65.0, 45.0f)];
+//        [path addLineToPoint:CGPointMake(kZero, 45.0f)];
         [path closePath];
         self.path = path.CGPath;
         self.shadowOffset = CGSizeMake(-kOne, 6.0f);
-        self.shadowOpacity = kShadowOpacity;
+        self.shadowOpacity = 0.75f;
         self.borderWidth = kBorderWidth;
+        self.opacity = kUINormaAlpha;
     }
     return self;
 }
