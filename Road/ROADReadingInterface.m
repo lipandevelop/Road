@@ -113,6 +113,8 @@
 @property (nonatomic, assign) int swipeUpIndex;
 @property (nonatomic, assign) int swipeDownIndex;
 
+@property (nonatomic, assign) NSMutableArray *buildingTools;
+
 
 @end
 
@@ -131,6 +133,7 @@
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     self.userColor = [[ROADColors alloc]init];
     [self loadData];
     [self loadValues];
@@ -2117,6 +2120,7 @@
 
 -(UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
+
 }
 
 
